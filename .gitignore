@@ -1,6 +1,7 @@
-# Compiled class file
+# Compiled class files
 *.class
 bin/
+out/
 
 # Log file
 *.log
@@ -24,7 +25,7 @@ bin/
 .project
 .classpath
 .idea/
-NameSayer_part3.iml
+*.iml
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
