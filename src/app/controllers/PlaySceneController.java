@@ -1,4 +1,4 @@
-package controllers;
+package app.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,7 +24,7 @@ public class PlaySceneController implements Initializable {
     }
 
     public void handleReturnAction(ActionEvent event) throws IOException {
-        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/NameSayer.fxml"));
+        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();

@@ -1,7 +1,7 @@
-package controllers;
+package app.controllers;
 
-import app.DataModel;
-import app.IDataModel;
+import app.model.DataModel;
+import app.model.IDataModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -51,7 +51,7 @@ public class MainMenuController implements Initializable {
         } else if(event.getSource() == view_rec_btn){
             rec_pane.toFront();
         } else if(event.getSource() == test_mic_btn){
-            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/RecordingScene.fxml"));
+            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/RecordingScene.fxml"));
             Scene playerScene = new Scene(playerParent);
 
             Stage window = new Stage();
@@ -62,7 +62,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void handleStartAction(ActionEvent event) throws IOException {
-        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/PlayScene.fxml"));
+        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/PlayScene.fxml"));
         Scene playerScene = new Scene(playerParent);
 
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
