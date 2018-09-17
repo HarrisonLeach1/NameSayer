@@ -17,7 +17,7 @@ public class DataModel implements IDataModel{
 		CheckBoxTreeItem<String> root = new CheckBoxTreeItem<>();
 		root.setExpanded(true);
 		// hashmap for storing all different versions (values) asoociated with a specific name (key)
-		HashMap<String, ArrayList<String>> nameTable = getNameTable();
+		HashMap<String, ArrayList<Name>> nameTable = getNameTable();
 
 		// loop through each name in table and build tree
 		for (String key : nameTable.keySet()) {
@@ -42,8 +42,8 @@ public class DataModel implements IDataModel{
 	 * Returns a Hashmap for storing all different versions (values) asoociated with a
 	 * specific name (key)
 	 */
-	private HashMap<String, ArrayList<String>> getNameTable() {
-		HashMap<String, ArrayList<String>> nameTable = new HashMap<>();
+	private HashMap<String, ArrayList<Name>> getNameTable() {
+		HashMap<Name, ArrayList<Name>> nameTable = new HashMap<>();
 
 		File[] files = DATABASE.listFiles();
 
@@ -51,31 +51,21 @@ public class DataModel implements IDataModel{
  		for (File file : files) {
 			if (file.isFile()) {
 
-				// retrieve full file name and presentable name
-				String fileName = file.getName();
-				String name = parseName(fileName);
+				// retrieve full file name and create a name object from it
+				Name name = new Name(file.getName());
 
 				// if other versions of the same name exist, add to the list
-				if (nameTable.containsKey(name)) {
-					ArrayList<String> currentList = nameTable.get(name);
+				if (nameTable.containsKey(name.getShortName())) {
+					ArrayList<Name> currentList = nameTable.get(name);
 					currentList.add(fileName);
 				} else { // otherwise create a new key for the name
-					ArrayList<String> version = new ArrayList<String>(Arrays.asList(fileName));
-					nameTable.put(name, version);
+					ArrayList<Name> version = new ArrayList<Name>(Arrays.asList(name));
+					nameTable.put(name.getShortName(), version);
 				}
 			}
 		}
 
 		return nameTable;
-	}
-
-	/**
-	 * Returns the basename of the recording excluding the creation date, time and file extension.
-	 * @param fileName
-	 */
-	private String parseName(String fileName) {
-		String dateTimeRemoved = fileName.substring(fileName.lastIndexOf('_') + 1);
-		return dateTimeRemoved.split("\\.")[0];
 	}
 
 	/**
