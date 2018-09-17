@@ -11,6 +11,7 @@ import javafx.scene.control.TreeView;
 import org.controlsfx.control.CheckTreeView;
 
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
@@ -44,11 +45,18 @@ public class Controller implements Initializable {
      }
 
     /**
-     * When the remove button is pressed all items selected items in the selected list are removed
+     * When the remove button is pressed all selected items in the selected list are removed
      * from being practised.
      */
     public void removeButtonPressed() {
         ObservableList<String> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
         _selectedList.getItems().removeAll(itemsToDelete);
+     }
+
+    /**
+     * When the randomise button the order of the items in the selected list are shuffled.
+     */
+     public void randomiseButtonPressed() {
+         Collections.shuffle(_selectedList.getItems());
      }
 }
