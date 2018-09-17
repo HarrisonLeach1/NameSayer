@@ -1,20 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.GridPane?>
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="20.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome to NameSayer" textAlignment="CENTER" />
+      <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <items>
+          <AnchorPane prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
+               <children>
+                  <Label fx:id="title" alignment="CENTER" contentDisplay="CENTER" layoutX="260.0" prefHeight="59.0" prefWidth="229.0" text="Welcome to Name Sayer" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="260.0" AnchorPane.rightAnchor="259.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="Roboto Medium" size="16.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="431.0" prefWidth="128.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button id="view_data" fx:id="view_data_btn" layoutY="52.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="View Database" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="menu-view_data" />
+                              <String fx:value="menu" />
+                           </styleClass>
+                        </Button>
+                        <Button id="view_rec" fx:id="view_rec_btn" layoutY="93.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="View Recordings" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="menu" />
+                              <String fx:value="menu-view_rec" />
+                           </styleClass>
+                        </Button>
+                        <Button id="test_mic" fx:id="test_mic_btn" layoutY="130.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="Test Mic" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="130.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="menu" />
+                              <String fx:value="menu-test_mic" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane layoutX="128.0" layoutY="14.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Pane fx:id="rec_pane" prefHeight="433.0" prefWidth="620.0" style="-fx-background-color: #789699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="play_recording_btn" layoutX="373.0" layoutY="159.0" mnemonicParsing="false" prefHeight="79.0" prefWidth="160.0" style="-fx-border-color: white;" styleClass="play" text="Play Recording" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font></Button>
+                              <TreeView fx:id="rec_list" layoutX="94.0" layoutY="71.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="200.0" />
+                              <Label fx:id="rec_label" alignment="CENTER" layoutX="94.0" layoutY="29.0" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #474448;" text="List of Recordings" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="data_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #90A4A8;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="add_btn" layoutX="230.0" layoutY="145.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Add" textFill="WHITE" />
+                              <ListView fx:id="data_list" layoutX="47.0" layoutY="85.0" prefHeight="310.0" prefWidth="170.0" />
+                              <Button id="remove" fx:id="remove_btn" layoutX="230.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Remove" textFill="WHITE" />
+                              <Button id="play_data" fx:id="start_btn" layoutX="518.0" layoutY="145.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
+                              <Button id="randomise" fx:id="random_btn" layoutX="518.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
+                              <Label fx:id="data_label" alignment="CENTER" layoutX="47.0" layoutY="39.0" prefHeight="30.0" prefWidth="170.0" style="-fx-background-color: #474448;" text="Database of Names" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <ListView fx:id="selected_list" layoutX="321.0" layoutY="84.0" prefHeight="310.0" prefWidth="170.0" />
+                              <Label fx:id="selected_label" alignment="CENTER" layoutX="321.0" layoutY="39.0" prefHeight="30.0" prefWidth="170.0" style="-fx-background-color: #474448;" text="Selected Names" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </Pane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
    </children>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-</VBox>
+</AnchorPane>
