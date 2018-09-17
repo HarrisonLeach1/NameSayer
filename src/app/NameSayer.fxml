@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
+<?import org.controlsfx.control.CheckTreeView?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -78,7 +79,7 @@
                         </Pane>
                         <Pane fx:id="data_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #90A4A8;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <TreeView fx:id="_dataList" layoutX="47.0" layoutY="84.0" prefHeight="310.0" prefWidth="170.0" />
+                              <CheckTreeView fx:id="_dataList" layoutX="47.0" layoutY="84.0" prefHeight="310.0" prefWidth="170.0" />
                               <Button fx:id="add_btn" layoutX="230.0" layoutY="145.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Add" textFill="WHITE" />
                               <Button id="remove" fx:id="remove_btn" layoutX="230.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Remove" textFill="WHITE" />
                               <Button id="play_data" fx:id="start_btn" layoutX="518.0" layoutY="145.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />

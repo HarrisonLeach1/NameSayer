@@ -1,6 +1,6 @@
 package app;
 
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.CheckBoxTreeItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,10 +11,10 @@ public class DataModel implements IDataModel{
     private static final File DATABASE = new File("./names");
 
 	@Override
-	public TreeItem<String> getTreeRoot() {
+	public CheckBoxTreeItem<String> getTreeRoot() {
 		File[] files = DATABASE.listFiles();
 
-		TreeItem<String> root = new TreeItem<>();
+		CheckBoxTreeItem<String> root = new CheckBoxTreeItem<>();
 		root.setExpanded(true);
 		// hashmap for storing all different versions (values) asoociated with a specific name (key)
 		HashMap<String, ArrayList<String>> nameTable = getNameTable();
@@ -26,7 +26,7 @@ public class DataModel implements IDataModel{
 			ArrayList<String> versions = nameTable.get(key);
 
 			// create branch for the name
-			TreeItem<String> name = addBranch(key,root);
+			CheckBoxTreeItem<String> name = addBranch(key,root);
 
 			// if multiple versions of the name exist, add children
 			if (versions.size() > 1) {
@@ -79,12 +79,12 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Takes a String and adds it to the tree by making it a TreeItem under the specified parent.
+	 * Takes a String and adds it to the tree by making it a CheckBoxTreeItem under the specified parent.
 	 * @param name
 	 * @param parent
 	 */
-	private TreeItem<String> addBranch(String name, TreeItem<String> parent) {
-		TreeItem<String> item = new TreeItem<>(name);
+	private CheckBoxTreeItem<String> addBranch(String name, CheckBoxTreeItem<String> parent) {
+		CheckBoxTreeItem<String> item = new CheckBoxTreeItem<>(name);
 		item.setExpanded(true);
 		parent.getChildren().add(item);
 		return item;

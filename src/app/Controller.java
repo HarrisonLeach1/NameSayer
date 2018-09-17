@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import org.controlsfx.control.CheckTreeView;
 
 import java.net.URL;
 import java.util.Observable;
@@ -15,7 +16,7 @@ import java.util.ResourceBundle;
 public class Controller implements Initializable {
 
     @FXML
-    private TreeView<String> _dataList;
+    private CheckTreeView<String> _dataList;
 
     IDataModel dataModel = new DataModel();
 
