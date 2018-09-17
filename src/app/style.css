@@ -1,0 +1,73 @@
+.menu {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+}
+.menu-view_data{
+    -fx-background-color: #90A4A8;
+}
+.menu-view_data:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #90A4A8, #BCF4F5);
+}
+.menu-view_rec{
+    -fx-background-color: #789699;
+}
+.menu-view_rec:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #789699, #BCF4F5);
+}
+.menu-test_mic{
+    -fx-background-color: #3E3B3F;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.menu-test_mic:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
+}
+.menu:pressed {
+    -fx-border-color: white;
+}
+.menu Text {
+    -fx-fill: white;
+    -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );
+}
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+.circle{
+    -fx-background-radius: 10em;
+    -fx-min-width: 50px;
+    -fx-min-height: 50px;
+    -fx-max-width: 50px;
+    -fx-max-height: 50px;
+}
+.circle:pressed {
+    -fx-padding: 10 15 13 15;
+    -fx-background-insets: 1 0 0 0,1 0 1 0, 1 0 2 0, 1 0 2 0;
+}
+.play{
+    -fx-background-color:#20BF55;
+}
+.play:hover {
+    -fx-background-color:#22AD4C;
+}
+.next{
+    -fx-background-color:#1b998b;
+}
+.next:hover {
+    -fx-background-color:#2184A5;
+}
+.bad{
+    -fx-background-color:D33030;
+}
+.bad:hover {
+    -fx-background-color:#A04040;
+}
+.sidebar{
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 100% 100%,  #474448 0%, #302A33 100%);
+}
