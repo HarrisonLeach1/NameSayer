@@ -1,10 +1,10 @@
 package app;
 
-import javafx.collections.ObservableList;
+import javafx.scene.control.TreeItem;
 
 public interface IDataModel {
     /**
      * Initialises the model by loading in the Names from the database folder.
      */
-    ObservableList<String> loadData();
+    TreeItem<String> getTreeRoot();
 }
