@@ -1,4 +1,4 @@
-package app;
+package app.model;
 
 import javafx.scene.control.TreeItem;
 
