@@ -35,7 +35,9 @@ public class Controller implements Initializable {
     public void addButtonPressed() {
          List<TreeItem<String>> checkedNames = _dataList.getCheckModel().getCheckedItems();
          for (TreeItem<String> name : checkedNames) {
-             _selectedList.getItems().add(name.getValue());
+             if (name.getChildren().size() < 2) { // if a node is not a leaf, do not add it
+                 _selectedList.getItems().add(name.getValue());
+             }
          }
      }
 }
