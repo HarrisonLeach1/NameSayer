@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -36,8 +37,10 @@ public class MainMenuController implements Initializable {
             Parent playerParent = FXMLLoader.load(getClass().getResource("/app/RecordingScene.fxml"));
             Scene playerScene = new Scene(playerParent);
 
-            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            Stage window = new Stage();
             window.setScene(playerScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.showAndWait();
         }
     }
 

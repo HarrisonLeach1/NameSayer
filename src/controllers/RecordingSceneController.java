@@ -24,12 +24,9 @@ public class RecordingSceneController implements Initializable {
 
     }
 
-    public void handleReturnAction(ActionEvent event) throws IOException {
-        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/NameSayer.fxml"));
-        Scene playerScene = new Scene(playerParent);
-
+    public void handleReturnAction(ActionEvent event){
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
+        window.close();
     }
 
 }
