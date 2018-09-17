@@ -81,7 +81,7 @@
                            <children>
                               <CheckTreeView fx:id="_dataList" layoutX="47.0" layoutY="84.0" prefHeight="310.0" prefWidth="170.0" />
                               <Button fx:id="add_btn" layoutX="230.0" layoutY="145.0" mnemonicParsing="false" onAction="#addButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Add" textFill="WHITE" />
-                              <Button id="remove" fx:id="remove_btn" layoutX="230.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Remove" textFill="WHITE" />
+                              <Button id="remove" fx:id="remove_btn" layoutX="230.0" layoutY="200.0" mnemonicParsing="false" onAction="#removeButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Remove" textFill="WHITE" />
                               <Button id="play_data" fx:id="start_btn" layoutX="518.0" layoutY="145.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
                               <Button id="randomise" fx:id="random_btn" layoutX="518.0" layoutY="200.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
                               <Label fx:id="data_label" alignment="CENTER" layoutX="47.0" layoutY="39.0" prefHeight="30.0" prefWidth="170.0" style="-fx-background-color: #474448;" text="Database of Names" textFill="WHITE">

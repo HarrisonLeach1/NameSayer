@@ -26,6 +26,7 @@ public class Controller implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
          _dataList.setRoot(dataModel.getTreeRoot());
          _dataList.setShowRoot(false);
+         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
      }
 
     /**
@@ -39,5 +40,15 @@ public class Controller implements Initializable {
                  _selectedList.getItems().add(name.getValue());
              }
          }
+         _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
+     }
+
+    /**
+     * When the remove button is pressed all items selected items in the selected list are removed
+     * from being practised.
+     */
+    public void removeButtonPressed() {
+        ObservableList<String> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
+        _selectedList.getItems().removeAll(itemsToDelete);
      }
 }
