@@ -5,18 +5,20 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import org.controlsfx.control.CheckTreeView;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
-    @FXML
-    private CheckTreeView<String> _dataList;
+    @FXML private CheckTreeView<String> _dataList;
+    @FXML private ListView<String> _selectedList;
 
     IDataModel dataModel = new DataModel();
 
@@ -26,10 +28,14 @@ public class Controller implements Initializable {
          _dataList.setShowRoot(false);
      }
 
-    private TreeItem<String> addBranch(String name, TreeItem<String> parent) {
-        TreeItem<String> item = new TreeItem<>(name);
-        parent.getChildren().add(item);
-        return item;
-    }
-
+    /**
+     * When the add button is pressed all checked names in the check tree view are added to the
+     * selected names list.
+     */
+    public void addButtonPressed() {
+         List<TreeItem<String>> checkedNames = _dataList.getCheckModel().getCheckedItems();
+         for (TreeItem<String> name : checkedNames) {
+             _selectedList.getItems().add(name.getValue());
+         }
+     }
 }
