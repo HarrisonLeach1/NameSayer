@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.model.DataModel;
 import app.model.IDataModel;
+import app.model.Name;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,8 +34,8 @@ public class MainMenuController implements Initializable {
     @FXML
     private Button view_data_btn,view_rec_btn,test_mic_btn;
 
-    @FXML private CheckTreeView<String> _dataList;
-    @FXML private ListView<String> _selectedList;
+    @FXML private CheckTreeView<Name> _dataList;
+    @FXML private ListView<Name> _selectedList;
 
     IDataModel dataModel = new DataModel();
 
@@ -75,8 +76,8 @@ public class MainMenuController implements Initializable {
      * selected names list.
      */
     public void addButtonPressed() {
-        List<TreeItem<String>> checkedNames = _dataList.getCheckModel().getCheckedItems();
-        for (TreeItem<String> name : checkedNames) {
+        List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
+        for (TreeItem<Name> name : checkedNames) {
             if (name.getChildren().size() < 2) { // if a node is not a leaf, do not add it
                 _selectedList.getItems().add(name.getValue());
             }
@@ -89,7 +90,7 @@ public class MainMenuController implements Initializable {
      * from being practised.
      */
     public void removeButtonPressed() {
-        ObservableList<String> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
+        ObservableList<Name> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
         _selectedList.getItems().removeAll(itemsToDelete);
     }
 
