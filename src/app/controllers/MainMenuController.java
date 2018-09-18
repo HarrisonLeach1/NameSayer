@@ -3,6 +3,7 @@ package app.controllers;
 import app.model.DataModel;
 import app.model.IDataModel;
 import app.model.Name;
+import app.model.PractiseListModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -63,7 +64,16 @@ public class MainMenuController implements Initializable {
     }
 
     public void handleStartAction(ActionEvent event) throws IOException {
-        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/PlayScene.fxml"));
+        // if no items are selected, do not switch scenes.
+        if(_selectedList.getItems().size() == 0){ return; }
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
+        Parent playerParent = loader.load();
+
+        PlaySceneController controller = loader.getController();
+        controller.initModel(new PractiseListModel(_selectedList.getItems()));
+
         Scene playerScene = new Scene(playerParent);
 
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -100,5 +110,6 @@ public class MainMenuController implements Initializable {
     public void randomiseButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
     }
+
 }
 
