@@ -45,6 +45,10 @@ public class PlaySceneController implements Initializable {
 
     }
 
+    public void playButtonPressed() {
+        _practiseListModel.getCurrentName().playRecording();
+    }
+
     public void handleReturnAction(ActionEvent event) throws IOException {
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);

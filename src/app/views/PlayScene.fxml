@@ -41,7 +41,7 @@
                         <String fx:value="play" />
                      </styleClass>
                      <graphic>
-                        <ImageView fitHeight="55.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="55.0" fitWidth="42.0" onMouseClicked="#playButtonPressed" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/play.png" />
                            </image>
