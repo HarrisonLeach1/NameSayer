@@ -24,4 +24,8 @@ public class PractiseListModel implements IPractiseListModel{
     public Name getCurrentName() {
         return _currentName;
     }
+
+    public boolean hasNext() {
+        return _listIterator.hasNext();
+    }
 }

@@ -11,6 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,8 +21,8 @@ import java.util.ResourceBundle;
 
 public class PlaySceneController implements Initializable {
 
-    @FXML
-    private Button play_btn,next_btn,bad_btn,return_btn;
+    @FXML private Button play_btn,next_btn,bad_btn,return_btn;
+    @FXML private Label _displayName;
 
     private IPractiseListModel _practiseListModel;
 
@@ -32,8 +33,17 @@ public class PlaySceneController implements Initializable {
 
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
+        _displayName.setText("Name: " + _practiseListModel.nextName().toString());
     }
 
+    public void nextButtonPressed() {
+        if (_practiseListModel.hasNext()) {
+            _displayName.setText("Name: " + _practiseListModel.nextName().toString());
+        } else {
+            // missing code to handle end of list reached
+        }
+
+    }
 
     public void handleReturnAction(ActionEvent event) throws IOException {
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));

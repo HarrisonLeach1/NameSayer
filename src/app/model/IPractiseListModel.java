@@ -6,4 +6,6 @@ public interface IPractiseListModel {
 
     Name getCurrentName();
 
+    boolean hasNext();
+
 }
