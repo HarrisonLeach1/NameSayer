@@ -29,7 +29,7 @@ public class Recording {
 
     public Name createRecording() {
         try {
-            String cmd = "ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
+            String cmd = "mkdir -p userRecordings/;ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();

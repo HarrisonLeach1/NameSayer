@@ -1,7 +1,6 @@
 package app.model;
 
 import javafx.scene.control.CheckBoxTreeItem;
-import javafx.scene.control.TreeItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
 
 	@Override
-	public TreeItem<Name> getTreeRoot() {
+	public CheckBoxTreeItem<Name> getTreeRoot() {
 		CheckBoxTreeItem<Name> root = new CheckBoxTreeItem<>();
 		root.setExpanded(true);
 		// hashmap for storing all different versions (values) associated with a specific name (key)

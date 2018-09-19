@@ -20,7 +20,7 @@ public class PractiseListModel implements IPractiseListModel{
     }
 
     public Name nextName() {
-        if (!_keepRecording) {
+        if (_currentUserRecording != null && !_keepRecording) {
             _currentUserRecording.deleteRecording();
         }
         _keepRecording = false;
