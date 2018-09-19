@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Recording {
 
+    private static final String USER_DATABASE = "./userRecordings/";
     private static final int RECORD_TIME = 5;
     private final String _fileName;
 
@@ -13,7 +14,7 @@ public class Recording {
         Date date = new Date();
         String dateTime = formatter.format(date);
 
-        _fileName = "userRecordings/"+ dateTime + "_" + name + ".wav";
+        _fileName = USER_DATABASE + dateTime + "_" + name + ".wav";
     }
 
     public void deleteRecording() {
@@ -29,7 +30,7 @@ public class Recording {
 
     public Name createRecording() {
         try {
-            String cmd = "mkdir -p userRecordings/;ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
+            String cmd = "mkdir -p " + USER_DATABASE+ "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();

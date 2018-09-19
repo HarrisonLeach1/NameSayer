@@ -52,7 +52,7 @@
                         <String fx:value="next" />
                         <String fx:value="menu" />
                      </styleClass></Button>
-                  <Button fx:id="compare_btn" layoutX="339.0" layoutY="365.0" mnemonicParsing="false" prefWidth="70.0" text="Compare" textFill="WHITE">
+                  <Button fx:id="compare_btn" layoutX="339.0" layoutY="365.0" mnemonicParsing="false" onAction="#compareButtonPressed" prefWidth="70.0" text="Compare" textFill="WHITE">
                      <styleClass>
                         <String fx:value="next" />
                         <String fx:value="menu" />

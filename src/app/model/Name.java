@@ -54,7 +54,7 @@ public class Name {
             in = new FileInputStream(_fileName);
             AudioStream audioStream = new AudioStream(in);
             AudioPlayer.player.start(audioStream);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

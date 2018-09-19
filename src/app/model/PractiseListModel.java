@@ -48,4 +48,16 @@ public class PractiseListModel implements IPractiseListModel{
         _currentUserCreatedName = _currentUserRecording.createRecording();
     }
 
+    public void compareUserRecording() {
+        if (_currentUserCreatedName == null) { return; }
+
+        _currentUserCreatedName.playRecording();
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        _currentName.playRecording();
+    }
+
 }

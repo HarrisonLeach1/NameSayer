@@ -12,4 +12,6 @@ public interface IPractiseListModel {
 
     void keepRecording();
 
+    void compareUserRecording();
+
 }
