@@ -35,13 +35,13 @@
                         <Font size="40.0" />
                      </font>
                   </Label>
-                  <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" layoutX="249.0" layoutY="297.0" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
+                  <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" layoutX="249.0" layoutY="297.0" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
                      <styleClass>
                         <String fx:value="circle" />
                         <String fx:value="play" />
                      </styleClass>
                      <graphic>
-                        <ImageView fitHeight="55.0" fitWidth="42.0" onMouseClicked="#playButtonPressed" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="55.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@images/play.png" />
                            </image>

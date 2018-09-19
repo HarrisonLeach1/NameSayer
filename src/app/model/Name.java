@@ -1,5 +1,14 @@
 package app.model;
 
+import app.Main;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+
+import java.io.*;
+
 public class Name {
     private String _shortName, _versionName, _fileName;
 
@@ -37,5 +46,17 @@ public class Name {
     @Override
     public String toString() {
         return _versionName;
+    }
+
+    public void playRecording() {
+        System.out.println("playing" + _fileName);
+        InputStream in = null;
+        try {
+            in = new FileInputStream("names/" + _fileName);
+            AudioStream audioStream = new AudioStream(in);
+            AudioPlayer.player.start(audioStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
