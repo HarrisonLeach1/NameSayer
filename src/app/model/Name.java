@@ -49,10 +49,9 @@ public class Name {
     }
 
     public void playRecording() {
-        System.out.println("playing" + _fileName);
-        InputStream in = null;
+        InputStream in;
         try {
-            in = new FileInputStream("names/" + _fileName);
+            in = new FileInputStream(DataModel.DATABASE + _fileName);
             AudioStream audioStream = new AudioStream(in);
             AudioPlayer.player.start(audioStream);
         } catch (IOException e) {

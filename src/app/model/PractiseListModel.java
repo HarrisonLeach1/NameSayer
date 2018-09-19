@@ -21,11 +21,14 @@ public class PractiseListModel implements IPractiseListModel{
         return _currentName;
     }
 
-    public Name getCurrentName() {
-        return _currentName;
+    public void playCurrentName() {
+        if (_currentName != null) {
+            _currentName.playRecording();
+        }
     }
 
     public boolean hasNext() {
         return _listIterator.hasNext();
     }
+
 }

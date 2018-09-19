@@ -46,7 +46,7 @@ public class PlaySceneController implements Initializable {
     }
 
     public void playButtonPressed() {
-        _practiseListModel.getCurrentName().playRecording();
+        _practiseListModel.playCurrentName();
     }
 
     public void handleReturnAction(ActionEvent event) throws IOException {

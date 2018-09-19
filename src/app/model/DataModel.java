@@ -9,8 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class DataModel implements IDataModel{
-    private static final File DATABASE = new File("./names");
-
+    public static final String DATABASE = "./names/";
 
 	@Override
 	public TreeItem<Name> getTreeRoot() {
@@ -53,7 +52,7 @@ public class DataModel implements IDataModel{
 	private HashMap<String, ArrayList<Name>> getNameTable() {
 		HashMap<String, ArrayList<Name>> nameTable = new HashMap<>();
 
-		File[] files = DATABASE.listFiles();
+		File[] files = new File(DATABASE).listFiles();
 
 		// loop through files to add recordings to table
  		for (File file : files) {

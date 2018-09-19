@@ -4,7 +4,7 @@ public interface IPractiseListModel {
 
     Name nextName();
 
-    Name getCurrentName();
+    void playCurrentName();
 
     boolean hasNext();
 
