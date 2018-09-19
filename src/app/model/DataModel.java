@@ -59,7 +59,7 @@ public class DataModel implements IDataModel{
 			if (file.isFile()) {
 
 				// retrieve full file name and create a name object from it
-				Name name = new Name(file.getName());
+				Name name = new Name(DATABASE + file.getName());
 
 				// if other versions of the same name exist, add to the list
 				if (nameTable.containsKey(name.getShortName())) {

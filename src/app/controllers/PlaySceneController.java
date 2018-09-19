@@ -45,6 +45,16 @@ public class PlaySceneController implements Initializable {
 
     }
 
+    public void keepButtonPressed() {
+        _practiseListModel.keepRecording();
+    }
+
+    public void recordButtonPressed() {
+        _practiseListModel.createUserRecording();
+
+    }
+
+
     public void playButtonPressed() {
         _practiseListModel.playCurrentName();
     }

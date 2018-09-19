@@ -8,4 +8,8 @@ public interface IPractiseListModel {
 
     boolean hasNext();
 
+    void createUserRecording();
+
+    void keepRecording();
+
 }

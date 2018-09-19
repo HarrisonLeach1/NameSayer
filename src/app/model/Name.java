@@ -51,7 +51,7 @@ public class Name {
     public void playRecording() {
         InputStream in;
         try {
-            in = new FileInputStream(DataModel.DATABASE + _fileName);
+            in = new FileInputStream(_fileName);
             AudioStream audioStream = new AudioStream(in);
             AudioPlayer.player.start(audioStream);
         } catch (IOException e) {

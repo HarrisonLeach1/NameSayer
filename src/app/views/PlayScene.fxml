@@ -47,7 +47,7 @@
                            </image>
                         </ImageView>
                      </graphic></Button>
-                  <Button fx:id="record_btn" layoutX="239.0" layoutY="365.0" mnemonicParsing="false" prefWidth="70.0" text="Record" textFill="WHITE">
+                  <Button fx:id="record_btn" layoutX="239.0" layoutY="365.0" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="70.0" text="Record" textFill="WHITE">
                      <styleClass>
                         <String fx:value="next" />
                         <String fx:value="menu" />
@@ -57,7 +57,7 @@
                         <String fx:value="next" />
                         <String fx:value="menu" />
                      </styleClass></Button>
-                  <Button fx:id="keep_btn" layoutX="439.0" layoutY="365.0" mnemonicParsing="false" prefWidth="70.0" text="Keep" textFill="WHITE">
+                  <Button fx:id="keep_btn" layoutX="439.0" layoutY="365.0" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="70.0" text="Keep" textFill="WHITE">
                      <styleClass>
                         <String fx:value="next" />
                         <String fx:value="menu" />
