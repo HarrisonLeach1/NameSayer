@@ -109,5 +109,12 @@ public class MainMenuController implements Initializable {
         Collections.shuffle(_selectedList.getItems());
     }
 
+    public void playButtonPressed() {
+        Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem();
+        if(currentUserRecording != null) {
+            currentUserRecording.playRecording();
+        }
+
+    }
 }
 

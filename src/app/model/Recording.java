@@ -2,10 +2,10 @@ package app.model;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import static app.model.UserRecordingsModel.USER_DATABASE;
 
 public class Recording {
 
-    private static final String USER_DATABASE = "./userRecordings/";
     private static final int RECORD_TIME = 5;
     private final String _fileName;
 
@@ -14,7 +14,7 @@ public class Recording {
         Date date = new Date();
         String dateTime = formatter.format(date);
 
-        _fileName = USER_DATABASE + dateTime + "_" + name + ".wav";
+        _fileName = USER_DATABASE + "se206_" + dateTime + "_" + name + ".wav";
     }
 
     public void deleteRecording() {
