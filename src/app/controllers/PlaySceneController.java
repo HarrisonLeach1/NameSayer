@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.ResourceBundle;
 
 public class PlaySceneController implements Initializable {
 
-    @FXML private Button play_btn,next_btn,bad_btn,return_btn;
+    @FXML private Button play_btn,next_btn,bad_btn,return_btn,keep_btn, compare_btn;
     @FXML private Label _displayName;
 
     private IPractiseListModel _practiseListModel;
@@ -42,6 +43,10 @@ public class PlaySceneController implements Initializable {
         } else {
             // missing code to handle end of list reached
         }
+
+        keep_btn.setDisable(true);
+        compare_btn.setDisable(true);
+
     }
 
     public void previousButtonPressed() {
@@ -56,6 +61,24 @@ public class PlaySceneController implements Initializable {
 
     public void recordButtonPressed() {
         _practiseListModel.createUserRecording();
+
+        Parent playerParent = null;
+
+        try {
+            playerParent = FXMLLoader.load(getClass().getResource("/app/views/RecordingScene.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Scene playerScene = new Scene(playerParent);
+
+        Stage window = new Stage();
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
+
+        keep_btn.setDisable(false);
+        compare_btn.setDisable(false);
 
     }
 
