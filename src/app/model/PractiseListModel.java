@@ -1,6 +1,7 @@
 package app.model;
 
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.util.ListIterator;
 
@@ -12,6 +13,12 @@ public class PractiseListModel implements IPractiseListModel{
     private boolean _keepRecording;
     private Recording _currentUserRecording;
     private Name _currentUserCreatedName;
+    private boolean nextCalled;
+    private boolean prevCalled;
+
+    Task compareWorker;
+
+
 
     public PractiseListModel(ObservableList<Name> practiseList) {
         _practiseList = practiseList;
@@ -19,24 +26,10 @@ public class PractiseListModel implements IPractiseListModel{
         _currentName = _practiseList.get(0);
     }
 
-    public Name nextName() {
-        if (_currentUserRecording != null && !_keepRecording) {
-            _currentUserRecording.deleteRecording();
-        }
-        _keepRecording = false;
-
-        _currentName = _listIterator.next();
-        return _currentName;
-    }
-
     public void playCurrentName() {
         if (_currentName != null) {
             _currentName.playRecording();
         }
-    }
-
-    public boolean hasNext() {
-        return _listIterator.hasNext();
     }
 
     public void keepRecording(){
@@ -51,13 +44,80 @@ public class PractiseListModel implements IPractiseListModel{
     public void compareUserRecording() {
         if (_currentUserCreatedName == null) { return; }
 
-        _currentUserCreatedName.playRecording();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        compareWorker = compareWorker();
+        new Thread(compareWorker).start();
+
+    }
+
+    public boolean hasNext() {
+        return _listIterator.hasNext();
+    }
+
+    public Name nextName() {
+        if (hasNext()) {
+            if (_currentUserRecording != null && !_keepRecording) {
+                _currentUserRecording.deleteRecording();
+            }
+
+            _keepRecording = false;
+
+            nextCalled = true;
+            if(prevCalled) {
+                _listIterator.next();
+                prevCalled = false;
+            }
+
+            _currentName = _listIterator.next();
         }
-        _currentName.playRecording();
+
+        return _currentName;
+    }
+
+    public boolean hasPrevious() {
+        return _listIterator.hasPrevious();
+    }
+
+    public Name previousName() {
+        if (hasPrevious()) {
+            if (_currentUserRecording != null && !_keepRecording) {
+                _currentUserRecording.deleteRecording();
+            }
+
+            _keepRecording = false;
+
+            prevCalled = true;
+            if(nextCalled) {
+                _listIterator.previous();
+                nextCalled = false;
+            }
+
+            _currentName = _listIterator.previous();
+        }
+
+        return _currentName;
+    }
+
+    public void cancelRecording(){
+        _currentUserRecording.cancelRecording();
+        _currentUserRecording.deleteRecording();
+    }
+
+    private Task compareWorker() {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                _currentUserCreatedName.playRecording();
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                _currentName.playRecording();
+                return true;
+            }
+        };
+
     }
 
 }

@@ -4,6 +4,8 @@ import sun.audio.AudioStream;
 
 import java.io.*;
 
+import static app.model.UserRecordingsModel.USER_DATABASE;
+
 public class Name {
     private String _shortName, _versionName, _fileName;
 
@@ -44,12 +46,13 @@ public class Name {
     }
 
     public void playRecording() {
-        InputStream in;
         try {
-            in = new FileInputStream(_fileName);
-            AudioStream audioStream = new AudioStream(in);
-            AudioPlayer.player.start(audioStream);
-        } catch (Exception e) {
+            String cmd = "ffplay " + _fileName + " -autoexit -nodisp";
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

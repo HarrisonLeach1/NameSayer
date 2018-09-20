@@ -14,4 +14,10 @@ public interface IPractiseListModel {
 
     void compareUserRecording();
 
+    boolean hasPrevious();
+
+    Name previousName();
+
+    void cancelRecording();
+
 }
