@@ -98,4 +98,8 @@ public class PractiseListModel implements IPractiseListModel{
         return _currentName;
     }
 
+    public void cancelRecording(){
+        _currentUserRecording.cancelRecording();
+    }
+
 }

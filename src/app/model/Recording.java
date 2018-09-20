@@ -8,6 +8,7 @@ public class Recording {
 
     private static final int RECORD_TIME = 5;
     private final String _fileName;
+    private Process process;
 
     public Recording(String name) {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
@@ -33,11 +34,15 @@ public class Recording {
             String cmd = "mkdir -p " + USER_DATABASE+ "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
+            process = builder.start();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         return new Name(_fileName);
+    }
+
+    public void cancelRecording() {
+        process.destroy();
     }
 }

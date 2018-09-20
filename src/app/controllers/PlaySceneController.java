@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.model.IPractiseListModel;
 import app.model.Name;
+import app.model.PractiseListModel;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -60,15 +61,18 @@ public class PlaySceneController implements Initializable {
     }
 
     public void recordButtonPressed() {
-        _practiseListModel.createUserRecording();
-
         Parent playerParent = null;
+        FXMLLoader loader = new FXMLLoader();
 
         try {
-            playerParent = FXMLLoader.load(getClass().getResource("/app/views/RecordingScene.fxml"));
+            loader.setLocation(getClass().getResource("/app/views/RecordingScene.fxml"));
+            playerParent = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        RecordingSceneController controller = loader.getController();
+        controller.initModel(_practiseListModel);
 
         Scene playerScene = new Scene(playerParent);
 

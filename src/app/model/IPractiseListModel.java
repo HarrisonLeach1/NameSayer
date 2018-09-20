@@ -18,4 +18,6 @@ public interface IPractiseListModel {
 
     Name previousName();
 
+    void cancelRecording();
+
 }

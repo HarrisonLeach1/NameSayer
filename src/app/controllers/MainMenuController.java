@@ -40,6 +40,7 @@ public class MainMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         _dataList.setRoot(dataModel.loadDatabase());
         _dataList.setShowRoot(false);
+        _dataList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 
     public void handleMenuAction(ActionEvent event) throws IOException {
