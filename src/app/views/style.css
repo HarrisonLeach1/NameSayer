@@ -48,24 +48,24 @@
 .circle:pressed {
     -fx-padding: 10 15 13 15;
     -fx-background-insets: 1 0 0 0,1 0 1 0, 1 0 2 0, 1 0 2 0;
-}
+ }
 .play{
-    -fx-background-color:#20BF55;
+    -fx-background-color:green;
 }
 .play:hover {
     -fx-background-color:#22AD4C;
 }
 .next{
-    -fx-background-color:#1b998b;
+    -fx-background-color:purple;
 }
 .next:hover {
-    -fx-background-color:#2184A5;
+    -fx-background-color:#FF00FF;
 }
 .bad{
-    -fx-background-color:D33030;
+    -fx-background-color:red;
 }
 .bad:hover {
-    -fx-background-color:#A04040;
+    -fx-background-color:#F94343;
 }
 .sidebar{
     -fx-background-color:

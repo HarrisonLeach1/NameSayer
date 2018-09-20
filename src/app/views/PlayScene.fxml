@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
@@ -13,9 +9,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -30,72 +28,110 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Label fx:id="_displayName" alignment="CENTER" layoutY="58.0" prefHeight="170.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Name:" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <Label fx:id="_displayName" alignment="CENTER" layoutY="58.0" prefHeight="170.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Name: name" textFill="WHITE" AnchorPane.bottomAnchor="205.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="58.0">
                      <font>
                         <Font size="40.0" />
                      </font>
                   </Label>
-                  <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" layoutX="249.0" layoutY="297.0" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
-                     <styleClass>
-                        <String fx:value="circle" />
-                        <String fx:value="play" />
-                     </styleClass>
-                     <graphic>
-                        <ImageView fitHeight="55.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/play.png" />
-                           </image>
-                        </ImageView>
-                     </graphic></Button>
-                  <Button fx:id="record_btn" layoutX="239.0" layoutY="365.0" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="70.0" text="Record" textFill="WHITE">
-                     <styleClass>
-                        <String fx:value="next" />
-                        <String fx:value="menu" />
-                     </styleClass></Button>
-                  <Button fx:id="compare_btn" layoutX="339.0" layoutY="365.0" mnemonicParsing="false" onAction="#compareButtonPressed" prefWidth="70.0" text="Compare" textFill="WHITE">
-                     <styleClass>
-                        <String fx:value="next" />
-                        <String fx:value="menu" />
-                     </styleClass></Button>
-                  <Button fx:id="keep_btn" layoutX="439.0" layoutY="365.0" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="70.0" text="Keep" textFill="WHITE">
-                     <styleClass>
-                        <String fx:value="next" />
-                        <String fx:value="menu" />
-                     </styleClass></Button>
-                  <Button fx:id="next_btn" layoutX="349.0" layoutY="297.0" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" onAction="#nextButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Next" textFill="WHITE">
-                     <styleClass>
-                        <String fx:value="circle" />
-                        <String fx:value="next" />
-                     </styleClass>
-                     <font>
-                        <Font name="System Bold" size="13.0" />
-                     </font>
-                  </Button>
-                  <Button fx:id="bad_btn" layoutX="449.0" layoutY="297.0" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
-                     <styleClass>
-                        <String fx:value="circle" />
-                        <String fx:value="bad" />
-                     </styleClass>
-                     <graphic>
-                        <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@images/down.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="return_btn" layoutX="648.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleReturnAction" stylesheets="@style.css" text="Return to Menu" textFill="WHITE">
+                  <Button fx:id="return_btn" layoutX="648.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleReturnAction" stylesheets="@style.css" text="Return to Menu" textFill="WHITE" AnchorPane.rightAnchor="0.0">
                      <styleClass>
                         <String fx:value="menu-test_mic" />
                         <String fx:value="menu" />
                      </styleClass>
                   </Button>
-                  <Slider fx:id="volume_slider" layoutX="304.0" layoutY="262.0" />
-                  <Label alignment="CENTER" layoutX="349.0" layoutY="241.0" prefHeight="21.0" text="Volume" textFill="WHITE">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                  </Label>
+                  <VBox alignment="CENTER" layoutY="228.0" prefHeight="206.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <VBox alignment="CENTER" prefHeight="108.0" prefWidth="748.0">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="21.0" text="Volume" textFill="WHITE">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                              </Label>
+                              <Slider fx:id="volume_slider" maxWidth="200.0" prefHeight="31.0" prefWidth="200.0" />
+                           </children>
+                        </VBox>
+                        <HBox alignment="CENTER" prefHeight="93.0" prefWidth="748.0" spacing="45.0">
+                           <children>
+                              <Button fx:id="prev_btn" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Prev" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="circle" />
+                                    <String fx:value="next" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="circle" />
+                                    <String fx:value="play" />
+                                 </styleClass>
+                                 <graphic>
+                                    <ImageView fitHeight="55.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/play.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="next_btn" mnemonicParsing="false" onAction="#nextButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Next" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="circle" />
+                                    <String fx:value="next" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="bad_btn" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="circle" />
+                                    <String fx:value="bad" />
+                                 </styleClass>
+                                 <graphic>
+                                    <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/down.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                           </children>
+                           <padding>
+                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER" prefHeight="111.0" prefWidth="748.0" spacing="30.0">
+                           <children>
+                              <Button fx:id="record_btn" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="70.0" style="-fx-background-color: #283044;" text="Record" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="next" />
+                                    <String fx:value="menu" />
+                                 </styleClass>
+                              </Button>
+                              <Button fx:id="compare_btn" disable="true" mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #283044;" text="Compare" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="next" />
+                                    <String fx:value="menu" />
+                                 </styleClass>
+                              </Button>
+                              <Button fx:id="keep_btn" disable="true" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="70.0" style="-fx-background-color: #283044;" text="Keep" textFill="WHITE">
+                                 <styleClass>
+                                    <String fx:value="next" />
+                                    <String fx:value="menu" />
+                                 </styleClass>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="30.0" top="20.0" />
+                     </padding>
+                  </VBox>
                </children>
             </AnchorPane>
         </items>
