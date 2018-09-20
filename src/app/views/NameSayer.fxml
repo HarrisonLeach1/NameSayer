@@ -33,7 +33,7 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                                  <children>
-                                    <TreeView fx:id="rec_list" maxWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="80.0" />
+                                    <ListView fx:id="rec_list" maxWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="80.0" />
                                     <Label fx:id="rec_label" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #474448;" text="List of Recordings" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
                                        <font>
                                           <Font size="15.0" />

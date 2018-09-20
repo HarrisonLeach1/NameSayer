@@ -8,5 +8,5 @@ public interface IDataModel {
     /**
      * Initialises the model by loading in the Names from the database folder.
      */
-    CheckBoxTreeItem<Name> getTreeRoot();
+    CheckBoxTreeItem<Name> loadDatabase();
 }

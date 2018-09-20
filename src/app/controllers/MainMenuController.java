@@ -1,9 +1,6 @@
 package app.controllers;
 
-import app.model.DataModel;
-import app.model.IDataModel;
-import app.model.Name;
-import app.model.PractiseListModel;
+import app.model.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,10 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -29,28 +23,32 @@ import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
 
-    @FXML
-    private Pane data_pane, rec_pane;
+    @FXML private Pane data_pane, rec_pane;
 
-    @FXML
-    private Button view_data_btn,view_rec_btn,test_mic_btn;
+    @FXML private Button view_data_btn,view_rec_btn,test_mic_btn;
 
     @FXML private CheckTreeView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
+    @FXML private ListView<Name> rec_list;
 
-    IDataModel dataModel = new DataModel();
+
+    private IDataModel dataModel = new DataModel();
+    private IUserRecordingsModel userRecordingsModel = new UserRecordingsModel();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _dataList.setRoot(dataModel.getTreeRoot());
+        _dataList.setRoot(dataModel.loadDatabase());
         _dataList.setShowRoot(false);
-        _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     public void handleMenuAction(ActionEvent event) throws IOException {
         if(event.getSource() == view_data_btn){
             data_pane.toFront();
         } else if(event.getSource() == view_rec_btn){
+            userRecordingsModel.loadUserRecordings();
+            if (rec_list.getItems() != null) {rec_list.getItems().clear();};
+            rec_list.getItems().addAll(userRecordingsModel.getRecordingsList());
             rec_pane.toFront();
         } else if(event.getSource() == test_mic_btn){
             Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/RecordingScene.fxml"));

@@ -11,7 +11,7 @@ public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
 
 	@Override
-	public CheckBoxTreeItem<Name> getTreeRoot() {
+	public CheckBoxTreeItem<Name> loadDatabase() {
 		CheckBoxTreeItem<Name> root = new CheckBoxTreeItem<>();
 		root.setExpanded(true);
 		// hashmap for storing all different versions (values) associated with a specific name (key)
