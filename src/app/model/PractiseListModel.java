@@ -1,6 +1,7 @@
 package app.model;
 
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 
 import java.util.ListIterator;
 
@@ -14,6 +15,8 @@ public class PractiseListModel implements IPractiseListModel{
     private Name _currentUserCreatedName;
     private boolean nextCalled;
     private boolean prevCalled;
+
+    Task compareWorker;
 
 
 
@@ -41,13 +44,9 @@ public class PractiseListModel implements IPractiseListModel{
     public void compareUserRecording() {
         if (_currentUserCreatedName == null) { return; }
 
-        _currentUserCreatedName.playRecording();
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        _currentName.playRecording();
+        compareWorker = compareWorker();
+        new Thread(compareWorker).start();
+
     }
 
     public boolean hasNext() {
@@ -100,6 +99,25 @@ public class PractiseListModel implements IPractiseListModel{
 
     public void cancelRecording(){
         _currentUserRecording.cancelRecording();
+        _currentUserRecording.deleteRecording();
+    }
+
+    private Task compareWorker() {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                _currentUserCreatedName.playRecording();
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                _currentName.playRecording();
+                return true;
+            }
+        };
+
     }
 
 }

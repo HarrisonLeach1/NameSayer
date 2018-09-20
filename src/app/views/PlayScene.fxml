@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -13,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -53,7 +59,7 @@
                         </VBox>
                         <HBox alignment="CENTER" prefHeight="93.0" prefWidth="748.0" spacing="45.0">
                            <children>
-                              <Button fx:id="prev_btn" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" onAction="#previousButtonPressed" stylesheets="@style.css" text="Prev" textFill="WHITE">
+                              <Button fx:id="prev_btn" mnemonicParsing="false" onAction="#previousButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Prev" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="circle" />
                                     <String fx:value="next" />
@@ -113,7 +119,7 @@
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
-                              <Button fx:id="compare_btn" disable="true" mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #283044;" text="Compare" textFill="WHITE">
+                              <Button fx:id="compare_btn" disable="true" mnemonicParsing="false" onAction="#compareButtonPressed" prefWidth="70.0" style="-fx-background-color: #283044;" text="Compare" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="next" />
                                     <String fx:value="menu" />
