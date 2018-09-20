@@ -42,7 +42,12 @@ public class PlaySceneController implements Initializable {
         } else {
             // missing code to handle end of list reached
         }
+    }
 
+    public void previousButtonPressed() {
+        if (_practiseListModel.hasPrevious()) {
+            _displayName.setText("Name: " + _practiseListModel.previousName().toString());
+        }
     }
 
     public void keepButtonPressed() {

@@ -53,7 +53,7 @@
                         </VBox>
                         <HBox alignment="CENTER" prefHeight="93.0" prefWidth="748.0" spacing="45.0">
                            <children>
-                              <Button fx:id="prev_btn" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Prev" textFill="WHITE">
+                              <Button fx:id="prev_btn" mnemonicParsing="false" prefHeight="50.0" prefWidth="50.0" onAction="#previousButtonPressed" stylesheets="@style.css" text="Prev" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="circle" />
                                     <String fx:value="next" />
