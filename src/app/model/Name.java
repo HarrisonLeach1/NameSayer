@@ -1,10 +1,6 @@
 package app.model;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 
 import java.io.*;
-
-import static app.model.UserRecordingsModel.USER_DATABASE;
 
 public class Name {
     private String _shortName, _versionName, _fileName;

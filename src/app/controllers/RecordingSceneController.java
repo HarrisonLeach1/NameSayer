@@ -31,11 +31,6 @@ public class RecordingSceneController implements Initializable {
         cancel_btn.setDisable(true);
     }
 
-    public void handleReturnAction(ActionEvent event){
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.close();
-    }
-
     public void startButtonPressed() {
         _practiseListModel.createUserRecording();
 
@@ -46,6 +41,11 @@ public class RecordingSceneController implements Initializable {
 
         progressBar.progressProperty().unbind();
         progressBar.progressProperty().bind(recordWorker.progressProperty());
+
+        recordWorker.setOnSucceeded(event -> {
+            Stage window = (Stage)cancel_btn.getScene().getWindow();
+            window.close();
+        });
 
         new Thread(recordWorker).start();
     }
@@ -59,6 +59,9 @@ public class RecordingSceneController implements Initializable {
         progressBar.setProgress(0);
 
         _practiseListModel.cancelRecording();
+
+        Stage window = (Stage)cancel_btn.getScene().getWindow();
+        window.close();
     }
 
     public Task startWorker() {

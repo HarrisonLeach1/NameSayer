@@ -2,7 +2,8 @@ package app.model;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import static app.model.UserRecordingsModel.USER_DATABASE;
+
+import static app.model.DataModel.USER_DATABASE;
 
 public class Recording {
 

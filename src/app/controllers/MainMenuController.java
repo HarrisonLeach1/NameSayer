@@ -30,7 +30,6 @@ public class MainMenuController implements Initializable {
 
 
     private IDataModel dataModel = new DataModel();
-    private IUserRecordingsModel userRecordingsModel = new UserRecordingsModel();
 
 
     @Override
