@@ -7,7 +7,7 @@ import static app.model.DataModel.USER_DATABASE;
 
 public class Recording {
 
-    private static final int RECORD_TIME = 5;
+    public static final int RECORD_TIME = 5;
     private final String _fileName;
     private Process process;
 
