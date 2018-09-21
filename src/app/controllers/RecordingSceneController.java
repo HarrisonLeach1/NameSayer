@@ -51,7 +51,7 @@ public class RecordingSceneController implements Initializable {
 
         // bind worker to display progress bar updates
         progressBar.progressProperty().unbind();
-        progressBar.progressProperty().bind(recordWorker.progressProperty();
+        progressBar.progressProperty().bind(recordWorker.progressProperty());
 
         // when the specified recording time is finished, close the window
         recordWorker.setOnSucceeded(event -> {
@@ -79,6 +79,10 @@ public class RecordingSceneController implements Initializable {
         window.close();
     }
 
+    /**
+     * Task which updates the progress bar for the specified recording time.
+     * Should be executed on a new Thread.
+     */
     public Task startWorker() {
         return new Task() {
 
