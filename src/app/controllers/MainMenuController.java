@@ -76,8 +76,8 @@ public class MainMenuController implements Initializable {
 
 
     /**
-     * When the add button is pressed all checked names in the check tree view are added to the
-     * selected names list.
+     * All checked items in the CheckTreeView are added to the selected list of names
+     * to be practised by the user
      */
     public void addButtonPressed() {
         List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
@@ -90,8 +90,7 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * When the remove button is pressed all selected items in the selected list are removed
-     * from being practised.
+     * All selected items in the selected list are removed from the selected list.
      */
     public void removeButtonPressed() {
         ObservableList<Name> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
@@ -99,12 +98,15 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * When the randomise button the order of the items in the selected list are shuffled.
+     * The order of the Name items in the selected list of Names is shuffled randomly
      */
     public void randomiseButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
     }
 
+    /**
+     * Plays the currently selected user recording in the list of user recordings.
+     */
     public void playButtonPressed() {
         Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem().getValue();
         if(currentUserRecording != null) {
