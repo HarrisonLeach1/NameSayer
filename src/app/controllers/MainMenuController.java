@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckTreeView;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -24,12 +23,10 @@ import java.util.ResourceBundle;
 public class MainMenuController implements Initializable {
 
     @FXML private Pane data_pane, rec_pane;
-
     @FXML private Button view_data_btn,view_rec_btn,test_mic_btn;
-
     @FXML private CheckTreeView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
-    @FXML private ListView<Name> rec_list;
+    @FXML private TreeView<Name> rec_list;
 
 
     private IDataModel dataModel = new DataModel();
@@ -47,9 +44,8 @@ public class MainMenuController implements Initializable {
         if(event.getSource() == view_data_btn){
             data_pane.toFront();
         } else if(event.getSource() == view_rec_btn){
-            userRecordingsModel.loadUserRecordings();
-            if (rec_list.getItems() != null) {rec_list.getItems().clear();};
-            rec_list.getItems().addAll(userRecordingsModel.getRecordingsList());
+            rec_list.setRoot(dataModel.loadUserDatabase());
+            rec_list.setShowRoot(false);
             rec_pane.toFront();
         } else if(event.getSource() == test_mic_btn){
             Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/RecordingScene.fxml"));
@@ -111,7 +107,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void playButtonPressed() {
-        Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem();
+        Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem().getValue();
         if(currentUserRecording != null) {
             currentUserRecording.playRecording();
         }
