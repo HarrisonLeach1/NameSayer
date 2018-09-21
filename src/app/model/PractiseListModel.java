@@ -8,36 +8,25 @@ import java.util.ListIterator;
 public class PractiseListModel implements IPractiseListModel{
 
     private ObservableList<Name> _practiseList;
-    private ListIterator<Name> _listIterator;
-    private Name _currentName;
-    private boolean _keepRecording;
     private Recording _currentUserRecording;
     private Name _currentUserCreatedName;
-    private boolean nextCalled;
-    private boolean prevCalled;
+    private int _currentIndex;
+
 
     Task compareWorker;
 
 
-
     public PractiseListModel(ObservableList<Name> practiseList) {
         _practiseList = practiseList;
-        _listIterator = _practiseList.listIterator();
-        _currentName = _practiseList.get(0);
+        _currentIndex = -1;
     }
 
     public void playCurrentName() {
-        if (_currentName != null) {
-            _currentName.playRecording();
-        }
-    }
-
-    public void keepRecording(){
-        _keepRecording = true;
+            _practiseList.get(_currentIndex).playRecording();
     }
 
     public void createUserRecording() {
-        _currentUserRecording = new Recording(_currentName.getShortName());
+        _currentUserRecording = new Recording(_practiseList.get(_currentIndex).getShortName());
         _currentUserCreatedName = _currentUserRecording.createRecording();
     }
 
@@ -49,52 +38,21 @@ public class PractiseListModel implements IPractiseListModel{
 
     }
 
-    public boolean hasNext() {
-        return _listIterator.hasNext();
-    }
-
     public Name nextName() {
-        if (hasNext()) {
-            if (_currentUserRecording != null && !_keepRecording) {
-                _currentUserRecording.deleteRecording();
-            }
-
-            _keepRecording = false;
-
-            nextCalled = true;
-            if(prevCalled) {
-                _listIterator.next();
-                prevCalled = false;
-            }
-
-            _currentName = _listIterator.next();
+        if (_currentIndex != _practiseList.size() - 1) {
+            _currentIndex++;
         }
 
-        return _currentName;
+        return _practiseList.get(_currentIndex);
     }
 
-    public boolean hasPrevious() {
-        return _listIterator.hasPrevious();
-    }
 
     public Name previousName() {
-        if (hasPrevious()) {
-            if (_currentUserRecording != null && !_keepRecording) {
-                _currentUserRecording.deleteRecording();
-            }
-
-            _keepRecording = false;
-
-            prevCalled = true;
-            if(nextCalled) {
-                _listIterator.previous();
-                nextCalled = false;
-            }
-
-            _currentName = _listIterator.previous();
+        if (_currentIndex != 0) {
+            _currentIndex--;
         }
 
-        return _currentName;
+        return _practiseList.get(_currentIndex);
     }
 
     public void cancelRecording(){
@@ -113,7 +71,7 @@ public class PractiseListModel implements IPractiseListModel{
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                _currentName.playRecording();
+                _practiseList.get(_currentIndex).playRecording();
                 return true;
             }
         };
