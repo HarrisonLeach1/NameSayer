@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
-    public static final String USER_DATABASE = "./userRecordings";
+    public static final String USER_DATABASE = "./userRecordings/";
 
 	public TreeItem<Name> loadDatabase(){
 		TreeViewFactory checkTree = new CheckTreeViewFactory();
