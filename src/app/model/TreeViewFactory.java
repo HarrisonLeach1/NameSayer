@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 /**
- * The TreeView factory creates a TreeView from a database of files.
+ * A TreeViewFactory creates a TreeView from a database of files.
  *
  * All files in the database folder should be named in the format:
  *

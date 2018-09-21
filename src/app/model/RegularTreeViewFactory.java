@@ -2,6 +2,11 @@ package app.model;
 
 import javafx.scene.control.TreeItem;
 
+/**
+ * A RegularTreeViewFactory is a TreeViewFactory that creates a TreeView from
+ * a database of files, where each TreeItem in the TreeView is a TreeItem.
+ */
+
 public class RegularTreeViewFactory extends TreeViewFactory {
 
     @Override
