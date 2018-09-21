@@ -2,6 +2,7 @@ package app.model;
 
 import java.io.*;
 
+
 public class Name {
     private String _shortName, _versionName, _fileName;
 
@@ -28,14 +29,6 @@ public class Name {
         _shortName =  dateTimeRemoved.split("\\.")[0];
     }
 
-    public String getShortName() {
-        return _shortName;
-    }
-
-    public void setVersionName(String s) {
-        _versionName = s;
-    }
-
     @Override
     public String toString() {
         return _versionName;
@@ -51,5 +44,13 @@ public class Name {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getShortName() {
+        return _shortName;
+    }
+
+    public void setVersionName(String s) {
+        _versionName = s;
     }
 }

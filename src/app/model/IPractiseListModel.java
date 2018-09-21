@@ -6,15 +6,9 @@ public interface IPractiseListModel {
 
     void playCurrentName();
 
-    boolean hasNext();
-
     void createUserRecording();
 
-    void keepRecording();
-
     void compareUserRecording();
-
-    boolean hasPrevious();
 
     Name previousName();
 

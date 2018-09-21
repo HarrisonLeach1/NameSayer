@@ -39,11 +39,7 @@ public class PlaySceneController implements Initializable {
     }
 
     public void nextButtonPressed() {
-        if (_practiseListModel.hasNext()) {
-            _displayName.setText("Name: " + _practiseListModel.nextName().toString());
-        } else {
-            // missing code to handle end of list reached
-        }
+        _displayName.setText("Name: " + _practiseListModel.nextName().toString());
 
         keep_btn.setDisable(true);
         compare_btn.setDisable(true);
@@ -51,13 +47,11 @@ public class PlaySceneController implements Initializable {
     }
 
     public void previousButtonPressed() {
-        if (_practiseListModel.hasPrevious()) {
-            _displayName.setText("Name: " + _practiseListModel.previousName().toString());
-        }
+        _displayName.setText("Name: " + _practiseListModel.previousName().toString());
     }
 
     public void keepButtonPressed() {
-        _practiseListModel.keepRecording();
+        //_practiseListModel.keepRecording();
     }
 
     public void recordButtonPressed() {
