@@ -3,12 +3,6 @@ package app.model;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ListIterator;
-import java.util.Scanner;
-
 public class PractiseListModel implements IPractiseListModel{
 
     private ObservableList<Name> _practiseList;
@@ -25,10 +19,6 @@ public class PractiseListModel implements IPractiseListModel{
     public PractiseListModel(ObservableList<Name> practiseList) {
         _practiseList = practiseList;
         _currentIndex = -1;
-    }
-
-    public void playCurrentName() {
-            _practiseList.get(_currentIndex).playRecording();
     }
 
     public void createUserRecording() {
@@ -96,25 +86,6 @@ public class PractiseListModel implements IPractiseListModel{
         }
         _currentUserRecording = null;
         _keepRecording = false;
-    }
-
-
-    public void setBadQuality() throws IOException {
-        File file = new File("bad.txt");
-        file.createNewFile();
-        FileWriter fw = new FileWriter("bad.txt",true); //the true will append the new data
-        Scanner scanner = new Scanner(file);
-        boolean found = false;
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if(line.equals(_practiseList.get(_currentIndex).getVersionName())) {
-                found=true;
-            }
-        }
-        if (!found) {
-            fw.write(_practiseList.get(_currentIndex).getShortName() + "\r\n");
-        }
-        fw.close();
     }
 
 }

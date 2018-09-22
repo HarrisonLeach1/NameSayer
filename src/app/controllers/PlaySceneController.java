@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.model.IPractiseListModel;
+import app.model.Name;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,6 +24,7 @@ public class PlaySceneController implements Initializable {
     @FXML private Label _displayName, _bad_Label, _savedLabel;
 
     private IPractiseListModel _practiseListModel;
+    private Name _currentName;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -36,7 +38,8 @@ public class PlaySceneController implements Initializable {
      */
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
-        _displayName.setText("Name: " + _practiseListModel.nextName().toString());
+        _currentName = _practiseListModel.nextName();
+        _displayName.setText("Name: " + _currentName.toString());
     }
 
     /**
@@ -46,7 +49,8 @@ public class PlaySceneController implements Initializable {
     public void nextButtonPressed() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
-        _displayName.setText("Name: " + _practiseListModel.nextName().toString());
+        _currentName = _practiseListModel.nextName();
+        _displayName.setText("Name: " + _currentName.toString());
 
         keep_btn.setDisable(true);
         compare_btn.setDisable(true);
@@ -60,7 +64,11 @@ public class PlaySceneController implements Initializable {
     public void previousButtonPressed() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
-        _displayName.setText("Name: " + _practiseListModel.previousName().toString());
+        _currentName = _practiseListModel.previousName();
+        _displayName.setText("Name: " + _currentName.toString());
+
+        keep_btn.setDisable(true);
+        compare_btn.setDisable(true);
     }
 
     /**
@@ -109,7 +117,7 @@ public class PlaySceneController implements Initializable {
      * Plays the currently displayed name
      */
     public void playButtonPressed() {
-        _practiseListModel.playCurrentName();
+        _currentName.playRecording();
     }
 
     /**
@@ -125,12 +133,19 @@ public class PlaySceneController implements Initializable {
         window.setScene(playerScene);
     }
 
+    /**
+     * Plays the user's recording then the original recording.
+     * Allows the user to judge their pronunciation.
+     */
     public void compareButtonPressed() {
         _practiseListModel.compareUserRecording();
     }
 
+    /**
+     *
+     */
     public void badButtonPressed() throws IOException {
-        _practiseListModel.setBadQuality();
+        _currentName.setBadQuality();
         _bad_Label.setVisible(true);
     }
 
