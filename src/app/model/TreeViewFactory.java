@@ -87,7 +87,12 @@ public abstract class TreeViewFactory {
     protected HashMap<String, ArrayList<Name>> getNameTable(String database) {
         HashMap<String, ArrayList<Name>> nameTable = new HashMap<>();
 
-        File[] files = new File(database).listFiles();
+        File databaseFolder = new File(database);
+        if(!databaseFolder.exists()){
+            return new HashMap<>();
+        }
+
+        File[] files  = databaseFolder.listFiles();
 
         // loop through files to add recordings to table
         for (File file : files) {

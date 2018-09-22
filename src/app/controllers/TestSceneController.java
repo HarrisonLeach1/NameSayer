@@ -21,6 +21,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static app.model.DataModel.USER_DATABASE;
+import static app.model.Recording.RECORD_TIME;
+
 public class TestSceneController implements Initializable {
 
     @FXML
@@ -28,13 +31,10 @@ public class TestSceneController implements Initializable {
     @FXML
     private ProgressBar _progress;
 
-    private static final String USER_DATABASE = "./userRecordings/";
-    private static final int RECORD_TIME = 5;
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            String cmd = "mkdir -p " + USER_DATABASE + "; ffmpeg -y -f alsa -t " + RECORD_TIME + " -i default _test.wav";
+            String cmd = "mkdir -p " + USER_DATABASE + "; ffmpeg -y -f alsa -t " + RECORD_TIME + " -i default "+ USER_DATABASE + "_test.wav";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
@@ -56,7 +56,7 @@ public class TestSceneController implements Initializable {
 
     public void handleReturnAction(ActionEvent event) {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = new File("./userRecordings/_test.wav");
+        File file = new File(USER_DATABASE + "_test.wav");
         if (file.exists()) {
             file.delete();
         }
@@ -66,7 +66,7 @@ public class TestSceneController implements Initializable {
     public void handlePlayAction(ActionEvent event) {
         InputStream in;
         try {
-            in = new FileInputStream("./userRecordings/_test.wav");
+            in = new FileInputStream(USER_DATABASE + "_test.wav");
             AudioStream audioStream = new AudioStream(in);
             AudioPlayer.player.start(audioStream);
         } catch (Exception e) {

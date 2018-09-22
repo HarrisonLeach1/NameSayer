@@ -11,10 +11,7 @@ public class PractiseListModel implements IPractiseListModel{
     private int _currentIndex;
     private boolean _keepRecording;
 
-
     private Task compareWorker;
-
-
 
     public PractiseListModel(ObservableList<Name> practiseList) {
         _practiseList = practiseList;

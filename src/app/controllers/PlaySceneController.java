@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
 public class PlaySceneController implements Initializable {
 
     @FXML private Button keep_btn, compare_btn;
-    @FXML private Label _displayName, _bad_Label, _savedLabel;
+    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
     private Name _currentName;
@@ -39,7 +39,8 @@ public class PlaySceneController implements Initializable {
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("Name: " + _currentName.toString());
+        _displayName.setText("Name: " + _currentName.getShortName());
+        _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
     }
 
     /**
@@ -50,7 +51,8 @@ public class PlaySceneController implements Initializable {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("Name: " + _currentName.toString());
+        _displayName.setText("Name: " + _currentName.getShortName());
+        _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
         keep_btn.setDisable(true);
         compare_btn.setDisable(true);
@@ -65,7 +67,8 @@ public class PlaySceneController implements Initializable {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
         _currentName = _practiseListModel.previousName();
-        _displayName.setText("Name: " + _currentName.toString());
+        _displayName.setText("Name: " + _currentName.getShortName());
+        _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
         keep_btn.setDisable(true);
         compare_btn.setDisable(true);
