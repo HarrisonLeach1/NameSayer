@@ -38,7 +38,7 @@ public class MainMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         _dataList.setRoot(dataModel.loadDatabase());
         _dataList.setShowRoot(false);
-        _dataList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     public void handleMenuAction(ActionEvent event) throws IOException {
@@ -112,6 +112,13 @@ public class MainMenuController implements Initializable {
     public void removeButtonPressed() {
         ObservableList<Name> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
         _selectedList.getItems().removeAll(itemsToDelete);
+    }
+
+    /**
+     * All items in the selected list are removed from the selected list.
+     */
+    public void removeAllButtonPressed() {
+        _selectedList.getItems().removeAll(_selectedList.getItems());
     }
 
     /**

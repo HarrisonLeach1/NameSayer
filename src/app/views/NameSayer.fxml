@@ -124,7 +124,7 @@
                                                       <Button fx:id="add_all_btn" mnemonicParsing="false" onAction="#addAllButtonPressed" prefHeight="27.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" text="&gt;&gt;" textFill="WHITE" />
                                                       <Button fx:id="add_btn" mnemonicParsing="false" onAction="#addButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Add" textFill="WHITE" />
                                                       <Button id="remove" fx:id="remove_btn" mnemonicParsing="false" onAction="#removeButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Remove" textFill="WHITE" />
-                                                      <Button mnemonicParsing="false" prefHeight="27.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="&lt;&lt;" textFill="WHITE" />
+                                                      <Button fx:id="remove_all_btn" mnemonicParsing="false" onAction="#removeAllButtonPressed" prefHeight="27.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="&lt;&lt;" textFill="WHITE" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="30.0" />
