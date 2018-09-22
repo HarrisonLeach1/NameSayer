@@ -63,9 +63,12 @@ public class PlaySceneController implements Initializable {
         _displayName.setText("Name: " + _practiseListModel.previousName().toString());
     }
 
+    /**
+     * Keeps the recording created by the user, prevents it from being deleted.
+     */
     public void keepButtonPressed() {
         _savedLabel.setVisible(true);
-        //_practiseListModel.keepRecording();
+        _practiseListModel.keepRecording();
     }
 
     /**

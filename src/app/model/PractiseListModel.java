@@ -15,9 +15,11 @@ public class PractiseListModel implements IPractiseListModel{
     private Recording _currentUserRecording;
     private Name _currentUserCreatedName;
     private int _currentIndex;
+    private boolean _keepRecording;
 
 
-    Task compareWorker;
+    private Task compareWorker;
+
 
 
     public PractiseListModel(ObservableList<Name> practiseList) {
@@ -43,6 +45,7 @@ public class PractiseListModel implements IPractiseListModel{
     }
 
     public Name nextName() {
+        finaliseRecording();
         if (_currentIndex != _practiseList.size() - 1) {
             _currentIndex++;
         }
@@ -52,6 +55,7 @@ public class PractiseListModel implements IPractiseListModel{
 
 
     public Name previousName() {
+        finaliseRecording();
         if (_currentIndex != 0) {
             _currentIndex--;
         }
@@ -81,6 +85,19 @@ public class PractiseListModel implements IPractiseListModel{
         };
 
     }
+
+    public void keepRecording() {
+        _keepRecording = true;
+    }
+
+    private void finaliseRecording() {
+        if (!_keepRecording && _currentUserRecording != null) {
+            _currentUserRecording.deleteRecording();
+        }
+        _currentUserRecording = null;
+        _keepRecording = false;
+    }
+
 
     public void setBadQuality() throws IOException {
         File file = new File("bad.txt");

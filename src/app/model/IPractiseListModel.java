@@ -16,5 +16,7 @@ public interface IPractiseListModel {
 
     void cancelRecording();
 
+    void keepRecording();
+
     void setBadQuality() throws IOException;
 }
