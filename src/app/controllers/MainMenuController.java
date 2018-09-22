@@ -22,6 +22,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import static app.model.DataModel.USER_DATABASE;
+
 public class MainMenuController implements Initializable {
 
     @FXML private Pane data_pane, rec_pane;
@@ -38,7 +40,7 @@ public class MainMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         _dataList.setRoot(dataModel.loadDatabase());
         _dataList.setShowRoot(false);
-        _dataList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     public void handleMenuAction(ActionEvent event) throws IOException {
@@ -54,7 +56,7 @@ public class MainMenuController implements Initializable {
             Stage window = new Stage();
             window.setScene(playerScene);
             window.setOnCloseRequest(event1 -> {
-                File file = new File("./userRecordings/_test.wav");
+                File file = new File(USER_DATABASE + "_test.wav");
                 if (file.exists()){
                     file.delete();
                 }
@@ -84,17 +86,28 @@ public class MainMenuController implements Initializable {
 
     /**
      * All checked items in the CheckTreeView are added to the selected list of names
-     * to be practised by the user
+     * to be practised by the user.
      */
     public void addButtonPressed() {
         List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
+        List<Name> selectedItems = _selectedList.getItems();
         for (TreeItem<Name> name : checkedNames) {
-            if (name.getChildren().size() < 2) { // if a node is not a leaf, do not add it
-                _selectedList.getItems().add(name.getValue());
+            if (name.getChildren().size() < 2) { // only add if name is not a leaf
+                selectedItems.add(name.getValue());
             }
         }
         _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
     }
+
+    /**
+     * All items in the CheckTreeView are added to the selected list of names
+     * to be practised by the user
+     */
+    public void addAllButtonPressed() {
+        _dataList.getCheckModel().checkAll();
+        addButtonPressed();
+    }
+
 
     /**
      * All selected items in the selected list are removed from the selected list.
@@ -102,6 +115,13 @@ public class MainMenuController implements Initializable {
     public void removeButtonPressed() {
         ObservableList<Name> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
         _selectedList.getItems().removeAll(itemsToDelete);
+    }
+
+    /**
+     * All items in the selected list are removed from the selected list.
+     */
+    public void removeAllButtonPressed() {
+        _selectedList.getItems().removeAll(_selectedList.getItems());
     }
 
     /**
@@ -115,9 +135,13 @@ public class MainMenuController implements Initializable {
      * Plays the currently selected user recording in the list of user recordings.
      */
     public void playButtonPressed() {
-        Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem().getValue();
-        if(currentUserRecording != null) {
-            currentUserRecording.playRecording();
+        TreeItem<Name> selectedItem = rec_list.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem().getValue();
+
+            if(currentUserRecording != null) {
+                currentUserRecording.playRecording();
+            }
         }
 
     }
