@@ -84,7 +84,7 @@ public class MainMenuController implements Initializable {
 
     /**
      * All checked items in the CheckTreeView are added to the selected list of names
-     * to be practised by the user
+     * to be practised by the user.
      */
     public void addButtonPressed() {
         List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
@@ -95,6 +95,16 @@ public class MainMenuController implements Initializable {
         }
         _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
     }
+
+    /**
+     * All items in the CheckTreeView are added to the selected list of names
+     * to be practised by the user
+     */
+    public void addAllButtonPressed() {
+        _dataList.getCheckModel().checkAll();
+        addButtonPressed();
+    }
+
 
     /**
      * All selected items in the selected list are removed from the selected list.
