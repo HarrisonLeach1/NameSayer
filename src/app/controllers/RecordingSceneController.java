@@ -15,8 +15,8 @@ import static app.model.Recording.RECORD_TIME;
  */
 public class RecordingSceneController {
 
-    @FXML private Button start_btn, cancel_btn;
-    @FXML private ProgressBar progressBar = new ProgressBar(0);
+    @FXML private Button _startBtn, _cancelBtn;
+    @FXML private ProgressBar _progressBar = new ProgressBar(0);
 
     private Task recordWorker;
     private IPractiseListModel _practiseListModel;
@@ -27,7 +27,7 @@ public class RecordingSceneController {
      */
     public void initModel(IPractiseListModel model) {
         _practiseListModel = model;
-        cancel_btn.setDisable(true);
+        _cancelBtn.setDisable(true);
     }
 
     /**
@@ -39,19 +39,19 @@ public class RecordingSceneController {
         // tell model to create recording
         _practiseListModel.createUserRecording();
 
-        start_btn.setDisable(true);
-        progressBar.setProgress(0);
-        cancel_btn.setDisable(false);
+        _startBtn.setDisable(true);
+        _progressBar.setProgress(0);
+        _cancelBtn.setDisable(false);
 
         recordWorker = startWorker();
 
         // bind worker to display progress bar updates
-        progressBar.progressProperty().unbind();
-        progressBar.progressProperty().bind(recordWorker.progressProperty());
+        _progressBar.progressProperty().unbind();
+        _progressBar.progressProperty().bind(recordWorker.progressProperty());
 
         // when the specified recording time is finished, close the window
         recordWorker.setOnSucceeded(event -> {
-            Stage window = (Stage)cancel_btn.getScene().getWindow();
+            Stage window = (Stage)_cancelBtn.getScene().getWindow();
             window.close();
         });
 
@@ -62,16 +62,16 @@ public class RecordingSceneController {
      * Cancels the new user recording, closing the recording window.
      */
     public void cancelButtonPressed() {
-        start_btn.setDisable(false);
-        cancel_btn.setDisable(true);
+        _startBtn.setDisable(false);
+        _cancelBtn.setDisable(true);
 
         recordWorker.cancel(true);
-        progressBar.progressProperty().unbind();
-        progressBar.setProgress(0);
+        _progressBar.progressProperty().unbind();
+        _progressBar.setProgress(0);
 
         _practiseListModel.cancelRecording();
 
-        Stage window = (Stage)cancel_btn.getScene().getWindow();
+        Stage window = (Stage)_cancelBtn.getScene().getWindow();
         window.close();
     }
 

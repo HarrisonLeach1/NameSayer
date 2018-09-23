@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckTreeView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -27,79 +27,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                <AnchorPane fx:id="rec_pane" layoutX="128.0" layoutY="14.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: #789699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #789699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0">
-                          <items>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                                 <children>
-                                    <TreeView fx:id="rec_list" maxWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="80.0" />
-                                    <Label fx:id="rec_label" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #474448;" text="List of Recordings" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
-                                       <font>
-                                          <Font size="15.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </AnchorPane>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                                 <children>
-                                    <VBox alignment="CENTER" layoutX="103.0" layoutY="108.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <children>
-                                          <Button fx:id="play_recording_btn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="79.0" prefWidth="160.0" style="-fx-border-color: white;" text="Play Recording" textFill="WHITE">
-                                             <font>
-                                                <Font size="15.0" />
-                                             </font>
-                                             <styleClass>
-                                                <String fx:value="play" />
-                                                <String fx:value="menu" />
-                                             </styleClass>
-                                          </Button>
-                                       </children>
-                                       <opaqueInsets>
-                                          <Insets />
-                                       </opaqueInsets>
-                                       <padding>
-                                          <Insets bottom="50.0" />
-                                       </padding>
-                                    </VBox>
-                                 </children>
-                              </AnchorPane>
-                          </items>
-                        </SplitPane>
-                     </children>
-                  </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="431.0" prefWidth="128.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Button id="view_data" fx:id="view_data_btn" layoutY="52.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="View Database" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <styleClass>
-                              <String fx:value="menu-view_data" />
-                              <String fx:value="menu" />
-                           </styleClass>
-                        </Button>
-                        <Button id="view_rec" fx:id="view_rec_btn" layoutY="93.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="View Recordings" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <styleClass>
-                              <String fx:value="menu" />
-                              <String fx:value="menu-view_rec" />
-                           </styleClass>
-                        </Button>
-                        <Button id="test_mic" fx:id="test_mic_btn" layoutY="130.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="Test Mic" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="130.0">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <styleClass>
-                              <String fx:value="menu" />
-                              <String fx:value="menu-test_mic" />
-                           </styleClass>
-                        </Button>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane fx:id="data_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane fx:id="_dataPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <SplitPane dividerPositions="0.5" layoutX="202.0" layoutY="88.0" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="0.0">
                           <items>
@@ -114,7 +42,7 @@
                                                       <Font size="15.0" />
                                                    </font>
                                                 </Label>
-                                                <CheckTreeView fx:id="_dataList" layoutX="28.0" layoutY="82.0" prefHeight="310.0" prefWidth="170.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="80.0" />
+                                                <CheckTreeView fx:id="_dataList" layoutX="22.0" layoutY="80.0" prefHeight="310.0" prefWidth="170.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="38.0" AnchorPane.topAnchor="80.0" />
                                              </children>
                                           </AnchorPane>
                                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -164,6 +92,78 @@
                                              </children></AnchorPane>
                                       </items>
                                     </SplitPane>
+                                 </children>
+                              </AnchorPane>
+                          </items>
+                        </SplitPane>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="431.0" prefWidth="128.0" styleClass="sidebar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Button id="view_data" fx:id="_viewDataBtn" layoutY="52.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="View Database" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="menu-view_data" />
+                              <String fx:value="menu" />
+                           </styleClass>
+                        </Button>
+                        <Button id="view_rec" fx:id="_viewRecBtn" layoutY="93.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="View Recordings" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="90.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="menu" />
+                              <String fx:value="menu-view_rec" />
+                           </styleClass>
+                        </Button>
+                        <Button id="test_mic" fx:id="_testMicBtn" layoutY="130.0" mnemonicParsing="false" onAction="#handleMenuAction" stylesheets="@style.css" text="Test Mic" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="130.0">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <styleClass>
+                              <String fx:value="menu" />
+                              <String fx:value="menu-test_mic" />
+                           </styleClass>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane fx:id="_recPane" layoutX="128.0" layoutY="14.0" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" style="-fx-background-color: #789699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0" style="-fx-background-color: #789699;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0">
+                          <items>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <TreeView fx:id="_recList" maxWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="333.0" prefWidth="200.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="80.0" />
+                                    <Label fx:id="rec_label" alignment="CENTER" prefHeight="30.0" prefWidth="200.0" style="-fx-background-color: #474448;" text="List of Recordings" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0">
+                                       <font>
+                                          <Font size="15.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                                 <children>
+                                    <VBox alignment="CENTER" layoutX="103.0" layoutY="108.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Button fx:id="play_recording_btn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="79.0" prefWidth="160.0" style="-fx-border-color: white;" text="Play Recording" textFill="WHITE">
+                                             <font>
+                                                <Font size="15.0" />
+                                             </font>
+                                             <styleClass>
+                                                <String fx:value="play" />
+                                                <String fx:value="menu" />
+                                             </styleClass>
+                                          </Button>
+                                       </children>
+                                       <opaqueInsets>
+                                          <Insets />
+                                       </opaqueInsets>
+                                       <padding>
+                                          <Insets bottom="50.0" />
+                                       </padding>
+                                    </VBox>
                                  </children>
                               </AnchorPane>
                           </items>

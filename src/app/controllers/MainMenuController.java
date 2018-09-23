@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckTreeView;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -32,11 +33,11 @@ import static app.model.DataModel.USER_DATABASE;
  */
 public class MainMenuController implements Initializable {
 
-    @FXML private Pane data_pane, rec_pane;
-    @FXML private Button view_data_btn,view_rec_btn,test_mic_btn;
+    @FXML private Pane _dataPane, _recPane;
+    @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn;
     @FXML private CheckTreeView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
-    @FXML private TreeView<Name> rec_list;
+    @FXML private TreeView<Name> _recList;
 
 
     private IDataModel dataModel = new DataModel();
@@ -59,20 +60,13 @@ public class MainMenuController implements Initializable {
      * @throws IOException
      */
     public void handleMenuAction(ActionEvent event) throws IOException {
-        if(event.getSource() == view_data_btn){
-
-            data_pane.toFront();
-
-        } else if(event.getSource() == view_rec_btn){
-
-            // load database of user recordings
-            rec_list.setRoot(dataModel.loadUserDatabase());
-            rec_list.setShowRoot(false);
-            rec_pane.toFront();
-
-        } else if(event.getSource() == test_mic_btn){
-
-            // load in test mic scene
+        if(event.getSource() == _viewDataBtn){
+            _dataPane.toFront();
+        } else if(event.getSource() == _viewRecBtn){
+            _recList.setRoot(dataModel.loadUserDatabase());
+            _recList.setShowRoot(false);
+            _recPane.toFront();
+        } else if(event.getSource() == _testMicBtn){
             Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
             Scene playerScene = new Scene(playerParent);
             Stage window = new Stage();
@@ -168,9 +162,9 @@ public class MainMenuController implements Initializable {
      * Plays the currently selected user recording in the list of user recordings.
      */
     public void playButtonPressed() {
-        TreeItem<Name> selectedItem = rec_list.getSelectionModel().getSelectedItem();
+        TreeItem<Name> selectedItem = _recList.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            Name currentUserRecording = rec_list.getSelectionModel().getSelectedItem().getValue();
+            Name currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
 
             if(currentUserRecording != null) {
                 currentUserRecording.playRecording();

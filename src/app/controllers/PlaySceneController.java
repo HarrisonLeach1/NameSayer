@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  */
 public class PlaySceneController {
 
-    @FXML private Button keep_btn, compare_btn, prev_btn, next_btn;
+    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
@@ -112,8 +112,8 @@ public class PlaySceneController {
         window.showAndWait();
 
         // enable buttons
-        keep_btn.setDisable(false);
-        compare_btn.setDisable(false);
+        _keepBtn.setDisable(false);
+        _compareBtn.setDisable(false);
 
     }
 
@@ -161,20 +161,20 @@ public class PlaySceneController {
 
         // if the user has reached the end of the list disable the next button, otherwise don't
         if (!_practiseListModel.hasNext()) {
-            next_btn.setDisable(true);
+            _nextBtn.setDisable(true);
         } else {
-            next_btn.setDisable(false);
+            _nextBtn.setDisable(false);
         }
 
         // if the user is at the start of the list disable the previous button, otherwise don't
         if (!_practiseListModel.hasPrevious()) {
-            prev_btn.setDisable(true);
+            _prevBtn.setDisable(true);
         } else {
-            prev_btn.setDisable(false);
+            _prevBtn.setDisable(false);
         }
 
-        keep_btn.setDisable(true);
-        compare_btn.setDisable(true);
+        _keepBtn.setDisable(true);
+        _compareBtn.setDisable(true);
     }
 
 }
