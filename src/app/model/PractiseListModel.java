@@ -2,7 +2,11 @@ package app.model;
 
 import javafx.collections.ObservableList;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ListIterator;
+import java.util.Scanner;
 
 public class PractiseListModel implements IPractiseListModel{
 
@@ -58,6 +62,24 @@ public class PractiseListModel implements IPractiseListModel{
             e.printStackTrace();
         }
         _currentName.playRecording();
+    }
+
+    public void setBadQuality() throws IOException {
+        File file = new File("bad.txt");
+        file.createNewFile();
+        FileWriter fw = new FileWriter("bad.txt",true); //the true will append the new data
+        Scanner scanner = new Scanner(file);
+        boolean found = false;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if(line.equals(_currentName.getVersionName())) {
+                found=true;
+            }
+        }
+        if (!found) {
+            fw.write(_currentName.getShortName() + "\r\n");
+        }
+        fw.close();
     }
 
 }

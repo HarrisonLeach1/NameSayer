@@ -39,6 +39,10 @@ public class Name {
         return _shortName;
     }
 
+    public String getVersionName() {
+        return _versionName;
+    }
+
     public void setVersionName(String s) {
         _versionName = s;
     }

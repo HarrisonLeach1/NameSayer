@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckTreeView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -154,8 +154,8 @@
                                              <children>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="83.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <children>
-                                                      <Button id="play_data" mnemonicParsing="false" onAction="#handleStartAction" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
-                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#randomiseButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
+                                                      <Button id="play_data" mnemonicParsing="false" onAction="#handleStartAction" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
+                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#randomiseButtonPressed" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="30.0" />

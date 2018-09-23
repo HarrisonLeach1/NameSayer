@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -62,7 +62,7 @@
                                     <Font name="System Bold" size="13.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
+                              <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="circle" />
                                     <String fx:value="play" />
@@ -84,22 +84,27 @@
                                     <Font name="System Bold" size="13.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="bad_btn" maxHeight="40.0" maxWidth="95.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="95.0" stylesheets="@style.css" textFill="WHITE">
-                                 <styleClass>
-                                    <String fx:value="circle" />
-                                    <String fx:value="bad" />
-                                 </styleClass>
-                                 <graphic>
-                                    <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/down.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
+                              <HBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="130.0" spacing="10.0">
+                                 <children>
+                                    <Button fx:id="bad_btn" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE">
+                                       <styleClass>
+                                          <String fx:value="circle" />
+                                          <String fx:value="bad" />
+                                       </styleClass>
+                                       <graphic>
+                                          <ImageView fitHeight="34.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/down.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Label fx:id="_bad_Label" prefHeight="17.0" prefWidth="72.0" text="Name Added" textFill="WHITE" visible="false" />
+                                 </children>
+                              </HBox>
                            </children>
                            <padding>
-                              <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                              <Insets bottom="20.0" left="100.0" right="20.0" top="20.0" />
                            </padding>
                            <VBox.margin>
                               <Insets />
@@ -107,19 +112,19 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="111.0" prefWidth="748.0" spacing="30.0">
                            <children>
-                              <Button fx:id="record_btn" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="70.0" style="-fx-background-color: #283044;" text="Record" textFill="WHITE">
+                              <Button fx:id="record_btn" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Record" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="next" />
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
-                              <Button fx:id="compare_btn" disable="true" mnemonicParsing="false" prefWidth="70.0" style="-fx-background-color: #283044;" text="Compare" textFill="WHITE">
+                              <Button fx:id="compare_btn" disable="true" mnemonicParsing="false" onAction="#compareButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Compare" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="next" />
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
-                              <Button fx:id="keep_btn" disable="true" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="70.0" style="-fx-background-color: #283044;" text="Keep" textFill="WHITE">
+                              <Button fx:id="keep_btn" disable="true" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Keep" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="next" />
                                     <String fx:value="menu" />
