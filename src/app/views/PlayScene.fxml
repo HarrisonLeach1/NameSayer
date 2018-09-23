@@ -12,11 +12,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.181" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
+          <AnchorPane minHeight="70.0" prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="297.0" text="Name Sayer Player" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="0.0">
                      <font>
@@ -134,7 +134,7 @@
                         <Font size="40.0" />
                      </font>
                   </Label>
-                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutX="-14.0" layoutY="107.0" prefHeight="170.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutX="-14.0" layoutY="107.0" prefHeight="100.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="210.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0">
                      <font>
                         <Font size="20.0" />
                      </font>
