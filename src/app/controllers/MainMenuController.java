@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckTreeView;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -24,6 +23,13 @@ import java.util.ResourceBundle;
 
 import static app.model.DataModel.USER_DATABASE;
 
+/**
+ * A MainMenuController holds the responsibility of receiving input events
+ * from the user at the main menu and then translating them into actions on the
+ * IDataModel.
+ * The IDataModel then passes information back to the MainMenuController
+ * to update the view.
+ */
 public class MainMenuController implements Initializable {
 
     @FXML private Pane data_pane, rec_pane;
@@ -36,6 +42,10 @@ public class MainMenuController implements Initializable {
     private IDataModel dataModel = new DataModel();
 
 
+    /**
+     * Initially the database of recordings is loaded in from the model,
+     * and displayed in the TreeView of the main menu view.
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         _dataList.setRoot(dataModel.loadDatabase());
@@ -43,17 +53,31 @@ public class MainMenuController implements Initializable {
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
+    /**
+     * Handles any user input event related to the switching tabs.
+     * @param event
+     * @throws IOException
+     */
     public void handleMenuAction(ActionEvent event) throws IOException {
         if(event.getSource() == view_data_btn){
+
             data_pane.toFront();
+
         } else if(event.getSource() == view_rec_btn){
+
+            // load database of user recordings
             rec_list.setRoot(dataModel.loadUserDatabase());
             rec_list.setShowRoot(false);
             rec_pane.toFront();
+
         } else if(event.getSource() == test_mic_btn){
+
+            // load in test mic scene
             Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
             Scene playerScene = new Scene(playerParent);
             Stage window = new Stage();
+
+            // when test mic scene is closed, delete the test audio file
             window.setScene(playerScene);
             window.setOnCloseRequest(event1 -> {
                 File file = new File(USER_DATABASE + "_test.wav");
@@ -61,28 +85,11 @@ public class MainMenuController implements Initializable {
                     file.delete();
                 }
             });
+
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
         }
     }
-
-    public void handleStartAction(ActionEvent event) throws IOException {
-        // if no items are selected, do not switch scenes.
-        if(_selectedList.getItems().size() == 0){ return; }
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        Parent playerParent = loader.load();
-
-        PlaySceneController controller = loader.getController();
-        controller.initModel(new PractiseListModel(_selectedList.getItems()));
-
-        Scene playerScene = new Scene(playerParent);
-
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
-    }
-
 
     /**
      * All checked items in the CheckTreeView are added to the selected list of names
@@ -129,6 +136,32 @@ public class MainMenuController implements Initializable {
      */
     public void randomiseButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
+    }
+
+
+    /**
+     * Loads in all Name objects in the selected list, passes it to the next view
+     * and controller, and switches scenes.
+     * @param event
+     * @throws IOException
+     */
+    public void handleStartAction(ActionEvent event) throws IOException {
+        // if no items are selected, do not switch scenes.
+        if(_selectedList.getItems().size() == 0){ return; }
+
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
+        Parent playerParent = loader.load();
+
+        // pass selected items to the next controller
+        PlaySceneController controller = loader.getController();
+        controller.initModel(new PractiseListModel(_selectedList.getItems()));
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(playerScene);
     }
 
     /**

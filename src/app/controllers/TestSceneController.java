@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.model.Name;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -12,13 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -27,10 +21,8 @@ import static app.model.Recording.RECORD_TIME;
 
 public class TestSceneController implements Initializable {
 
-    @FXML
-    private Button play_btn,ok_btn;
-    @FXML
-    private ProgressBar _progress;
+    @FXML private Button play_btn,ok_btn;
+    @FXML private ProgressBar _progress;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

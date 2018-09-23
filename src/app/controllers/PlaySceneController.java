@@ -13,23 +13,25 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class PlaySceneController implements Initializable {
+/**
+ * A PlaySceneController holds the responsibility of receiving input events
+ * from the user during name pronunciation practise and then translating
+ * them into actions on the IPractiseListModel.
+ *
+ * The IPractiseListModel then passes information back to the PlaySceneController
+ * to update the view.
+ */
+public class PlaySceneController {
 
     @FXML private Button keep_btn, compare_btn, prev_btn, next_btn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
     private Name _currentName;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
 
     /**
      * Loads in the practise list model that stores the list of selected names from
@@ -116,14 +118,14 @@ public class PlaySceneController implements Initializable {
     }
 
     /**
-     * Plays the currently displayed name
+     * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
         _currentName.playRecording();
     }
 
     /**
-     * Redirects the user back to the main menu
+     * Redirects the user back to the main menu when the return button is pressed.
      */
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
@@ -144,7 +146,7 @@ public class PlaySceneController implements Initializable {
     }
 
     /**
-     *
+     * Sets the currently display to be of bad quality.
      */
     public void badButtonPressed() throws IOException {
         _currentName.setBadQuality();
@@ -157,12 +159,14 @@ public class PlaySceneController implements Initializable {
      */
     private void checkBounds() {
 
+        // if the user has reached the end of the list disable the next button, otherwise don't
         if (!_practiseListModel.hasNext()) {
             next_btn.setDisable(true);
         } else {
             next_btn.setDisable(false);
         }
 
+        // if the user is at the start of the list disable the previous button, otherwise don't
         if (!_practiseListModel.hasPrevious()) {
             prev_btn.setDisable(true);
         } else {

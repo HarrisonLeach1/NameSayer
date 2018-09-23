@@ -3,34 +3,30 @@ package app.controllers;
 import app.model.IPractiseListModel;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import static app.model.Recording.RECORD_TIME;
 
-public class RecordingSceneController implements Initializable {
+/**
+ * A RecordingSceneController holds the responsibility of receiving input events
+ * from the user during name pronunciation practise and then translating
+ * them into actions on the IPractiseListModel.
+ */
+public class RecordingSceneController {
 
     @FXML private Button start_btn, cancel_btn;
     @FXML private ProgressBar progressBar = new ProgressBar(0);
 
-    Task recordWorker;
-    IPractiseListModel _practiseListModel;
+    private Task recordWorker;
+    private IPractiseListModel _practiseListModel;
 
     /**
-     * Initialises the contoller with the practise list model to be used.
+     * Initialises the controller with the practise list model to be used.
      * @param model
      */
     public void initModel(IPractiseListModel model) {
         _practiseListModel = model;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
         cancel_btn.setDisable(true);
     }
 
@@ -88,8 +84,8 @@ public class RecordingSceneController implements Initializable {
 
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < RECORD_TIME * 10; i++) {
-                    Thread.sleep(100);
+                for (int i = 0; i < RECORD_TIME * 100; i++) {
+                    Thread.sleep(10);
                     updateProgress(i+1,50);
                 }
                 return true;
