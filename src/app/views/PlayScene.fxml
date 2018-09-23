@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -18,11 +12,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="750.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
+          <AnchorPane minHeight="70.0" prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="297.0" text="Name Sayer Player" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="297.0" AnchorPane.rightAnchor="297.0" AnchorPane.topAnchor="0.0">
                      <font>
@@ -33,11 +27,6 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <Label fx:id="_displayName" alignment="CENTER" layoutY="58.0" prefHeight="170.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Name: name" textFill="WHITE" AnchorPane.bottomAnchor="205.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="58.0">
-                     <font>
-                        <Font size="40.0" />
-                     </font>
-                  </Label>
                   <Button fx:id="return_btn" layoutX="648.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleReturnAction" stylesheets="@style.css" text="Return to Menu" textFill="WHITE" AnchorPane.rightAnchor="0.0">
                      <styleClass>
                         <String fx:value="menu-test_mic" />
@@ -140,7 +129,12 @@
                         <Insets bottom="30.0" top="20.0" />
                      </padding>
                   </VBox>
-                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutX="-14.0" layoutY="107.0" prefHeight="170.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="180.0">
+                  <Label fx:id="_displayName" alignment="CENTER" layoutY="58.0" prefHeight="170.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Name: name" textFill="WHITE" AnchorPane.bottomAnchor="205.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="58.0">
+                     <font>
+                        <Font size="40.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutX="-14.0" layoutY="107.0" prefHeight="100.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="210.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0">
                      <font>
                         <Font size="20.0" />
                      </font>

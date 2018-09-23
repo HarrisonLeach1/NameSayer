@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.model.Name;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -34,7 +35,7 @@ public class TestSceneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            String cmd = "mkdir -p " + USER_DATABASE + "; ffmpeg -y -f alsa -t " + RECORD_TIME + " -i default "+ USER_DATABASE + "_test.wav";
+            String cmd = "mkdir -p " + USER_DATABASE + "; ffmpeg -y -f alsa -t " + RECORD_TIME + " -i default "+ USER_DATABASE + ".test.wav";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
@@ -51,12 +52,13 @@ public class TestSceneController implements Initializable {
         );
         timeline.setCycleCount(1);
         timeline.play();
+
     }
 
 
     public void handleReturnAction(ActionEvent event) {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = new File(USER_DATABASE + "_test.wav");
+        File file = new File(USER_DATABASE + ".test.wav");
         if (file.exists()) {
             file.delete();
         }
@@ -64,12 +66,13 @@ public class TestSceneController implements Initializable {
     }
 
     public void handlePlayAction(ActionEvent event) {
-        InputStream in;
         try {
-            in = new FileInputStream(USER_DATABASE + "_test.wav");
-            AudioStream audioStream = new AudioStream(in);
-            AudioPlayer.player.start(audioStream);
-        } catch (Exception e) {
+            String cmd = "ffplay " + USER_DATABASE + ".test.wav -autoexit -nodisp";
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
