@@ -7,7 +7,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-
+/**
+ * A Name object represents a name in a database that can be interacted with
+ * by the user. A Name object is usually created by providing a file name
+ * in the appropirate format:
+ *
+ * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ *
+ *  e.g. se206_2-5-2018_15-23-50_Mason.wav
+ *
+ *  This Name points to this file and stores information of the file such that
+ *  it can be efficiently played, rated and displayed to the user.
+ */
 public class Name {
     private String _shortName, _versionName, _fileName, _dateCreated, _timeCreated;
 
@@ -18,12 +29,11 @@ public class Name {
     }
 
     public Name() {
-
     }
 
     /**
      * Parses the file name, turning the date and time format into a more presentable
-     * format to the user.
+     * format to the user. The name must be in the appropriate format.
      */
     private void parseVersionName() {
         try {
@@ -55,14 +65,6 @@ public class Name {
         _shortName =  dateTimeRemoved.split("\\.")[0];
     }
 
-    public String getShortName() {
-        return _shortName;
-    }
-
-    public void setVersionName(String s) {
-        _versionName = s;
-    }
-
     public void playRecording() {
         try {
             String cmd = "ffplay " + _fileName + " -autoexit -nodisp";
@@ -75,12 +77,18 @@ public class Name {
         }
     }
 
+    /**
+     * The invoked Name object is given a bad quality rating by the user.
+     * This information is stored in a text file on the users machine.
+     * @throws IOException
+     */
     public void setBadQuality() throws IOException {
         File file = new File("bad.txt");
         file.createNewFile();
         FileWriter fw = new FileWriter("bad.txt",true); //the true will append the new data
         Scanner scanner = new Scanner(file);
         boolean found = false;
+
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             if(line.equals(_versionName)) {
@@ -91,6 +99,10 @@ public class Name {
             fw.write(_versionName + "\r\n");
         }
         fw.close();
+    }
+
+    public String getShortName() {
+        return _shortName;
     }
 
     public String getDateCreated() {
@@ -104,5 +116,9 @@ public class Name {
     @Override
     public String toString() {
         return _versionName;
+    }
+
+    public void setVersionName(String s) {
+        _versionName = s;
     }
 }
