@@ -54,6 +54,18 @@ public class Name {
         _shortName =  dateTimeRemoved.split("\\.")[0];
     }
 
+    public String getShortName() {
+        return _shortName;
+    }
+
+    public String getVersionName() {
+        return _versionName;
+    }
+
+    public void setVersionName(String s) {
+        _versionName = s;
+    }
+
     @Override
     public String toString() {
         return _versionName;
@@ -77,14 +89,5 @@ public class Name {
 
     public String getTimeCreated() {
         return _timeCreated;
-    }
-
-
-    public String getShortName() {
-        return _shortName;
-    }
-
-    public void setVersionName(String s) {
-        _versionName = s;
     }
 }

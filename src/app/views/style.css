@@ -40,10 +40,10 @@
 }
 .circle{
     -fx-background-radius: 10em;
-    -fx-min-width: 50px;
-    -fx-min-height: 50px;
-    -fx-max-width: 50px;
-    -fx-max-height: 50px;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 60px;
+    -fx-max-height: 60px;
 }
 .circle:pressed {
     -fx-padding: 10 15 13 15;

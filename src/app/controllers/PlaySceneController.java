@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public class PlaySceneController implements Initializable {
 
     @FXML private Button keep_btn, compare_btn;
-    @FXML private Label _displayName;
+    @FXML private Label _displayName, _bad_Label;
 
     private IPractiseListModel _practiseListModel;
 
@@ -44,6 +44,7 @@ public class PlaySceneController implements Initializable {
      * unchanged if the end of the list is reached.
      */
     public void nextButtonPressed() {
+        _bad_Label.setVisible(false);
         _displayName.setText("Name: " + _practiseListModel.nextName().toString());
 
         keep_btn.setDisable(true);
@@ -116,8 +117,14 @@ public class PlaySceneController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(playerScene);
     }
-    
+
     public void compareButtonPressed() {
         _practiseListModel.compareUserRecording();
     }
+
+    public void badButtonPressed() throws IOException {
+        _practiseListModel.setBadQuality();
+        _bad_Label.setVisible(true);
+    }
+
 }

@@ -1,5 +1,7 @@
 package app.model;
 
+import java.io.IOException;
+
 public interface IPractiseListModel {
 
     Name nextName();
@@ -14,4 +16,5 @@ public interface IPractiseListModel {
 
     void cancelRecording();
 
+    void setBadQuality() throws IOException;
 }

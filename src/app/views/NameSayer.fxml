@@ -154,8 +154,8 @@
                                              <children>
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="83.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <children>
-                                                      <Button id="play_data" mnemonicParsing="false" onAction="#handleStartAction" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
-                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#randomiseButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
+                                                      <Button id="play_data" mnemonicParsing="false" onAction="#handleStartAction" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
+                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#randomiseButtonPressed" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="30.0" />

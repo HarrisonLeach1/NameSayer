@@ -14,6 +14,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckTreeView;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
@@ -47,11 +49,16 @@ public class MainMenuController implements Initializable {
             rec_list.setShowRoot(false);
             rec_pane.toFront();
         } else if(event.getSource() == test_mic_btn){
-            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/RecordingScene.fxml"));
+            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
             Scene playerScene = new Scene(playerParent);
-
             Stage window = new Stage();
             window.setScene(playerScene);
+            window.setOnCloseRequest(event1 -> {
+                File file = new File("./userRecordings/_test.wav");
+                if (file.exists()){
+                    file.delete();
+                }
+            });
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
         }
