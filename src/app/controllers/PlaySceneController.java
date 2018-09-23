@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class PlaySceneController implements Initializable {
 
-    @FXML private Button keep_btn, compare_btn, prev_btn, next_btn;
+    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
@@ -110,8 +110,8 @@ public class PlaySceneController implements Initializable {
         window.showAndWait();
 
         // enable buttons
-        keep_btn.setDisable(false);
-        compare_btn.setDisable(false);
+        _keepBtn.setDisable(false);
+        _compareBtn.setDisable(false);
 
     }
 
@@ -158,19 +158,19 @@ public class PlaySceneController implements Initializable {
     private void checkBounds() {
 
         if (!_practiseListModel.hasNext()) {
-            next_btn.setDisable(true);
+            _nextBtn.setDisable(true);
         } else {
-            next_btn.setDisable(false);
+            _nextBtn.setDisable(false);
         }
 
         if (!_practiseListModel.hasPrevious()) {
-            prev_btn.setDisable(true);
+            _prevBtn.setDisable(true);
         } else {
-            prev_btn.setDisable(false);
+            _prevBtn.setDisable(false);
         }
 
-        keep_btn.setDisable(true);
-        compare_btn.setDisable(true);
+        _keepBtn.setDisable(true);
+        _compareBtn.setDisable(true);
     }
 
 }

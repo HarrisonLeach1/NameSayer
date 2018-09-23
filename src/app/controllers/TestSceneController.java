@@ -28,7 +28,7 @@ import static app.model.Recording.RECORD_TIME;
 public class TestSceneController implements Initializable {
 
     @FXML
-    private Button play_btn,ok_btn;
+    private Button _playBtn,_okBtn;
     @FXML
     private ProgressBar _progress;
 
@@ -46,8 +46,8 @@ public class TestSceneController implements Initializable {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(_progress.progressProperty(), 0)),
                 new KeyFrame(Duration.seconds(5), e -> {
-                    play_btn.setDisable(false);
-                    ok_btn.setDisable(false);
+                    _playBtn.setDisable(false);
+                    _okBtn.setDisable(false);
                 }, new KeyValue(_progress.progressProperty(), 1))
         );
         timeline.setCycleCount(1);
