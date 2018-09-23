@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 
 public class Name {
@@ -34,7 +35,7 @@ public class Name {
             Date date = originalFormat.parse(originalDate);
 
             DateFormat newDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
-            DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a, z");
+            DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a");
 
             _dateCreated = newDateFormat.format(date);
             _timeCreated = newTimeFormat.format(date);
@@ -58,17 +59,8 @@ public class Name {
         return _shortName;
     }
 
-    public String getVersionName() {
-        return _versionName;
-    }
-
     public void setVersionName(String s) {
         _versionName = s;
-    }
-
-    @Override
-    public String toString() {
-        return _versionName;
     }
 
     public void playRecording() {
@@ -83,11 +75,34 @@ public class Name {
         }
     }
 
+    public void setBadQuality() throws IOException {
+        File file = new File("bad.txt");
+        file.createNewFile();
+        FileWriter fw = new FileWriter("bad.txt",true); //the true will append the new data
+        Scanner scanner = new Scanner(file);
+        boolean found = false;
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if(line.equals(_versionName)) {
+                found=true;
+            }
+        }
+        if (!found) {
+            fw.write(_versionName + "\r\n");
+        }
+        fw.close();
+    }
+
     public String getDateCreated() {
         return _dateCreated;
     }
 
     public String getTimeCreated() {
         return _timeCreated;
+    }
+
+    @Override
+    public String toString() {
+        return _versionName;
     }
 }
