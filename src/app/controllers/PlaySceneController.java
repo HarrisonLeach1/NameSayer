@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 
 public class PlaySceneController implements Initializable {
 
-    @FXML private Button keep_btn, compare_btn;
+    @FXML private Button keep_btn, compare_btn, prev_btn, next_btn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
@@ -41,6 +41,7 @@ public class PlaySceneController implements Initializable {
         _currentName = _practiseListModel.nextName();
         _displayName.setText("Name: " + _currentName.getShortName());
         _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
+        checkBounds();
     }
 
     /**
@@ -50,13 +51,12 @@ public class PlaySceneController implements Initializable {
     public void nextButtonPressed() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
+
         _currentName = _practiseListModel.nextName();
         _displayName.setText("Name: " + _currentName.getShortName());
         _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
-        keep_btn.setDisable(true);
-        compare_btn.setDisable(true);
-
+        checkBounds();
     }
 
     /**
@@ -70,8 +70,7 @@ public class PlaySceneController implements Initializable {
         _displayName.setText("Name: " + _currentName.getShortName());
         _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
-        keep_btn.setDisable(true);
-        compare_btn.setDisable(true);
+        checkBounds();
     }
 
     /**
@@ -150,6 +149,28 @@ public class PlaySceneController implements Initializable {
     public void badButtonPressed() throws IOException {
         _currentName.setBadQuality();
         _bad_Label.setVisible(true);
+    }
+
+    /**
+     * Indicates when the start or the end of the list has been reached by disabling
+     * the previous and/or next button.
+     */
+    private void checkBounds() {
+
+        if (!_practiseListModel.hasNext()) {
+            next_btn.setDisable(true);
+        } else {
+            next_btn.setDisable(false);
+        }
+
+        if (!_practiseListModel.hasPrevious()) {
+            prev_btn.setDisable(true);
+        } else {
+            prev_btn.setDisable(false);
+        }
+
+        keep_btn.setDisable(true);
+        compare_btn.setDisable(true);
     }
 
 }

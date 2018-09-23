@@ -77,6 +77,20 @@ public class PractiseListModel implements IPractiseListModel{
         _keepRecording = true;
     }
 
+    public boolean hasNext() {
+        if (_currentIndex >= _practiseList.size() - 1) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean hasPrevious() {
+        if (_currentIndex <= 0) {
+            return false;
+        }
+        return true;
+    }
+
     private void finaliseRecording() {
         if (!_keepRecording && _currentUserRecording != null) {
             _currentUserRecording.deleteRecording();

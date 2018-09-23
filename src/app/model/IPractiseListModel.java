@@ -13,4 +13,8 @@ public interface IPractiseListModel {
     void cancelRecording();
 
     void keepRecording();
+
+    boolean hasNext();
+
+    boolean hasPrevious();
 }
