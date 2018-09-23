@@ -50,7 +50,7 @@
     -fx-background-insets: 1 0 0 0,1 0 1 0, 1 0 2 0, 1 0 2 0;
  }
 .play{
-    -fx-background-color:green;
+    -fx-background-color:forestgreen;
 }
 .play:hover {
     -fx-background-color:#22AD4C;

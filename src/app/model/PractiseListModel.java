@@ -95,7 +95,7 @@ public class PractiseListModel implements IPractiseListModel{
             }
         }
         if (!found) {
-            fw.write(_practiseList.get(_currentIndex).getShortName() + "\r\n");
+            fw.write(_practiseList.get(_currentIndex).getVersionName() + "\r\n");
         }
         fw.close();
     }
