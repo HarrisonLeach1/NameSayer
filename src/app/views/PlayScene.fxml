@@ -101,15 +101,15 @@
                         </HBox>
                         <HBox alignment="CENTER" prefHeight="111.0" prefWidth="748.0" spacing="30.0">
                            <children>
-                              <Button fx:id="record_btn" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Record" textFill="WHITE">
+                              <Button fx:id="record_btn" mnemonicParsing="false" onAction="#recordButtonPressed" prefWidth="90.0" text="Record" textFill="WHITE">
                                  <styleClass>
-                                    <String fx:value="next" />
                                     <String fx:value="menu" />
+                                    <String fx:value="record" />
                                  </styleClass>
                               </Button>
                               <Button fx:id="compare_btn" disable="true" mnemonicParsing="false" onAction="#compareButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Compare" textFill="WHITE">
                                  <styleClass>
-                                    <String fx:value="next" />
+                                    <String fx:value="record" />
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
@@ -117,7 +117,7 @@
                                  <children>
                                     <Button fx:id="keep_btn" disable="true" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Keep" textFill="WHITE">
                                        <styleClass>
-                                          <String fx:value="next" />
+                                          <String fx:value="record" />
                                           <String fx:value="menu" />
                                        </styleClass>
                                     </Button>

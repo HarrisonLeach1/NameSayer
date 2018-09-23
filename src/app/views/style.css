@@ -71,3 +71,15 @@
     -fx-background-color:
         linear-gradient(from 0% 0% to 100% 100%,  #474448 0%, #302A33 100%);
 }
+
+.record{
+    -fx-background-color: #283044;
+}
+.record:hover{
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
+}
+
+.record:pressed{
+    -fx-border-color: white;
+}

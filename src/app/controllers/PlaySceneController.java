@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public class PlaySceneController implements Initializable {
 
     @FXML private Button keep_btn, compare_btn;
-    @FXML private Label _displayName, _bad_Label;
+    @FXML private Label _displayName, _bad_Label, _savedLabel;
 
     private IPractiseListModel _practiseListModel;
 
@@ -44,6 +44,7 @@ public class PlaySceneController implements Initializable {
      * unchanged if the end of the list is reached.
      */
     public void nextButtonPressed() {
+        _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
         _displayName.setText("Name: " + _practiseListModel.nextName().toString());
 
@@ -57,10 +58,13 @@ public class PlaySceneController implements Initializable {
      * is unchanged if there are no previous names.
      */
     public void previousButtonPressed() {
+        _savedLabel.setVisible(false);
+        _bad_Label.setVisible(false);
         _displayName.setText("Name: " + _practiseListModel.previousName().toString());
     }
 
     public void keepButtonPressed() {
+        _savedLabel.setVisible(true);
         //_practiseListModel.keepRecording();
     }
 
