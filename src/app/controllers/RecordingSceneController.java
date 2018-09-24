@@ -86,7 +86,7 @@ public class RecordingSceneController {
             protected Object call() throws Exception {
                 for (int i = 0; i < RECORD_TIME * 100; i++) {
                     Thread.sleep(10);
-                    updateProgress(i+1,50);
+                    updateProgress(i+1,500);
                 }
                 return true;
             }

@@ -3,9 +3,7 @@ package app.model;
 
 import javafx.scene.control.TreeItem;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * A TreeViewFactory creates a TreeView from a database of files.
@@ -73,6 +71,10 @@ public abstract class TreeViewFactory {
                 addBranch(singleName,root);
             }
         }
+
+        // Sort children alphabetically
+        Collections.sort(root.getChildren(), Comparator.comparing((TreeItem<Name> o) -> o.getValue().toString()));
+
         return root;
     }
 

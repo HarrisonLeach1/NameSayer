@@ -12,7 +12,7 @@ public class CheckTreeViewFactory extends TreeViewFactory {
     @Override
     protected CheckBoxTreeItem<Name> addBranch(Name child, TreeItem<Name> parent) {
         CheckBoxTreeItem<Name> item = new CheckBoxTreeItem<>(child);
-        item.setExpanded(true);
+        item.setExpanded(false);
         parent.getChildren().add(item);
         return item;
     }
