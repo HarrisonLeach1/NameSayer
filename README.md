@@ -1,11 +1,14 @@
-# Namesayer_part3
+# NameSayer
+
+## How to Run
+
+Place names database in a folder called names in the same directory as the jar file.
 
 Give necessary permissions or run using java command in terminal.
 
-Go to directory containing jar file
+Go to directory containing jar file.
 
-Type "java -jar NameSayer_part3.jar" into the terminal
+Type "java -jar NameSayer_part3.jar" into the terminal.
 
-Press Enter
+Press Enter.
 
-Place names database in a folder called names in the same directory as the jar file.
