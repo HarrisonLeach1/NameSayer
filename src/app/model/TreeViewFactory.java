@@ -2,7 +2,7 @@ package app.model;
 
 
 import javafx.scene.control.TreeItem;
-import java.io.File;
+
 import java.util.*;
 
 /**
@@ -40,17 +40,14 @@ public abstract class TreeViewFactory {
      * @param database
      * @return the TreeItem to be used as root for the TreeView
      */
-    public TreeItem<Name> getTreeRoot(TreeItem<Name> root , String database) {
+    public TreeItem<Name> getTreeRoot(TreeItem<Name> root , HashMap<String, ArrayList<Name>> database) {
         root.setExpanded(true);
 
-        // hashmap for storing all different versions (values) associated with a specific name (key)
-        HashMap<String, ArrayList<Name>> nameTable = getNameTable(database);
-
         // loop through each name in table and build tree
-        for (String key : nameTable.keySet()) {
+        for (String key : database.keySet()) {
 
             // get all versions with the name
-            ArrayList<Name> versions = nameTable.get(key);
+            ArrayList<Name> versions = database.get(key);
 
             // if multiple versions of the name exist, add children
             if (versions.size() > 1) {
@@ -76,44 +73,5 @@ public abstract class TreeViewFactory {
         Collections.sort(root.getChildren(), Comparator.comparing((TreeItem<Name> o) -> o.getValue().toString()));
 
         return root;
-    }
-
-    /**
-     * Given a the path to a non-empty folder, all files are converted to Name objects
-     * and are stored in a HashMap under the key corresponding to their short name.
-     * This allows for time-efficient detection of duplicates.
-     *
-     * @param database
-     * @return the HashMap containing the
-     */
-    protected HashMap<String, ArrayList<Name>> getNameTable(String database) {
-        HashMap<String, ArrayList<Name>> nameTable = new HashMap<>();
-
-        File databaseFolder = new File(database);
-        if(!databaseFolder.exists()){
-            return new HashMap<>();
-        }
-
-        File[] files  = databaseFolder.listFiles();
-
-        // loop through files to add recordings to table
-        for (File file : files) {
-            if (file.isFile()) {
-
-                // retrieve full file name and create a name object from it
-                Name name = new Name(database + file.getName());
-
-                // if other versions of the same name exist, add to the list
-                if (nameTable.containsKey(name.getShortName())) {
-                    ArrayList<Name> currentList = nameTable.get(name.getShortName());
-                    currentList.add(name);
-                } else { // otherwise create a new key for the name
-                    ArrayList<Name> version = new ArrayList<>(Arrays.asList(name));
-                    nameTable.put(name.getShortName(), version);
-                }
-            }
-        }
-
-        return nameTable;
     }
 }

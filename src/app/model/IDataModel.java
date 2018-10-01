@@ -17,7 +17,7 @@ public interface IDataModel {
      *
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<Name> loadDatabase();
+    TreeItem<Name> loadDatabaseTree();
 
     /**
      * Loads the database of user recordings as a tree. The root is returned,
@@ -27,6 +27,6 @@ public interface IDataModel {
      *
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<Name> loadUserDatabase();
+    TreeItem<Name> loadUserDatabaseTree();
 
 }

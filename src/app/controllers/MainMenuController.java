@@ -49,7 +49,7 @@ public class MainMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _dataList.setRoot(dataModel.loadDatabase());
+        _dataList.setRoot(dataModel.loadDatabaseTree());
         _dataList.setShowRoot(false);
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
@@ -63,7 +63,7 @@ public class MainMenuController implements Initializable {
         if(event.getSource() == _viewDataBtn){
             _dataPane.toFront();
         } else if(event.getSource() == _viewRecBtn){
-            _recList.setRoot(dataModel.loadUserDatabase());
+            _recList.setRoot(dataModel.loadUserDatabaseTree());
             _recList.setShowRoot(false);
             _recPane.toFront();
         } else if(event.getSource() == _testMicBtn){
