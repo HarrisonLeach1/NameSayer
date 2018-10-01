@@ -20,7 +20,7 @@ import java.util.Scanner;
  *  it can be efficiently played, rated and displayed to the user.
  */
 public class Name {
-    private String _shortName, _versionName, _fileName, _dateCreated, _timeCreated;
+    private String _shortName, _displayName, _fileName, _dateCreated, _timeCreated;
 
     public Name(String fileName) {
         _fileName = fileName;
@@ -50,7 +50,7 @@ public class Name {
             _dateCreated = newDateFormat.format(date);
             _timeCreated = newTimeFormat.format(date);
 
-            _versionName = _shortName + " " + _dateCreated + " " + _timeCreated;
+            _displayName = _shortName + " " + _dateCreated + " " + _timeCreated;
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -91,12 +91,12 @@ public class Name {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if(line.equals(_versionName)) {
+            if(line.equals(_displayName)) {
                 found=true;
             }
         }
         if (!found) {
-            fw.write(_versionName + "\r\n");
+            fw.write(_displayName + "\r\n");
         }
         fw.close();
     }
@@ -115,10 +115,10 @@ public class Name {
 
     @Override
     public String toString() {
-        return _versionName;
+        return _displayName;
     }
 
-    public void setVersionName(String s) {
-        _versionName = s;
+    public void setDisplayName(String s) {
+        _displayName = s;
     }
 }

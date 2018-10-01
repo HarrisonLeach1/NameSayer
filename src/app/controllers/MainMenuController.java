@@ -13,6 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.CheckTreeView;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class MainMenuController implements Initializable {
 
     @FXML private Pane _dataPane, _recPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn;
-    @FXML private CheckTreeView<Name> _dataList;
+    @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
     @FXML private TreeView<Name> _recList;
 
@@ -49,8 +50,7 @@ public class MainMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _dataList.setRoot(dataModel.loadDatabaseTree());
-        _dataList.setShowRoot(false);
+        _dataList.getItems().addAll(dataModel.loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
@@ -89,15 +89,23 @@ public class MainMenuController implements Initializable {
      * All checked items in the CheckTreeView are added to the selected list of names
      * to be practised by the user.
      */
+//    public void addButtonPressedTree() {
+//        List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
+//        List<Name> selectedItems = _selectedList.getItems();
+//        for (TreeItem<Name> name : checkedNames) {
+//            if (name.getChildren().size() < 2) { // only add if name is not a leaf
+//                selectedItems.add(name.getValue());
+//            }
+//        }
+//        _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
+//    }
+
     public void addButtonPressed() {
-        List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
-        List<Name> selectedItems = _selectedList.getItems();
-        for (TreeItem<Name> name : checkedNames) {
-            if (name.getChildren().size() < 2) { // only add if name is not a leaf
-                selectedItems.add(name.getValue());
-            }
-        }
-        _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
+        // add all checked items to the selected list
+        _selectedList.getItems().addAll(_dataList.getCheckModel().getCheckedItems());
+
+        // clear items checked after they have been added
+        _dataList.getCheckModel().clearChecks();
     }
 
     /**

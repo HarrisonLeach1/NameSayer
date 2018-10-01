@@ -54,7 +54,7 @@ public abstract class TreeViewFactory {
 
                 // creates a placeholder node that bridges to all subversions of the name
                 Name bridgeName = new Name();
-                bridgeName.setVersionName(key);
+                bridgeName.setDisplayName(key);
                 TreeItem<Name> bridgeNode = addBranch(bridgeName,root);
 
                 // add all children with the name under this node
@@ -64,7 +64,7 @@ public abstract class TreeViewFactory {
 
             } else {
                 Name singleName = versions.get(0);
-                singleName.setVersionName(key);
+                singleName.setDisplayName(key);
                 addBranch(singleName,root);
             }
         }

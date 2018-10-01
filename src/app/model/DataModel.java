@@ -1,12 +1,11 @@
 package app.model;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
@@ -30,6 +29,51 @@ public class DataModel implements IDataModel{
 		TreeViewFactory checkTree = new RegularTreeViewFactory();
 		TreeItem<Name> root = new TreeItem<>();
 		return checkTree.getTreeRoot(root, getNameTable(USER_DATABASE));
+	}
+
+	/**
+	 * Creates a List of Names containing only one version of each name.
+	 * @return ArrayList
+	 */
+	public List<Name> loadDatabaseList() {
+		HashMap<String, ArrayList<Name>> nameTable = getNameTable(DATABASE);
+
+		List<Name> nameList = new ArrayList<Name>();
+
+		// loop through each base name
+		for (String key : nameTable.keySet()) {
+
+			// randomly select name from nameTable
+			Name selectedName = selectQualityVersion(nameTable.get(key));
+
+			// set display name to short version
+			selectedName.setDisplayName(selectedName.getShortName());
+
+			nameList.add(selectedName);
+		}
+
+		return nameList;
+	}
+
+	/**
+	 * Given a list, if there exists a good quality version in the list of a given name, one
+	 * is chosen at and returned. Otherwise, a bad recording is returned.
+	 * @param list
+	 * @return Name that was selected
+	 */
+	private Name selectQualityVersion(ArrayList<Name> list) {
+		// initialise random generator
+		Random random = new Random();
+
+		// loop through list of versions of names until a good quality version is found
+		for(Name n: list) {
+			//if(!n.isBadQuality) { // if good (not bad) quality, return the version
+				return n;
+			//}
+		}
+		// if no good quality version is found return any recording
+		return list.get(0);
+
 	}
 
 	/**
