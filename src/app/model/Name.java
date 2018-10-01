@@ -61,8 +61,14 @@ public class Name {
      * Retrieves just the name of the recording excluding the creation date, time and file extension.
      */
     private void parseShortName() {
+        // get the last part of the file name
         String dateTimeRemoved = _fileName.substring(_fileName.lastIndexOf('_') + 1);
-        _shortName =  dateTimeRemoved.split("\\.")[0];
+
+        // remove the file extension
+        String uncapitalisedName =  dateTimeRemoved.split("\\.")[0];
+
+        // capitalise the name
+        _shortName = uncapitalisedName.substring(0, 1).toUpperCase() + uncapitalisedName.substring(1);
     }
 
     public void playRecording() {
@@ -91,12 +97,12 @@ public class Name {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if(line.equals(_displayName)) {
+            if(line.equals(_fileName)) {
                 found=true;
             }
         }
         if (!found) {
-            fw.write(_displayName + "\r\n");
+            fw.write(_fileName + "\r\n");
         }
         fw.close();
     }

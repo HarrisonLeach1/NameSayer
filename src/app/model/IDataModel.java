@@ -33,6 +33,11 @@ public interface IDataModel {
      */
     TreeItem<Name> loadUserDatabaseTree();
 
+    /**
+     * Loads the database of recordings as a list. Each name only appears in the list
+     * once and is of good quality (if possible).
+     * @return List<Name>
+     */
     List<Name> loadDatabaseList();
 
 }

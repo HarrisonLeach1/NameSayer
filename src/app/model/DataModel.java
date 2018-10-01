@@ -52,6 +52,9 @@ public class DataModel implements IDataModel{
 			nameList.add(selectedName);
 		}
 
+		// sort alphabetically
+		Collections.sort(nameList, Comparator.comparing((Name o) -> o.toString()));
+
 		return nameList;
 	}
 

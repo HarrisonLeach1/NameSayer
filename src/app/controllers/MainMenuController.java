@@ -84,22 +84,11 @@ public class MainMenuController implements Initializable {
             window.showAndWait();
         }
     }
-
+    
     /**
-     * All checked items in the CheckTreeView are added to the selected list of names
+     * All checked items in the CheckListView are added to the selected list of names
      * to be practised by the user.
      */
-//    public void addButtonPressedTree() {
-//        List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
-//        List<Name> selectedItems = _selectedList.getItems();
-//        for (TreeItem<Name> name : checkedNames) {
-//            if (name.getChildren().size() < 2) { // only add if name is not a leaf
-//                selectedItems.add(name.getValue());
-//            }
-//        }
-//        _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
-//    }
-
     public void addButtonPressed() {
         // add all checked items to the selected list
         _selectedList.getItems().addAll(_dataList.getCheckModel().getCheckedItems());
