@@ -21,11 +21,13 @@ import java.util.Scanner;
  */
 public class Name {
     private String _shortName, _displayName, _fileName, _dateCreated, _timeCreated;
+    private boolean _isBadQuality;
 
     public Name(String fileName) {
         _fileName = fileName;
         parseShortName();
         parseVersionName();
+        _isBadQuality = findQuality();
     }
 
     public Name() {
@@ -89,22 +91,44 @@ public class Name {
      * @throws IOException
      */
     public void setBadQuality() throws IOException {
-        File file = new File("bad.txt");
-        file.createNewFile();
-        FileWriter fw = new FileWriter("bad.txt",true); //the true will append the new data
-        Scanner scanner = new Scanner(file);
-        boolean found = false;
+        FileWriter fw = new FileWriter("bad.txt", true); //the true will append the new data
 
+        if (!_isBadQuality) { // if it is not already bad quality, mark as bad quality
+            fw.write(_fileName + "\r\n");
+            _isBadQuality = true;
+        }
+        fw.close();
+    }
+
+    /**
+     * Returns true if the specific recording related to this file name
+     * has been marked as bad quality by the user. Otherwise, returns false.
+     * @throws IOException
+     */
+    private boolean findQuality() {
+        File file = new File("bad.txt");
+        Scanner scanner = null;
+
+        // create bad.txt if it does not already exist
+        try {
+            file.createNewFile();
+            scanner = new Scanner(file);
+        } catch (IOException e) {
+            e.printStackTrace(); // incorrect filename
+        }
+
+        // loop through all lines of the file until the version is found, otherwise it is not bad
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             if(line.equals(_fileName)) {
-                found=true;
+                return true;
             }
         }
-        if (!found) {
-            fw.write(_fileName + "\r\n");
-        }
-        fw.close();
+        return false;
+    }
+
+    public boolean isBadQuality() {
+        return _isBadQuality;
     }
 
     public String getShortName() {

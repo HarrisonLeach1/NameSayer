@@ -84,7 +84,7 @@ public class MainMenuController implements Initializable {
             window.showAndWait();
         }
     }
-    
+
     /**
      * All checked items in the CheckListView are added to the selected list of names
      * to be practised by the user.

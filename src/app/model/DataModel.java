@@ -28,7 +28,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<Name> loadUserDatabaseTree(){
 		TreeViewFactory checkTree = new RegularTreeViewFactory();
 		TreeItem<Name> root = new TreeItem<>();
-		return checkTree.getTreeRoot(root, getNameTable(USER_DATABASE));
+		return checkTree.getTreeRoot(root, getNameTable(DATABASE));
 	}
 
 	/**
@@ -69,10 +69,10 @@ public class DataModel implements IDataModel{
 		Random random = new Random();
 
 		// loop through list of versions of names until a good quality version is found
-		for(Name n: list) {
-			//if(!n.isBadQuality) { // if good (not bad) quality, return the version
-				return n;
-			//}
+		for(Name currentName: list) {
+			if(!currentName.isBadQuality()) { // if good (not bad) quality, return the version
+				return currentName;
+			}
 		}
 		// if no good quality version is found return any recording
 		return list.get(0);
