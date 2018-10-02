@@ -1,9 +1,7 @@
 package app.model;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,7 +19,7 @@ public interface IDataModel {
      *
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<Name> loadDatabaseTree();
+    TreeItem<NameVersion> loadDatabaseTree();
 
     /**
      * Loads the database of user recordings as a tree. The root is returned,
@@ -31,7 +29,7 @@ public interface IDataModel {
      *
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<Name> loadUserDatabaseTree();
+    TreeItem<NameVersion> loadUserDatabaseTree();
 
     /**
      * Loads the database of recordings as a list. Each name only appears in the list

@@ -14,13 +14,10 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
-import org.controlsfx.control.CheckTreeView;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static app.model.DataModel.USER_DATABASE;
@@ -38,7 +35,7 @@ public class MainMenuController implements Initializable {
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
-    @FXML private TreeView<Name> _recList;
+    @FXML private TreeView<NameVersion> _recList;
 
 
     private IDataModel dataModel = new DataModel();
@@ -123,7 +120,7 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * The order of the Name items in the selected list of Names is shuffled randomly
+     * The order of the NameVersion items in the selected list of Names is shuffled randomly
      */
     public void randomiseButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
@@ -131,7 +128,7 @@ public class MainMenuController implements Initializable {
 
 
     /**
-     * Loads in all Name objects in the selected list, passes it to the next view
+     * Loads in all NameVersion objects in the selected list, passes it to the next view
      * and controller, and switches scenes.
      * @param event
      * @throws IOException
@@ -159,9 +156,9 @@ public class MainMenuController implements Initializable {
      * Plays the currently selected user recording in the list of user recordings.
      */
     public void playButtonPressed() {
-        TreeItem<Name> selectedItem = _recList.getSelectionModel().getSelectedItem();
+        TreeItem<NameVersion> selectedItem = _recList.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            Name currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
+            NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
 
             if(currentUserRecording != null) {
                 currentUserRecording.playRecording();

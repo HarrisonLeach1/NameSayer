@@ -1,154 +1,85 @@
 package app.model;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-import java.io.*;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Scanner;
-
-/**
- * A Name object represents a name in a database that can be interacted with
- * by the user. A Name object is usually created by providing a file name
- * in the appropirate format:
- *
- * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
- *
- *  e.g. se206_2-5-2018_15-23-50_Mason.wav
- *
- *  This Name points to this file and stores information of the file such that
- *  it can be efficiently played, rated and displayed to the user.
- */
 public class Name {
-    private String _shortName, _displayName, _fileName, _dateCreated, _timeCreated;
-    private boolean _isBadQuality;
+    private final String _name;
+    private List<NameVersion> _nameVersions;
 
-    public Name(String fileName) {
-        _fileName = fileName;
-        parseShortName();
-        parseVersionName();
-        _isBadQuality = findQuality();
-    }
-
-    public Name() {
+    public Name(String name) {
+        _name = name;
+        _nameVersions = new ArrayList<>();
     }
 
     /**
-     * Parses the file name, turning the date and time format into a more presentable
-     * format to the user. The name must be in the appropriate format.
+     * Given a list, if there exists a good quality version in the list of a given name, one
+     * is chosen at and returned. Otherwise, a bad recording is returned.
+     * @return NameVersion that was selected
      */
-    private void parseVersionName() {
-        try {
-            String[] parts = _fileName.split("_");
-            String originalDate = parts[1] + "_" + parts[2];
+    public NameVersion selectGoodVersion() {
+        // initialise random generator
+        Random random = new Random();
 
-            DateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
-
-            Date date = originalFormat.parse(originalDate);
-
-            DateFormat newDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
-            DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a");
-
-            _dateCreated = newDateFormat.format(date);
-            _timeCreated = newTimeFormat.format(date);
-
-            _displayName = _shortName + " " + _dateCreated + " " + _timeCreated;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Retrieves just the name of the recording excluding the creation date, time and file extension.
-     */
-    private void parseShortName() {
-        // get the last part of the file name
-        String dateTimeRemoved = _fileName.substring(_fileName.lastIndexOf('_') + 1);
-
-        // remove the file extension
-        String uncapitalisedName =  dateTimeRemoved.split("\\.")[0];
-
-        // capitalise the name
-        _shortName = uncapitalisedName.substring(0, 1).toUpperCase() + uncapitalisedName.substring(1);
-    }
-
-    public void playRecording() {
-        try {
-            String cmd = "ffplay " + _fileName + " -autoexit -nodisp";
-
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * The invoked Name object is given a bad quality rating by the user.
-     * This information is stored in a text file on the users machine.
-     * @throws IOException
-     */
-    public void setBadQuality() throws IOException {
-        FileWriter fw = new FileWriter("bad.txt", true); //the true will append the new data
-
-        if (!_isBadQuality) { // if it is not already bad quality, mark as bad quality
-            fw.write(_fileName + "\r\n");
-            _isBadQuality = true;
-        }
-        fw.close();
-    }
-
-    /**
-     * Returns true if the specific recording related to this file name
-     * has been marked as bad quality by the user. Otherwise, returns false.
-     * @throws IOException
-     */
-    private boolean findQuality() {
-        File file = new File("bad.txt");
-        Scanner scanner = null;
-
-        // create bad.txt if it does not already exist
-        try {
-            file.createNewFile();
-            scanner = new Scanner(file);
-        } catch (IOException e) {
-            e.printStackTrace(); // incorrect filename
-        }
-
-        // loop through all lines of the file until the version is found, otherwise it is not bad
-        while (scanner.hasNextLine()) {
-            String line = scanner.nextLine();
-            if(line.equals(_fileName)) {
-                return true;
+        // loop through _nameVersions of versions of names until a good quality version is found
+        for(NameVersion currentName: _nameVersions) {
+            if(!currentName.isBadQuality()) { // if good (not bad) quality, return the version
+                return currentName;
             }
         }
-        return false;
+        // if no good quality version is found return any recording
+        return _nameVersions.get(0);
+
     }
 
-    public boolean isBadQuality() {
-        return _isBadQuality;
+    /**
+     * Adds a NameVersion to the list of versions of this name
+     * @param name
+     */
+    public void add(NameVersion name) {
+        _nameVersions.add(name);
     }
 
-    public String getShortName() {
-        return _shortName;
+    /**
+     * Returns the number of different recording verisons pf this name.  If this name
+     * contains more than Integer.MAX_VALUE recordings, returns Integer.MAX_VALUE.
+     *
+     * @return the number of recordings if the name
+     */
+    public int size() {
+        return _nameVersions.size();
     }
 
-    public String getDateCreated() {
-        return _dateCreated;
-    }
-
-    public String getTimeCreated() {
-        return _timeCreated;
+    /**
+     * Returns the version at the specified position in the list.
+     *
+     * @param i index of the element to return
+     * @return the version at the specified position in the list
+     * @throws IndexOutOfBoundsException if the index is out of range
+     */
+    public NameVersion get(int i) {
+        return _nameVersions.get(i);
     }
 
     @Override
     public String toString() {
-        return _displayName;
+        return _name;
     }
 
-    public void setDisplayName(String s) {
-        _displayName = s;
+    public void playRecording() {
+        selectGoodVersion().playRecording();
+    }
+
+    public String getDateCreated() {
+        return selectGoodVersion().getDateCreated();
+    }
+
+    public String getTimeCreated() {
+        return selectGoodVersion().getTimeCreated();
+    }
+
+    public void setBadQuality() throws IOException {
+        selectGoodVersion().setBadQuality();
     }
 }
