@@ -2,7 +2,6 @@ package app.model;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class Name {
     private final String _name;
@@ -19,9 +18,6 @@ public class Name {
      * @return NameVersion that was selected
      */
     public NameVersion selectGoodVersion() {
-        // initialise random generator
-        Random random = new Random();
-
         // loop through _nameVersions of versions of names until a good quality version is found
         for(NameVersion currentName: _nameVersions) {
             if(!currentName.isBadQuality()) { // if good (not bad) quality, return the version
@@ -62,13 +58,22 @@ public class Name {
         return _nameVersions.get(i);
     }
 
-    @Override
-    public String toString() {
-        return _name;
+    /**
+     * The current recording of the name which was said to be of good
+     * quality is marked as bad quality.
+     * @throws IOException
+     */
+    public void setBadQuality() throws IOException {
+        selectGoodVersion().setBadQuality();
     }
 
     public void playRecording() {
         selectGoodVersion().playRecording();
+    }
+
+    @Override
+    public String toString() {
+        return _name;
     }
 
     public String getDateCreated() {
@@ -77,9 +82,5 @@ public class Name {
 
     public String getTimeCreated() {
         return selectGoodVersion().getTimeCreated();
-    }
-
-    public void setBadQuality() throws IOException {
-        selectGoodVersion().setBadQuality();
     }
 }

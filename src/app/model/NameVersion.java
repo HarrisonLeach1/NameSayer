@@ -127,10 +127,15 @@ public class NameVersion {
         return false;
     }
 
+    /**
+     * Indicates if this recording version has previously been marked as being of
+     * bad quality
+     * @return
+     */
     public boolean isBadQuality() {
         return _isBadQuality;
     }
-
+    
     public String getShortName() {
         return _shortName;
     }
@@ -143,12 +148,12 @@ public class NameVersion {
         return _timeCreated;
     }
 
+    public void setDisplayName(String s) {
+        _displayName = s;
+    }
+
     @Override
     public String toString() {
         return _displayName;
-    }
-
-    public void setDisplayName(String s) {
-        _displayName = s;
     }
 }
