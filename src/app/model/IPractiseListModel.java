@@ -33,26 +33,26 @@ public interface IPractiseListModel {
     void keepRecording();
 
     /**
-     * Returns the Name object that is next in the list of selected
+     * Returns the NameVersion object that is next in the list of selected
      * recordings to be practised.
      */
     Name nextName();
 
     /**
-     * Returns the Name object that is previous in the list of selected
+     * Returns the NameVersion object that is previous in the list of selected
      * recordings to be practised.
      */
     Name previousName();
 
     /**
-     * Returns true if there exists a Name object after the current Name
+     * Returns true if there exists a NameVersion object after the current NameVersion
      * object in the list of selected recordings to be practised, otherwise
      * returns false.
      */
     boolean hasNext();
 
     /**
-     * Returns true if there exists a Name object before the current Name
+     * Returns true if there exists a NameVersion object before the current NameVersion
      * object in the list of selected recordings to be practised, otherwise
      * returns false.
      */

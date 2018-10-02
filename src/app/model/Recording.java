@@ -44,9 +44,9 @@ public class Recording {
     /**
      * Records the users voice for the specified recording time and creates a new
      * file for the recording.
-     * @return the Name object pointing to the file of the newly created user recording.
+     * @return the NameVersion object pointing to the file of the newly created user recording.
      */
-    public Name createRecording() {
+    public NameVersion createRecording() {
         try {
             String cmd = "mkdir -p " + USER_DATABASE+ "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
 
@@ -56,7 +56,7 @@ public class Recording {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new Name(_fileName);
+        return new NameVersion(_fileName);
     }
 
 

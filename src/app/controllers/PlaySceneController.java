@@ -2,10 +2,10 @@ package app.controllers;
 
 import app.model.IPractiseListModel;
 import app.model.Name;
+import app.model.NameVersion;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,8 +14,6 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * A PlaySceneController holds the responsibility of receiving input events
@@ -41,13 +39,13 @@ public class PlaySceneController {
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("Name: " + _currentName.getShortName());
+        _displayName.setText("NameVersion: " + _currentName.toString());
         _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
         checkBounds();
     }
 
     /**
-     * Moves to the next Name in the list and updates the displayed name. The Name is
+     * Moves to the next NameVersion in the list and updates the displayed name. The NameVersion is
      * unchanged if the end of the list is reached.
      */
     public void nextButtonPressed() {
@@ -55,21 +53,21 @@ public class PlaySceneController {
         _bad_Label.setVisible(false);
 
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("Name: " + _currentName.getShortName());
+        _displayName.setText("NameVersion: " + _currentName.toString());
         _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
         checkBounds();
     }
 
     /**
-     * Moves to the previous Name in the list and updates the displayed name. The Name
+     * Moves to the previous NameVersion in the list and updates the displayed name. The NameVersion
      * is unchanged if there are no previous names.
      */
     public void previousButtonPressed() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
         _currentName = _practiseListModel.previousName();
-        _displayName.setText("Name: " + _currentName.getShortName());
+        _displayName.setText("NameVersion: " + _currentName.toString());
         _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
         checkBounds();
