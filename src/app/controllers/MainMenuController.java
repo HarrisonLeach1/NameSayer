@@ -91,15 +91,28 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * When the find and play button is pressed the searched name is retrieved
+     * and the user is moved to the play scene. If searched name does not exist
+     * the user is notified.
+     * @param event
+     * @throws IOException
+     */
     public void playSearchPressed(ActionEvent event) throws IOException {
         try {
             // create a new playlist loader and retrieve the playlist created
             PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
             ArrayList<Practisable> list = new ArrayList<>(loader.getList());
             moveToPlayScene(list, event);
+
+            // if the name is not found perform action
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void chooseFilePressed() {
+
     }
 
     /**

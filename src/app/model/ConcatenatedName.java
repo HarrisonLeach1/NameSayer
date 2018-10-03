@@ -103,6 +103,7 @@ public class ConcatenatedName implements Practisable {
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -y -i " + FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
                         "-f null /dev/null |& grep 'mean_volume:' ";
+                System.out.println(cmd);
 
                 // start process
                 ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
@@ -112,7 +113,7 @@ public class ConcatenatedName implements Practisable {
 
                 // read in standard out to be parsed
                 InputStream stdout = process.getInputStream();
-                BufferedReader stdoutBuffered =new BufferedReader(new InputStreamReader(stdout));
+                BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
                 String lineOut = stdoutBuffered.readLine();
 
                 // Parse the mean volume number from the output, the volume is 2-7 indices from the right of the colon
@@ -147,7 +148,9 @@ public class ConcatenatedName implements Practisable {
         for(Name name : _names) {
             try {
                 String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFileName() +
-                        " -af silenceremove=1:0:-50dB:1:5:-70dB:0:peak " + FOLDER + name.toString() + EXTENSION;
+                        " -af silenceremove=1:0:-50dB:1:5:-70dB " + FOLDER + name.toString() + EXTENSION;
+                System.out.println(cmd);
+
 
                 ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
                 Process process = builder.start();
