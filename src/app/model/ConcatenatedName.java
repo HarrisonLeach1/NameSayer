@@ -1,6 +1,6 @@
 package app.model;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 public class ConcatenatedName {
@@ -11,6 +11,7 @@ public class ConcatenatedName {
     public ConcatenatedName(List<Name> names) {
         _names = names;
         concatenateFileNames();
+        normaliseAudio();
         concatenateAudio();
     }
 
@@ -19,7 +20,32 @@ public class ConcatenatedName {
      * of similar volume.
      */
     private void normaliseAudio() {
+        double sum = 0;
 
+        for(Name name : _names) {
+            try {
+                // define process for returning the mean volume of the recording
+                String cmd = "ffmpeg -i " + name.selectGoodVersion().getFileName() + " -filter:a volumedetect -f null /dev/null |& grep 'mean_volume:' ";
+
+                // start process
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+                Process process = builder.start();
+
+                // read in standard out to be parsed
+                InputStream stdout = process.getInputStream();
+                BufferedReader stdoutBuffered =new BufferedReader(new InputStreamReader(stdout));
+                String lineOut = stdoutBuffered.readLine();
+
+                // Parse the mean volume number from the output, the 2-7 indices from the right of the colon
+                int colonIndex = lineOut.lastIndexOf(':');
+                String volumeString = lineOut.substring(colonIndex + 2, colonIndex + 7);
+                Double volume = Double.parseDouble(volumeString);
+
+                sum += volume;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
