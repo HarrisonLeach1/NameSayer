@@ -2,7 +2,9 @@ package app.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -27,19 +29,22 @@ public class PlaylistLoader {
      */
     private List<ConcatenatedName> loadFile(File playlistFile) throws FileNotFoundException {
         Scanner input = new Scanner(playlistFile);
-        List<String> list = new ArrayList<String>();
+        List<ConcatenatedName> nameList = new ArrayList<>();
 
-        // load in each line of the text file as a string
+        // load in each line of the text file, and use each string to create a new Name object
         while (input.hasNextLine()) {
-            list.add(input.nextLine());
+            nameList.add(new ConcatenatedName(input.nextLine()));
         }
 
-        return stringsToNames(list);
+        return nameList;
     }
 
+    /**
+     * Given a single name string, returns a Name object of the associated name.
+     * @param singleName
+     * @return a list containing a single name
+     */
     private List<ConcatenatedName> loadSingleName(String singleName) {
-
+        return Arrays.asList(new ConcatenatedName(singleName));
     }
-
-
 }
