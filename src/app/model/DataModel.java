@@ -14,7 +14,8 @@ public class DataModel implements IDataModel{
     private DataModel() {}
 
 	/**
-	 * Returns the singleton instance of the DataModel
+	 * Returns the singleton instance of the DataModel, used for loading
+	 * in the recording databases.
 	 * @return instance of DataModel
 	 */
 	public static DataModel getInstance() {
