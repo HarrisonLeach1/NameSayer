@@ -1,5 +1,6 @@
 package app.controllers;
 
+import app.model.ConcatenatedName;
 import app.model.IPractiseListModel;
 import app.model.Name;
 import app.model.NameVersion;
@@ -14,6 +15,8 @@ import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A PlaySceneController holds the responsibility of receiving input events
@@ -119,7 +122,12 @@ public class PlaySceneController {
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
-        _currentName.playRecording();
+        List<Name> list = new ArrayList<>();
+        list.add(_currentName);
+        list.add(_practiseListModel.nextName());
+        list.add(_practiseListModel.nextName());
+        ConcatenatedName cname = new ConcatenatedName(list);
+        cname.playRecording();
     }
 
     /**
