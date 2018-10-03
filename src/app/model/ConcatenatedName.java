@@ -4,8 +4,8 @@ import java.io.*;
 import java.util.List;
 
 public class ConcatenatedName {
-    public static final String TEMP_EXTENSION = "temp/normalised";
-    public static final String MERGED_PATH = "temp/merged.wav";
+    public static final String EXTENSION = "_temp.wav";
+    public static final String FOLDER = "temp/";
     public static final double VOLUME_LEVEL = -20.0;
     private final String _displayName;
     private List<Name> _names;
@@ -41,7 +41,7 @@ public class ConcatenatedName {
         double[] meanVolumes = new double[_names.size()];
 
         try {
-            for(int i = 0; i < _names.size(); i++) {
+            for(Name name : _names) {
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -i " + _names.get(i).selectGoodVersion().getFileName() + " -filter:a volumedetect -f null /dev/null |& grep 'mean_volume:' ";
 
@@ -90,14 +90,17 @@ public class ConcatenatedName {
      * not contain any unnecessary silence.
      */
     private void cutSilence() {
-        try {
-            String cmd = "ffmpeg -y -hide_banner -i " catherine.wav "-af silenceremove=1:0:-50dB:1:5:-70dB:0:peak " + ;
+        for(Name name : _names) {
+            try {
+                String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFileName() +
+                        "-af silenceremove=1:0:-50dB:1:5:-70dB:0:peak " + FOLDER + name.toString() + EXTENSION;
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+                builder.start();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -159,7 +162,7 @@ public class ConcatenatedName {
     }
 
     /**
-     *
+     * Takes all the display names of the Name objects and creates a display name
      * @return String to be displayed
      */
     private String createDisplayName() {
