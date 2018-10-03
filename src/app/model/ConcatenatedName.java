@@ -7,6 +7,7 @@ public class ConcatenatedName {
     public static final String EXTENSION = "_temp.wav";
     public static final String FOLDER = "temp/";
     public static final double VOLUME_LEVEL = -20.0;
+
     private final String _displayName;
     private List<Name> _names;
     private String _stringOfPaths;
@@ -14,7 +15,9 @@ public class ConcatenatedName {
     public ConcatenatedName(List<Name> names) {
         _names = names;
         _displayName = createDisplayName();
+
         makeTempDirectory();
+        cutSilence();
         concatenateFileNames();
         normaliseAudio();
         concatenateAudio();
@@ -22,7 +25,7 @@ public class ConcatenatedName {
 
     public void playRecording() {
         try {
-            String cmd = "ffplay " + MERGED_PATH + " -autoexit -nodisp";
+            String cmd = "ffplay " + FOLDER + _displayName + EXTENSION + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
@@ -37,13 +40,11 @@ public class ConcatenatedName {
      * of similar volume.
      */
     private void normaliseAudio() {
-        double sum = 0;
-        double[] meanVolumes = new double[_names.size()];
-
         try {
             for(Name name : _names) {
                 // define process for returning the mean volume of the recording
-                String cmd = "ffmpeg -i " + _names.get(i).selectGoodVersion().getFileName() + " -filter:a volumedetect -f null /dev/null |& grep 'mean_volume:' ";
+                String cmd = "ffmpeg -y -i " + FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
+                        "-f null /dev/null |& grep 'mean_volume:' ";
 
                 // start process
                 ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
@@ -59,25 +60,20 @@ public class ConcatenatedName {
                 // Parse the mean volume number from the output, the volume is 2-7 indices from the right of the colon
                 int colonIndex = lineOut.lastIndexOf(':');
                 String volumeString = lineOut.substring(colonIndex + 2, colonIndex + 7);
-                Double volume = Double.parseDouble(volumeString);
+                Double meanVolume = Double.parseDouble(volumeString);
 
-                // store mean volume of the recording and add it to the sum
-                meanVolumes[i] = volume;
-            }
-
-            // generate normalised version of all recordings
-            for(int i = 0; i < _names.size(); i++) {
                 // calculate the adjustment needed to get the audio to the standard volume
-                double adjustment = VOLUME_LEVEL - meanVolumes[i];
+                double adjustment = VOLUME_LEVEL - meanVolume;
 
                 // define bash process to create new audio file with the mean volume
-                String cmd = "ffmpeg -y -i " + _names.get(i).selectGoodVersion().getFileName() + " -filter:a \"volume=" +  String.format( "%.1f", adjustment) + " dB\" " + NORMALISED_PATH + i + ".wav";
+                String cmd2 = "ffmpeg -y -i " + FOLDER + name.toString() + EXTENSION + " -filter:a \"volume=" +
+                        String.format( "%.1f", adjustment) + " dB\" " + FOLDER + name.toString() + EXTENSION;
 
                 // start process
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-                Process process = builder.start();
+                ProcessBuilder builder2 = new ProcessBuilder("/bin/bash", "-c", cmd2);
+                Process process2 = builder2.start();
 
-                process.waitFor();
+                process2.waitFor();
             }
 
         } catch (Exception e) {
@@ -93,12 +89,14 @@ public class ConcatenatedName {
         for(Name name : _names) {
             try {
                 String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFileName() +
-                        "-af silenceremove=1:0:-50dB:1:5:-70dB:0:peak " + FOLDER + name.toString() + EXTENSION;
+                        " -af silenceremove=1:0:-50dB:1:5:-70dB:0:peak " + FOLDER + name.toString() + EXTENSION;
 
                 ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-                builder.start();
+                Process process = builder.start();
 
-            } catch (IOException e) {
+                process.waitFor();
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -111,8 +109,8 @@ public class ConcatenatedName {
      */
     private void concatenateFileNames() {
         _stringOfPaths = "";
-        for (int i = 0; i < _names.size(); i++) {
-            _stringOfPaths += " -i " + NORMALISED_PATH + i + ".wav";
+        for (Name name : _names) {
+            _stringOfPaths += " -i " + FOLDER + name.toString() + EXTENSION;
         }
     }
 
@@ -129,17 +127,15 @@ public class ConcatenatedName {
         }
         bashFilter += "concat=n=" + _names.size() + ":v=0:a=1[out]";
 
-        // executes the bash process
+        // execute the bash process
         try {
-            String cmd = "ffmpeg -y" + _stringOfPaths +
-                    " -filter_complex '"+ bashFilter + "' " +
-                    "-map '[out]' " + MERGED_PATH;
+            String cmd = "ffmpeg -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
+                    "-map '[out]' " + FOLDER + _displayName + EXTENSION;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             Process process = builder.start();
 
             process.waitFor();
-            System.out.println("DONE");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -151,7 +147,7 @@ public class ConcatenatedName {
      */
     private void makeTempDirectory() {
         try {
-            String cmd = "mkdir -p temp/";
+            String cmd = "mkdir -p " + FOLDER;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
@@ -168,9 +164,9 @@ public class ConcatenatedName {
     private String createDisplayName() {
         String displayName = "";
         for(Name name : _names) {
-            displayName += name.toString() + " ";
+            displayName += name.toString() + "_";
         }
-        return displayName.trim();
+        return displayName.substring(0, displayName.length() - 1);
     }
 
     @Override
