@@ -1,9 +1,11 @@
 package app.model;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ConcatenatedName {
     private List<Name> _names;
+    private String _stringOfNames;
 
     public ConcatenatedName(List<Name> names) {
         _names = names;
@@ -29,7 +31,10 @@ public class ConcatenatedName {
      * All modified temporary recordings of the names are concatenated into
      * recording in a temporary audio file.
      */
-    private void concatenateNames() {
-
+    private void concatenateFileNames() {
+        _stringOfNames = " ";
+        for (Name n : _names) {
+            _stringOfNames += n + " ";
+        }
     }
 }
