@@ -10,8 +10,11 @@ public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
     public static final String USER_DATABASE = "./userRecordings/";
     public static final DataModel INSTANCE = new DataModel();
+	private final HashMap<String, Name> _databaseTable;
 
-    private DataModel() {}
+	private DataModel() {
+    	_databaseTable = createNameTable(DATABASE);
+	}
 
 	/**
 	 * Returns the singleton instance of the DataModel, used for loading
@@ -29,7 +32,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<NameVersion> loadDatabaseTree(){
 		TreeViewFactory checkTree = new CheckTreeViewFactory();
 		CheckBoxTreeItem<NameVersion> root = new CheckBoxTreeItem<>();
-		return checkTree.getTreeRoot(root, getNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
 	}
 
     /**
@@ -39,7 +42,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<NameVersion> loadUserDatabaseTree(){
 		TreeViewFactory checkTree = new RegularTreeViewFactory();
 		TreeItem<NameVersion> root = new TreeItem<>();
-		return checkTree.getTreeRoot(root, getNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
 	}
 
 	/**
@@ -47,7 +50,7 @@ public class DataModel implements IDataModel{
 	 * @return ArrayList
 	 */
 	public List<Name> loadDatabaseList() {
-		HashMap<String, Name> nameTable = getNameTable(DATABASE);
+		HashMap<String, Name> nameTable = createNameTable(DATABASE);
 
 		List<Name> nameList = new ArrayList<>();
 
@@ -75,7 +78,7 @@ public class DataModel implements IDataModel{
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
-	private HashMap<String, Name> getNameTable(String database) {
+	private HashMap<String, Name> createNameTable(String database) {
 		HashMap<String, Name> nameTable = new HashMap<>();
 
 		File databaseFolder = new File(database);
@@ -108,4 +111,7 @@ public class DataModel implements IDataModel{
 	}
 
 
+	public HashMap<String, Name> getDatabaseTable() {
+		return _databaseTable;
+	}
 }

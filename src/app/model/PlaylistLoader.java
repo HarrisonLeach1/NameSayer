@@ -2,7 +2,6 @@ package app.model;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -46,5 +45,13 @@ public class PlaylistLoader {
      */
     private List<ConcatenatedName> loadSingleName(String singleName) {
         return Arrays.asList(new ConcatenatedName(singleName));
+    }
+
+    /**
+     * Returns the list of Name objects created by this playlist loader object
+     * @return list of names
+     */
+    public List<ConcatenatedName> getList() {
+        return _names;
     }
 }

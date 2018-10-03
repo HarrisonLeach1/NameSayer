@@ -1,6 +1,9 @@
 package app.model;
 
+import javax.xml.crypto.Data;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConcatenatedName {
@@ -12,9 +15,9 @@ public class ConcatenatedName {
     private List<Name> _names;
     private String _stringOfPaths;
 
-    public ConcatenatedName(List<Name> names) {
-        _names = names;
-        _displayName = createDisplayName();
+    public ConcatenatedName(String names) {
+        _names = stringsToList(names);
+        _displayName = names;
 
         makeTempDirectory();
         cutSilence();
@@ -25,7 +28,7 @@ public class ConcatenatedName {
 
     public void playRecording() {
         try {
-            String cmd = "ffplay " + FOLDER + _displayName + EXTENSION + " -autoexit -nodisp";
+            String cmd = "ffplay " + FOLDER + _displayName.replaceAll(" ","_") + EXTENSION + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
@@ -33,6 +36,27 @@ public class ConcatenatedName {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Converts a string of names into a list of their associated Name objects
+     * @return list of Name objects
+     */
+    private List<Name> stringsToList(String names) {
+        // replace all hyphens with spaces
+        names = names.replaceAll("-"," ");
+
+        // parse strings into a list of strings
+        List<String> stringList = new ArrayList<>(Arrays.asList(names.split(" ")));
+
+        List<Name> nameList = new ArrayList<>();
+
+        // for each string, retrieve the Name object associated with the specific string key
+        for (String str : stringList) {
+            nameList.add(DataModel.getInstance().getDatabaseTable().get(str));
+        }
+
+        return nameList;
     }
 
     /**
@@ -155,18 +179,6 @@ public class ConcatenatedName {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Takes all the display names of the Name objects and creates a display name
-     * @return String to be displayed
-     */
-    private String createDisplayName() {
-        String displayName = "";
-        for(Name name : _names) {
-            displayName += name.toString() + "_";
-        }
-        return displayName.substring(0, displayName.length() - 1);
     }
 
     @Override
