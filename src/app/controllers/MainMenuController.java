@@ -38,7 +38,7 @@ public class MainMenuController implements Initializable {
     @FXML private TreeView<NameVersion> _recList;
 
 
-    private IDataModel dataModel = new DataModel();
+    private IDataModel dataModel = DataModel.getInstance();
 
 
     /**
