@@ -31,8 +31,8 @@ import static app.model.DataModel.USER_DATABASE;
  */
 public class MainMenuController implements Initializable {
 
-    @FXML private Pane _dataPane, _recPane;
-    @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn;
+    @FXML private Pane _dataPane, _recPane, _searchPane;
+    @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
     @FXML private TreeView<NameVersion> _recList;
@@ -49,6 +49,7 @@ public class MainMenuController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         _dataList.getItems().addAll(dataModel.loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        _searchPane.toFront();
     }
 
     /**
@@ -63,6 +64,8 @@ public class MainMenuController implements Initializable {
             _recList.setRoot(dataModel.loadUserDatabaseTree());
             _recList.setShowRoot(false);
             _recPane.toFront();
+        } else if(event.getSource() == _searchMenuBtn){
+            _searchPane.toFront();
         } else if(event.getSource() == _testMicBtn){
             Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
             Scene playerScene = new Scene(playerParent);
