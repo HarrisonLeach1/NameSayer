@@ -4,14 +4,16 @@ import java.io.*;
 import java.util.List;
 
 public class ConcatenatedName {
-    public static final String NORMALISED_PATH = "temp/normalised";
+    public static final String TEMP_EXTENSION = "temp/normalised";
     public static final String MERGED_PATH = "temp/merged.wav";
     public static final double VOLUME_LEVEL = -20.0;
+    private final String _displayName;
     private List<Name> _names;
-    private String _stringOfNames;
+    private String _stringOfPaths;
 
     public ConcatenatedName(List<Name> names) {
         _names = names;
+        _displayName = createDisplayName();
         makeTempDirectory();
         concatenateFileNames();
         normaliseAudio();
@@ -85,10 +87,18 @@ public class ConcatenatedName {
 
     /**
      * Modifies the audio files of the associated names such that they do
-     * not contain any unnecessary  silence.
+     * not contain any unnecessary silence.
      */
     private void cutSilence() {
+        try {
+            String cmd = "ffmpeg -y -hide_banner -i " catherine.wav "-af silenceremove=1:0:-50dB:1:5:-70dB:0:peak " + ;
 
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -97,9 +107,9 @@ public class ConcatenatedName {
      * an ffmpeg bash process
      */
     private void concatenateFileNames() {
-        _stringOfNames = "";
+        _stringOfPaths = "";
         for (int i = 0; i < _names.size(); i++) {
-            _stringOfNames += " -i " + NORMALISED_PATH + i + ".wav";
+            _stringOfPaths += " -i " + NORMALISED_PATH + i + ".wav";
         }
     }
 
@@ -118,7 +128,7 @@ public class ConcatenatedName {
 
         // executes the bash process
         try {
-            String cmd = "ffmpeg -y" + _stringOfNames +
+            String cmd = "ffmpeg -y" + _stringOfPaths +
                     " -filter_complex '"+ bashFilter + "' " +
                     "-map '[out]' " + MERGED_PATH;
 
@@ -146,5 +156,22 @@ public class ConcatenatedName {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     * @return String to be displayed
+     */
+    private String createDisplayName() {
+        String displayName = "";
+        for(Name name : _names) {
+            displayName += name.toString() + " ";
+        }
+        return displayName.trim();
+    }
+
+    @Override
+    public String toString() {
+        return _displayName;
     }
 }
