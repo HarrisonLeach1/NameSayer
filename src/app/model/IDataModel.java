@@ -2,6 +2,8 @@ package app.model;
 
 import javafx.scene.control.TreeItem;
 
+import java.util.List;
+
 /**
  * An IDataModel object represents the database in which practise and user recordings
  * are to be stored. The displayable databases are returned in Tree View form
@@ -17,7 +19,7 @@ public interface IDataModel {
      *
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<Name> loadDatabase();
+    TreeItem<NameVersion> loadDatabaseTree();
 
     /**
      * Loads the database of user recordings as a tree. The root is returned,
@@ -27,6 +29,13 @@ public interface IDataModel {
      *
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<Name> loadUserDatabase();
+    TreeItem<NameVersion> loadUserDatabaseTree();
+
+    /**
+     * Loads the database of recordings as a list. Each name only appears in the list
+     * once and is of good quality (if possible).
+     * @return List<Name>
+     */
+    List<Name> loadDatabaseList();
 
 }

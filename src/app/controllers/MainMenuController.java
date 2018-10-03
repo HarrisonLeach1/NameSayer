@@ -13,13 +13,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.controlsfx.control.CheckTreeView;
-
+import org.controlsfx.control.CheckListView;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static app.model.DataModel.USER_DATABASE;
@@ -35,9 +33,9 @@ public class MainMenuController implements Initializable {
 
     @FXML private Pane _dataPane, _recPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn;
-    @FXML private CheckTreeView<Name> _dataList;
+    @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
-    @FXML private TreeView<Name> _recList;
+    @FXML private TreeView<NameVersion> _recList;
 
 
     private IDataModel dataModel = new DataModel();
@@ -49,8 +47,7 @@ public class MainMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _dataList.setRoot(dataModel.loadDatabase());
-        _dataList.setShowRoot(false);
+        _dataList.getItems().addAll(dataModel.loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
@@ -63,7 +60,7 @@ public class MainMenuController implements Initializable {
         if(event.getSource() == _viewDataBtn){
             _dataPane.toFront();
         } else if(event.getSource() == _viewRecBtn){
-            _recList.setRoot(dataModel.loadUserDatabase());
+            _recList.setRoot(dataModel.loadUserDatabaseTree());
             _recList.setShowRoot(false);
             _recPane.toFront();
         } else if(event.getSource() == _testMicBtn){
@@ -86,18 +83,15 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * All checked items in the CheckTreeView are added to the selected list of names
+     * All checked items in the CheckListView are added to the selected list of names
      * to be practised by the user.
      */
     public void addButtonPressed() {
-        List<TreeItem<Name>> checkedNames = _dataList.getCheckModel().getCheckedItems();
-        List<Name> selectedItems = _selectedList.getItems();
-        for (TreeItem<Name> name : checkedNames) {
-            if (name.getChildren().size() < 2) { // only add if name is not a leaf
-                selectedItems.add(name.getValue());
-            }
-        }
-        _dataList.getCheckModel().clearChecks(); // clear items checked after they have been added
+        // add all checked items to the selected list
+        _selectedList.getItems().addAll(_dataList.getCheckModel().getCheckedItems());
+
+        // clear items checked after they have been added
+        _dataList.getCheckModel().clearChecks();
     }
 
     /**
@@ -126,7 +120,7 @@ public class MainMenuController implements Initializable {
     }
 
     /**
-     * The order of the Name items in the selected list of Names is shuffled randomly
+     * The order of the NameVersion items in the selected list of Names is shuffled randomly
      */
     public void randomiseButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
@@ -134,7 +128,7 @@ public class MainMenuController implements Initializable {
 
 
     /**
-     * Loads in all Name objects in the selected list, passes it to the next view
+     * Loads in all NameVersion objects in the selected list, passes it to the next view
      * and controller, and switches scenes.
      * @param event
      * @throws IOException
@@ -162,9 +156,9 @@ public class MainMenuController implements Initializable {
      * Plays the currently selected user recording in the list of user recordings.
      */
     public void playButtonPressed() {
-        TreeItem<Name> selectedItem = _recList.getSelectionModel().getSelectedItem();
+        TreeItem<NameVersion> selectedItem = _recList.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
-            Name currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
+            NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
 
             if(currentUserRecording != null) {
                 currentUserRecording.playRecording();

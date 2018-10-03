@@ -7,7 +7,7 @@ public class PractiseListModel implements IPractiseListModel{
 
     private ObservableList<Name> _practiseList;
     private Recording _currentUserRecording;
-    private Name _currentUserCreatedName;
+    private NameVersion _currentUserCreatedName;
     private int _currentIndex;
     private boolean _keepRecording;
     private Task compareWorker;
@@ -18,10 +18,10 @@ public class PractiseListModel implements IPractiseListModel{
     }
 
     /**
-     * Creates a new recording for the currently indexed Name object
+     * Creates a new recording for the currently indexed NameVersion object
      */
     public void createUserRecording() {
-        _currentUserRecording = new Recording(_practiseList.get(_currentIndex).getShortName());
+        _currentUserRecording = new Recording(_practiseList.get(_currentIndex).toString());
         _currentUserCreatedName = _currentUserRecording.createRecording();
     }
 
