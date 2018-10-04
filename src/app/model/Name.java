@@ -3,7 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Name {
+public class Name implements Practisable{
     private final String _name;
     private List<NameVersion> _nameVersions;
 
@@ -69,6 +69,11 @@ public class Name {
 
     public void playRecording() {
         selectGoodVersion().playRecording();
+    }
+
+    @Override
+    public boolean isRateable() {
+        return true;
     }
 
     @Override

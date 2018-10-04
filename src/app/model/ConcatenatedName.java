@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-public class ConcatenatedName {
+public class ConcatenatedName implements Practisable {
     public static final String EXTENSION = "_temp.wav";
     public static final String FOLDER = "temp/";
     public static final double VOLUME_LEVEL = -20.0;
@@ -37,6 +37,16 @@ public class ConcatenatedName {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean isRateable() {
+        return false;
+    }
+
+    @Override
+    public void setBadQuality() {
+        // A concatenated Name cannot as of yet be rated
     }
 
 

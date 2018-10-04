@@ -1,9 +1,6 @@
 package app.controllers;
 
-import app.model.ConcatenatedName;
-import app.model.IPractiseListModel;
-import app.model.Name;
-import app.model.NameVersion;
+import app.model.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +29,7 @@ public class PlaySceneController {
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
-    private Name _currentName;
+    private Practisable _currentName;
 
     /**
      * Loads in the practise list model that stores the list of selected names from
@@ -42,8 +39,10 @@ public class PlaySceneController {
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("NameVersion: " + _currentName.toString());
-        _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
+
+        _displayName.setText("Name: " + _currentName.toString());
+        //_dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
+
         checkBounds();
     }
 
@@ -56,8 +55,8 @@ public class PlaySceneController {
         _bad_Label.setVisible(false);
 
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("NameVersion: " + _currentName.toString());
-        _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
+        _displayName.setText("Name: " + _currentName.toString());
+        //_dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
         checkBounds();
     }
@@ -69,9 +68,10 @@ public class PlaySceneController {
     public void previousButtonPressed() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
+
         _currentName = _practiseListModel.previousName();
-        _displayName.setText("NameVersion: " + _currentName.toString());
-        _dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
+        _displayName.setText("Name: " + _currentName.toString());
+        //_dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
 
         checkBounds();
     }
@@ -122,12 +122,7 @@ public class PlaySceneController {
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
-        List<Name> list = new ArrayList<>();
-        list.add(_currentName);
-        list.add(_practiseListModel.nextName());
-        list.add(_practiseListModel.nextName());
-        ConcatenatedName cname = new ConcatenatedName(list);
-        cname.playRecording();
+        _currentName.playRecording();
     }
 
     /**

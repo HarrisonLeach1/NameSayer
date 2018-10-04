@@ -36,13 +36,13 @@ public interface IPractiseListModel {
      * Returns the NameVersion object that is next in the list of selected
      * recordings to be practised.
      */
-    Name nextName();
+    Practisable nextName();
 
     /**
      * Returns the NameVersion object that is previous in the list of selected
      * recordings to be practised.
      */
-    Name previousName();
+    Practisable previousName();
 
     /**
      * Returns true if there exists a NameVersion object after the current NameVersion

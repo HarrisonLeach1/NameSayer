@@ -1,18 +1,19 @@
 package app.model;
 
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+
+import java.util.ArrayList;
 
 public class PractiseListModel implements IPractiseListModel{
 
-    private ObservableList<Name> _practiseList;
+    private ArrayList<Practisable> _practiseList;
     private Recording _currentUserRecording;
     private NameVersion _currentUserCreatedName;
     private int _currentIndex;
     private boolean _keepRecording;
     private Task compareWorker;
 
-    public PractiseListModel(ObservableList<Name> practiseList) {
+    public PractiseListModel(ArrayList<Practisable> practiseList) {
         _practiseList = practiseList;
         _currentIndex = -1;
     }
@@ -41,7 +42,7 @@ public class PractiseListModel implements IPractiseListModel{
      * Returns the next Name object in the list. If there is no
      * next name, the current and returned name remains unchanged.
      */
-    public Name nextName() {
+    public Practisable nextName() {
         finaliseRecording();
         if (_currentIndex != _practiseList.size() - 1) {
             _currentIndex++;
@@ -55,7 +56,7 @@ public class PractiseListModel implements IPractiseListModel{
      * Returns the previous Name object in the list. If there is no
      * previous name, the current and returned name remains unchanged.
      */
-    public Name previousName() {
+    public Practisable previousName() {
         finaliseRecording();
         if (_currentIndex != 0) {
             _currentIndex--;

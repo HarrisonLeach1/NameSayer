@@ -14,10 +14,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static app.model.DataModel.USER_DATABASE;
@@ -36,6 +39,7 @@ public class MainMenuController implements Initializable {
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Name> _selectedList;
     @FXML private TreeView<NameVersion> _recList;
+    @FXML private TextField _searchBox;
 
 
     private IDataModel dataModel = DataModel.getInstance();
@@ -82,6 +86,17 @@ public class MainMenuController implements Initializable {
 
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
+        }
+    }
+
+    public void playSearchPressed(ActionEvent event) {
+        try {
+            // create a new playlist loader and retrieve the playlist created
+            PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
+            List<ConcatenatedName> list = loader.getList();
+            moveToPlayScene(list);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -167,7 +182,10 @@ public class MainMenuController implements Initializable {
                 currentUserRecording.playRecording();
             }
         }
-
     }
+
+    private void moveToPlayScene(List<ConcatenatedName> list) {
+    }
+
 }
 
