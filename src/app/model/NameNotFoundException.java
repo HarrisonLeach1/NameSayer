@@ -6,12 +6,19 @@ package app.model;
  */
 public class NameNotFoundException extends Exception {
 
+    private final String _missingNames;
+
     public NameNotFoundException(String missingNames) {
-        super("The Name(s) " + missingNames + "cannot be found");
+        super("The following Name(s) cannot be found: " + missingNames);
+        _missingNames = missingNames;
     }
 
     public String getMessage() {
         return super.getMessage();
+    }
+
+    public String getMissingNames() {
+        return _missingNames;
     }
 
 }

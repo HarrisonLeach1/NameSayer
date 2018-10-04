@@ -39,13 +39,15 @@ public class MainMenuController implements Initializable {
     @FXML private Pane _dataPane, _recPane, _searchPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
-    @FXML private ListView<Practisable> _previewList, _selectedList;
+    @FXML private ListView<Practisable> _selectedList;
+    @FXML private ListView<String> _previewList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel;
 
 
     private IDataModel dataModel = DataModel.getInstance();
+    private ArrayList<Practisable> _playList;
 
 
     /**
@@ -103,7 +105,7 @@ public class MainMenuController implements Initializable {
         try {
             // create a new playlist loader and retrieve the playlist created
             PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
-            ArrayList<Practisable> list = new ArrayList<>(loader.getList());
+            ArrayList<Practisable> list = new ArrayList<>(loader.getNameList());
             moveToPlayScene(list, event);
 
             // if the name is not found perform action
@@ -112,6 +114,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * Opens a file chooser which allows the user to upload the playlist they wish
+     * to practise.
+     * @param event
+     * @throws IOException
+     */
     public void chooseFilePressed(ActionEvent event) throws IOException {
         // initialise file chooser
         FileChooser fileChooser = new FileChooser();
@@ -126,15 +134,19 @@ public class MainMenuController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(window);
 
         if (selectedFile != null) {
-            _fileNameLabel.setText(selectedFile.getName());
+            loadFile(selectedFile);
+        }
+    }
 
-            LoadTask loadWorker = new LoadTask(selectedFile);
-
-            loadWorker.setOnSucceeded(e -> {
-                _previewList.getItems().addAll(loadWorker.getValue());
-            });
-
-            new Thread(loadWorker).start();
+    /**
+     * If a valid playlist has been loaded in by the user, moves to the play scene
+     * to pracitse the playlist. Otherwise, does nothing.
+     * @param event
+     * @throws IOException
+     */
+    public void playFilePressed(ActionEvent event) throws IOException {
+        if (_playList != null) {
+            moveToPlayScene(_playList,event);
         }
     }
 
@@ -210,6 +222,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * Given a practise list, redirects the user to the play scene to practise the list of names.
+     * @param list
+     * @param event
+     * @throws IOException
+     */
     private void moveToPlayScene(ArrayList<Practisable> list , ActionEvent event) throws IOException {
         // load in the new scene
         FXMLLoader loader = new FXMLLoader();
@@ -226,22 +244,49 @@ public class MainMenuController implements Initializable {
         window.setScene(playerScene);
     }
 
-    private static class LoadTask extends Task<ArrayList<Practisable>> {
-        private File _selectedFile;
+    /**
+     * Given a file which represents the user playlist of names to practise, updates the
+     * previewList with the names. If all names are found in the database, the playlist
+     * field is loaded with names to practise.
+     * @param selectedFile
+     * @throws FileNotFoundException
+     */
+    private void loadFile(File selectedFile) throws FileNotFoundException{
+        _fileNameLabel.setText("  " + selectedFile.getName());
+        PlaylistLoader loader = new PlaylistLoader(selectedFile);
 
-        private LoadTask(File selectedFile) {
-         _selectedFile = selectedFile;
+        // create a load worker for loading in the names in the file
+        LoadTask loadWorker = new LoadTask(loader);
+
+        _previewList.getItems().addAll(loader.getStringList());
+
+        // when finished update the list view
+        loadWorker.setOnSucceeded(e -> {
+            _playList = loadWorker.getValue();
+        });
+
+        // if failed, notify the user which names are missing
+        loadWorker.setOnFailed(e -> {
+            System.out.println(loadWorker.getException().getMessage()); // stub
+        });
+
+        new Thread(loadWorker).start();
+    }
+
+    /**
+     * The LoadTask executes the loading of the playlist with names on a background thread
+     * to avoid GUI unresponsiveness.
+     */
+    private static class LoadTask extends Task<ArrayList<Practisable>> {
+        private PlaylistLoader _loader;
+
+        private LoadTask(PlaylistLoader loader) {
+         _loader = loader;
         }
 
         @Override
-        protected ArrayList<Practisable> call() throws FileNotFoundException {
-            PlaylistLoader loader = null;
-            try {
-                loader = new PlaylistLoader(_selectedFile);
-            } catch (NameNotFoundException e) {
-                e.printStackTrace();
-            }
-            return new ArrayList<>(loader.getList());
+        protected ArrayList<Practisable> call() throws NameNotFoundException {
+            return new ArrayList<>(_loader.getNameList());
         }
     }
 }
