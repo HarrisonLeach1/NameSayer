@@ -4,6 +4,7 @@ import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class ConcatenatedName {
@@ -15,7 +16,7 @@ public class ConcatenatedName {
     private List<Name> _names;
     private String _stringOfPaths;
 
-    public ConcatenatedName(String names) {
+    public ConcatenatedName(String names) throws NameNotFoundException {
         _names = stringsToList(names);
         _displayName = names;
 
@@ -38,11 +39,14 @@ public class ConcatenatedName {
         }
     }
 
+
     /**
-     * Converts a string of names into a list of their associated Name objects
+     *  Converts a string of names into a list of name objects found the DataModel search table
+     * @param names the string of names
      * @return list of Name objects
+     * @throws NameNotFoundException
      */
-    private List<Name> stringsToList(String names) {
+    private List<Name> stringsToList(String names) throws NameNotFoundException {
         // replace all hyphens with spaces
         names = names.replaceAll("-"," ");
 
@@ -51,9 +55,24 @@ public class ConcatenatedName {
 
         List<Name> nameList = new ArrayList<>();
 
+        // get the DataModel table which references the names with their associated strings
+        HashMap<String, Name> searchTable = DataModel.getInstance().getDatabaseTable();
+
+        // initialise the variable to store names that are not found
+        String missingNames = null;
+
         // for each string, retrieve the Name object associated with the specific string key
         for (String str : stringList) {
-            nameList.add(DataModel.getInstance().getDatabaseTable().get(str));
+            if (searchTable.containsKey(str.toLowerCase())) {
+                nameList.add(searchTable.get(str.toLowerCase()));
+            } else {
+                missingNames += str + " ";
+            }
+        }
+
+        // if there are missing names in the string, notify by throwing an exception
+        if (missingNames != null) {
+            throw new NameNotFoundException(missingNames);
         }
 
         return nameList;

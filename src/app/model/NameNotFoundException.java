@@ -6,8 +6,8 @@ package app.model;
  */
 public class NameNotFoundException extends Exception {
 
-    public NameNotFoundException(String message) {
-        super(message);
+    public NameNotFoundException(String missingNames) {
+        super("The Name(s) " + missingNames + "cannot be found");
     }
 
     public String getMessage() {

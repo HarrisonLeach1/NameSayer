@@ -11,11 +11,11 @@ public class PlaylistLoader {
 
     private final List<ConcatenatedName> _names;
 
-    public PlaylistLoader(File playlistFile) throws FileNotFoundException {
+    public PlaylistLoader(File playlistFile) throws FileNotFoundException, NameNotFoundException {
         _names = loadFile(playlistFile);
     }
 
-    public PlaylistLoader(String singleName) {
+    public PlaylistLoader(String singleName) throws NameNotFoundException {
         _names = loadSingleName(singleName);
     }
 
@@ -26,7 +26,7 @@ public class PlaylistLoader {
      * @return list of names
      * @throws FileNotFoundException
      */
-    private List<ConcatenatedName> loadFile(File playlistFile) throws FileNotFoundException {
+    private List<ConcatenatedName> loadFile(File playlistFile) throws FileNotFoundException, NameNotFoundException {
         Scanner input = new Scanner(playlistFile);
         List<ConcatenatedName> nameList = new ArrayList<>();
 
@@ -43,7 +43,7 @@ public class PlaylistLoader {
      * @param singleName
      * @return a list containing a single name
      */
-    private List<ConcatenatedName> loadSingleName(String singleName) {
+    private List<ConcatenatedName> loadSingleName(String singleName) throws NameNotFoundException {
         return Arrays.asList(new ConcatenatedName(singleName));
     }
 
