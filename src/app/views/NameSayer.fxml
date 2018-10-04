@@ -76,7 +76,7 @@
                                  <children>
                                     <VBox alignment="CENTER" layoutX="103.0" layoutY="108.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <Button fx:id="play_recording_btn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="79.0" prefWidth="160.0" style="-fx-border-color: white;" text="Play Recording" textFill="WHITE">
+                                          <Button fx:id="play_recording_btn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#playUserRecordingPressed" prefHeight="79.0" prefWidth="160.0" style="-fx-border-color: white;" text="Play Recording" textFill="WHITE">
                                              <font>
                                                 <Font size="15.0" />
                                              </font>

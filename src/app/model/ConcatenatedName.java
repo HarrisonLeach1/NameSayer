@@ -154,7 +154,7 @@ public class ConcatenatedName {
         // execute the bash process
         try {
             String cmd = "ffmpeg -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
-                    "-map '[out]' " + FOLDER + _displayName + EXTENSION;
+                    "-map '[out]' " + FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             Process process = builder.start();

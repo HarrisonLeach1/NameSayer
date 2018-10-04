@@ -155,7 +155,7 @@ public class MainMenuController implements Initializable {
     /**
      * Plays the currently selected user recording in the list of user recordings.
      */
-    public void playButtonPressed() {
+    public void playUserRecordingPressed() {
         TreeItem<NameVersion> selectedItem = _recList.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
