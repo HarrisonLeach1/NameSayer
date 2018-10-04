@@ -21,4 +21,9 @@ public interface Practisable {
     void setBadQuality() throws IOException;
 
 
+    /**
+     * Returns the date and time of creation of the recording
+     * @return
+     */
+    String getDateTimeCreated();
 }

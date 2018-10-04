@@ -6,6 +6,7 @@ import java.util.List;
 public class Name implements Practisable{
     private final String _name;
     private List<NameVersion> _nameVersions;
+    private NameVersion _goodVersion;
 
     public Name(String name) {
         _name = name;
@@ -21,10 +22,13 @@ public class Name implements Practisable{
         // loop through _nameVersions of versions of names until a good quality version is found
         for(NameVersion currentName: _nameVersions) {
             if(!currentName.isBadQuality()) { // if good (not bad) quality, return the version
+                _goodVersion = currentName;
                 return currentName;
             }
         }
+
         // if no good quality version is found return any recording
+        _goodVersion = _nameVersions.get(0);
         return _nameVersions.get(0);
 
     }
@@ -67,6 +71,11 @@ public class Name implements Practisable{
         selectGoodVersion().setBadQuality();
     }
 
+    @Override
+    public String getDateTimeCreated() {
+        return _goodVersion.getDateCreated() + " " + _goodVersion.getTimeCreated();
+    }
+
     public void playRecording() {
         selectGoodVersion().playRecording();
     }
@@ -79,13 +88,5 @@ public class Name implements Practisable{
     @Override
     public String toString() {
         return _name;
-    }
-
-    public String getDateCreated() {
-        return selectGoodVersion().getDateCreated();
-    }
-
-    public String getTimeCreated() {
-        return selectGoodVersion().getTimeCreated();
     }
 }

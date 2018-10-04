@@ -49,6 +49,11 @@ public class ConcatenatedName implements Practisable {
         // A concatenated Name cannot as of yet be rated
     }
 
+    @Override
+    public String getDateTimeCreated() {
+        return "";
+    }
+
 
     /**
      *  Converts a string of names into a list of name objects found the DataModel search table

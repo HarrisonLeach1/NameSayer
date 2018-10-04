@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class PlaySceneController {
 
-    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn;
+    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
 
     private IPractiseListModel _practiseListModel;
@@ -39,41 +39,25 @@ public class PlaySceneController {
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
-
-        _displayName.setText("Name: " + _currentName.toString());
-        //_dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
-
-        checkBounds();
+        makeTransition();
     }
 
     /**
-     * Moves to the next NameVersion in the list and updates the displayed name. The NameVersion is
+     * Moves to the next Name in the list and updates the displayed name. The Name is
      * unchanged if the end of the list is reached.
      */
     public void nextButtonPressed() {
-        _savedLabel.setVisible(false);
-        _bad_Label.setVisible(false);
-
         _currentName = _practiseListModel.nextName();
-        _displayName.setText("Name: " + _currentName.toString());
-        //_dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
-
-        checkBounds();
+        makeTransition();
     }
 
     /**
-     * Moves to the previous NameVersion in the list and updates the displayed name. The NameVersion
+     * Moves to the previous Name in the list and updates the displayed name. The Name
      * is unchanged if there are no previous names.
      */
     public void previousButtonPressed() {
-        _savedLabel.setVisible(false);
-        _bad_Label.setVisible(false);
-
         _currentName = _practiseListModel.previousName();
-        _displayName.setText("Name: " + _currentName.toString());
-        //_dateTimeLabel.setText(_currentName.getDateCreated() + " " + _currentName.getTimeCreated());
-
-        checkBounds();
+        makeTransition();
     }
 
     /**
@@ -153,6 +137,26 @@ public class PlaySceneController {
         _currentName.setBadQuality();
         _bad_Label.setVisible(true);
     }
+
+    /**
+     * Whenever the user moves to a new name the scene is reinitialised
+     */
+    private void makeTransition() {
+        _savedLabel.setVisible(false);
+        _bad_Label.setVisible(false);
+
+        _displayName.setText("Name: " + _currentName.toString());
+
+        if (_currentName.isRateable()) {
+            _badBtn.setDisable(false);
+        } else {
+            _badBtn.setDisable(true);
+        }
+        _dateTimeLabel.setText(_currentName.getDateTimeCreated());
+
+        checkBounds();
+    }
+
 
     /**
      * Indicates when the start or the end of the list has been reached by disabling
