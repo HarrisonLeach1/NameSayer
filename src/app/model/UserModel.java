@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class UserModel {
@@ -16,7 +14,7 @@ public class UserModel {
     private int _userXP;
 
     private UserModel() throws FileNotFoundException {
-        loadUserData();
+        readUserData();
         updateStreak();
     }
 
@@ -32,7 +30,17 @@ public class UserModel {
 
     }
 
-    private void loadUserData() throws FileNotFoundException {
+    private void updateStreak() {
+        LocalDate today = LocalDate.now();
+        LocalDate yesterday = today.minusDays(1);
+        if (_lastLogin == yesterday) {
+
+        }
+        _lastLogin = today;
+        //writeUserData();
+    }
+
+    private void readUserData() throws FileNotFoundException {
         Scanner input = new Scanner(new File(DATA_FILE));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
