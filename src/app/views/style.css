@@ -10,6 +10,13 @@
     -fx-background-color:
         radial-gradient(center 50% 50%, radius 100%, #90A4A8, #BCF4F5);
 }
+.menu-search{
+    -fx-background-color: #728184;
+}
+.menu-search:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #728184, #9FC6CE);
+}
 .menu-view_rec{
     -fx-background-color: #789699;
 }
