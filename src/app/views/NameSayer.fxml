@@ -220,7 +220,7 @@
                               <Font name="System Italic" size="15.0" />
                            </font>
                         </Label>
-                        <Button layoutX="520.0" layoutY="313.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="53.0" AnchorPane.topAnchor="220.0">
+                        <Button onAction="#chooseFilePressed" layoutX="520.0" layoutY="313.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="53.0" AnchorPane.topAnchor="220.0">
                            <graphic>
                               <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

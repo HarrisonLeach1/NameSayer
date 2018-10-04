@@ -12,12 +12,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import org.controlsfx.control.CheckListView;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -111,8 +114,21 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    public void chooseFilePressed() {
+    public void chooseFilePressed(ActionEvent event) throws IOException {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select PlayList");
 
+        // only show text files
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+
+        File selectedFile = fileChooser.showOpenDialog(window);
+
+        if (selectedFile != null) {
+
+        }
     }
 
     /**
