@@ -97,12 +97,15 @@ public class DataModel implements IDataModel{
 
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
-					Name currentName = nameTable.get(nameVersion.getShortName());
+					Name currentName = nameTable.get(nameVersion.getShortName().toLowerCase());
 					currentName.add(nameVersion);
 				} else { // otherwise create a new Name, add version to the Name
 					Name name = new Name(nameVersion.getShortName());
 					name.add(nameVersion);
-					nameTable.put(nameVersion.getShortName().toLowerCase(),name);
+					nameTable.put(nameVersion.getShortName().toLowerCase(), name);
+
+					// initialises the good version to be used as the recording for this name
+					name.selectGoodVersion();
 				}
 			}
 		}

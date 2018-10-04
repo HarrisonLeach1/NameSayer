@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.model.*;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -37,7 +39,7 @@ public class MainMenuController implements Initializable {
     @FXML private Pane _dataPane, _recPane, _searchPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
-    @FXML private ListView<Name> _selectedList;
+    @FXML private ListView<Practisable> _selectedList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
 
@@ -89,12 +91,12 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    public void playSearchPressed(ActionEvent event) {
+    public void playSearchPressed(ActionEvent event) throws IOException {
         try {
             // create a new playlist loader and retrieve the playlist created
             PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
-            List<ConcatenatedName> list = loader.getList();
-            moveToPlayScene(list);
+            ArrayList<Practisable> list = new ArrayList<>(loader.getList());
+            moveToPlayScene(list, event);
         } catch (NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -126,7 +128,7 @@ public class MainMenuController implements Initializable {
      * All selected items in the selected list are removed from the selected list.
      */
     public void removeButtonPressed() {
-        ObservableList<Name> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
+        ObservableList<Practisable> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
         _selectedList.getItems().removeAll(itemsToDelete);
     }
 
@@ -155,19 +157,7 @@ public class MainMenuController implements Initializable {
         // if no items are selected, do not switch scenes.
         if(_selectedList.getItems().size() == 0){ return; }
 
-        // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        Parent playerParent = loader.load();
-
-        // pass selected items to the next controller
-        PlaySceneController controller = loader.getController();
-        controller.initModel(new PractiseListModel(_selectedList.getItems()));
-
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
+        moveToPlayScene(new ArrayList<>(_selectedList.getItems()), event);
     }
 
     /**
@@ -184,7 +174,20 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    private void moveToPlayScene(List<ConcatenatedName> list) {
+    private void moveToPlayScene(ArrayList<Practisable> list , ActionEvent event) throws IOException {
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
+        Parent playerParent = loader.load();
+
+        // pass selected items to the next controller
+        PlaySceneController controller = loader.getController();
+        controller.initModel(new PractiseListModel(list));
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(playerScene);
     }
 
 }

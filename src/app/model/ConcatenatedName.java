@@ -74,7 +74,7 @@ public class ConcatenatedName implements Practisable {
         HashMap<String, Name> searchTable = DataModel.getInstance().getDatabaseTable();
 
         // initialise the variable to store names that are not found
-        String missingNames = null;
+        String missingNames = "";
 
         // for each string, retrieve the Name object associated with the specific string key
         for (String str : stringList) {
@@ -86,7 +86,7 @@ public class ConcatenatedName implements Practisable {
         }
 
         // if there are missing names in the string, notify by throwing an exception
-        if (missingNames != null) {
+        if (!missingNames.equals("")) {
             throw new NameNotFoundException(missingNames);
         }
 
