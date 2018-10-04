@@ -1,8 +1,8 @@
 package app.controllers;
 
 import app.model.*;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,17 +15,14 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import org.controlsfx.control.CheckListView;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static app.model.DataModel.USER_DATABASE;
@@ -42,9 +39,10 @@ public class MainMenuController implements Initializable {
     @FXML private Pane _dataPane, _recPane, _searchPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
-    @FXML private ListView<Practisable> _selectedList;
+    @FXML private ListView<Practisable> _previewList, _selectedList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
+    @FXML private Label _fileNameLabel;
 
 
     private IDataModel dataModel = DataModel.getInstance();
@@ -115,6 +113,7 @@ public class MainMenuController implements Initializable {
     }
 
     public void chooseFilePressed(ActionEvent event) throws IOException {
+        // initialise file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select PlayList");
 
@@ -122,12 +121,20 @@ public class MainMenuController implements Initializable {
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("Text Files", "*.txt"));
 
+        // open file chooser
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
         File selectedFile = fileChooser.showOpenDialog(window);
 
         if (selectedFile != null) {
+            _fileNameLabel.setText(selectedFile.getName());
 
+            LoadTask loadWorker = new LoadTask(selectedFile);
+
+            loadWorker.setOnSucceeded(e -> {
+                _previewList.getItems().addAll(loadWorker.getValue());
+            });
+
+            new Thread(loadWorker).start();
         }
     }
 
@@ -219,5 +226,23 @@ public class MainMenuController implements Initializable {
         window.setScene(playerScene);
     }
 
+    private static class LoadTask extends Task<ArrayList<Practisable>> {
+        private File _selectedFile;
+
+        private LoadTask(File selectedFile) {
+         _selectedFile = selectedFile;
+        }
+
+        @Override
+        protected ArrayList<Practisable> call() throws FileNotFoundException {
+            PlaylistLoader loader = null;
+            try {
+                loader = new PlaylistLoader(_selectedFile);
+            } catch (NameNotFoundException e) {
+                e.printStackTrace();
+            }
+            return new ArrayList<>(loader.getList());
+        }
+    }
 }
 

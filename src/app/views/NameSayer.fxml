@@ -215,7 +215,7 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label layoutX="232.0" layoutY="310.0" prefHeight="30.0" prefWidth="304.0" style="-fx-background-color: #3E3B3F; -fx-border-color: white;" text="    No file selected" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="220.0">
+                        <Label fx:id="_fileNameLabel" layoutX="232.0" layoutY="310.0" prefHeight="30.0" prefWidth="304.0" style="-fx-background-color: #3E3B3F; -fx-border-color: white;" text="    No file selected" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="220.0">
                            <font>
                               <Font name="System Italic" size="15.0" />
                            </font>
@@ -232,7 +232,7 @@
                               <String fx:value="menu-test_mic" />
                               <String fx:value="menu" />
                            </styleClass></Button>
-                        <ListView layoutX="233.0" layoutY="362.0" prefHeight="353.0" prefWidth="371.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="290.0" />
+                        <ListView fx:id= "_previewList" layoutX="233.0" layoutY="362.0" prefHeight="353.0" prefWidth="371.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="290.0" />
                         <Label layoutX="234.0" layoutY="236.0" text="File Preview" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="260.0">
                            <font>
                               <Font size="18.0" />

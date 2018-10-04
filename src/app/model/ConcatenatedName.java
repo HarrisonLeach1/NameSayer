@@ -17,8 +17,8 @@ public class ConcatenatedName implements Practisable {
     private String _stringOfPaths;
 
     public ConcatenatedName(String names) throws NameNotFoundException {
-        _names = stringsToList(names);
         _displayName = names;
+        _names = stringsToList(names);
 
         makeTempDirectory();
         cutSilence();
