@@ -17,8 +17,8 @@ public class ConcatenatedName implements Practisable {
     private String _stringOfPaths;
 
     public ConcatenatedName(String names) throws NameNotFoundException {
-        _names = stringsToList(names);
         _displayName = names;
+        _names = stringsToList(names);
 
         makeTempDirectory();
         cutSilence();
@@ -38,22 +38,6 @@ public class ConcatenatedName implements Practisable {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public boolean isRateable() {
-        return false;
-    }
-
-    @Override
-    public void setBadQuality() {
-        // A concatenated Name cannot as of yet be rated
-    }
-
-    @Override
-    public String getDateTimeCreated() {
-        return "";
-    }
-
 
     /**
      *  Converts a string of names into a list of name objects found the DataModel search table
@@ -221,5 +205,20 @@ public class ConcatenatedName implements Practisable {
     @Override
     public String toString() {
         return _displayName;
+    }
+
+    @Override
+    public boolean isRateable() {
+        return false;
+    }
+
+    @Override
+    public void setBadQuality() {
+        // A concatenated Name cannot yet be rated
+    }
+
+    @Override
+    public String getDateTimeCreated() {
+        return "";
     }
 }

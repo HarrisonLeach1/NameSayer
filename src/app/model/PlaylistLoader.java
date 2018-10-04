@@ -9,49 +9,79 @@ import java.util.Scanner;
 
 public class PlaylistLoader {
 
-    private final List<ConcatenatedName> _names;
+    private final List<String> _stringList;
 
-    public PlaylistLoader(File playlistFile) throws FileNotFoundException, NameNotFoundException {
-        _names = loadFile(playlistFile);
+    public PlaylistLoader(File playlistFile) throws FileNotFoundException {
+        _stringList = loadFileToStrings(playlistFile);
     }
 
-    public PlaylistLoader(String singleName) throws NameNotFoundException {
-        _names = loadSingleName(singleName);
+    public PlaylistLoader(String singleName) {
+        _stringList = loadSingleNameString(singleName);
     }
 
     /**
-     * Given text file of names, returns a list of names where each name corresponds
-     * to a line of names in the given text file.
-     * @param playlistFile
+     * Returns the list of Name objects from the the strings inputted to this object.
+     * This can be a long running task because new audio files need to be generated.
+     * If a name cannot be found in the database a NameNotFoundException will be thrown.
      * @return list of names
-     * @throws FileNotFoundException
+     * @throws NameNotFoundException
      */
-    private List<ConcatenatedName> loadFile(File playlistFile) throws FileNotFoundException, NameNotFoundException {
-        Scanner input = new Scanner(playlistFile);
+    public List<ConcatenatedName> getNameList() throws NameNotFoundException {
         List<ConcatenatedName> nameList = new ArrayList<>();
+        String missingNames = "";
 
-        // load in each line of the text file, and use each string to create a new Name object
-        while (input.hasNextLine()) {
-            nameList.add(new ConcatenatedName(input.nextLine()));
+        // for each string in the list of input strings, create a new name object
+        for (String nameString : _stringList) {
+            try {
+                nameList.add(new ConcatenatedName(nameString));
+
+            } catch (NameNotFoundException e) {
+                missingNames += e.getMissingNames() +"\n";
+            }
+        }
+
+        // if some names were missing throw a new exception with the appropriate message
+        if (!missingNames.equals("")) {
+            throw new NameNotFoundException(missingNames);
         }
 
         return nameList;
     }
 
+
     /**
-     * Given a single name string, returns a Name object of the associated name.
-     * @param singleName
-     * @return a list containing a single name
+     * Given text file of names, returns a list of strings where each string corresponds
+     * to a line of names in the given text file.
+     * @param playlistFile
+     * @return list of strings of the names
+     * @throws FileNotFoundException
      */
-    private List<ConcatenatedName> loadSingleName(String singleName) throws NameNotFoundException {
-        return Arrays.asList(new ConcatenatedName(singleName));
+    private List<String> loadFileToStrings(File playlistFile) throws FileNotFoundException {
+        Scanner input = new Scanner(playlistFile);
+        List<String> stringList = new ArrayList<>();
+
+        // load in each line of the text file, and use each string to create a new Name object
+        while (input.hasNextLine()) {
+            stringList.add(input.nextLine());
+        }
+
+        return stringList;
     }
 
     /**
-     * Returns the list of Name objects created by this playlist loader object
-     * @return list of names
+     * Given a single name string, returns a list object containing the name string.
+     * @param singleName
+     * @return a list containing the input string
      */
-    public List<ConcatenatedName> getList() {
-        return _names;
+    private List<String> loadSingleNameString(String singleName) {
+        return Arrays.asList(singleName);
+    }
+
+    /**
+     * Returns a list of strings corresponding to the inputs to the file loader object
+     * @return
+     */
+    public List<String> getStringList() {
+        return _stringList;
     }
 }
