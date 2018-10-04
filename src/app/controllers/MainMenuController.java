@@ -119,10 +119,6 @@ public class MainMenuController implements Initializable {
         }
     }
 
-    private void showErrorScene(NameNotFoundException e) {
-
-    }
-
     /**
      * Opens a file chooser which allows the user to upload the playlist they wish
      * to practise.
