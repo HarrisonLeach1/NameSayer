@@ -1,6 +1,5 @@
 package app.model;
 
-import java.awt.color.ICC_Profile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;

@@ -44,7 +44,7 @@ public class MainMenuController implements Initializable {
     @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
-    @FXML private Label _fileNameLabel;
+    @FXML private Label _fileNameLabel, _streakCounter;
 
 
     private IDataModel dataModel = DataModel.getInstance();
@@ -59,6 +59,7 @@ public class MainMenuController implements Initializable {
         _dataList.getItems().addAll(dataModel.loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
+        _streakCounter.setText(String.valueOf(UserModel.getInstance().getDailyStreak()));
 
         openStreakWindow();
     }
