@@ -59,6 +59,8 @@ public class MainMenuController implements Initializable {
         _dataList.getItems().addAll(dataModel.loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
+
+        openStreakWindow();
     }
 
     /**
@@ -324,8 +326,23 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    private void openStreakWindow() {
+        Parent playerParent = null;
+        try {
+            playerParent = FXMLLoader.load(getClass().getResource("/app/views/StreakScene.fxml"));
+            Scene playerScene = new Scene(playerParent);
+            Stage window = new Stage();
+
+            window.setScene(playerScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
-     * Deletes the temporary directory for storing modified audio files.
+     * Deletes the temporary directory for storing modified audio files. PUT IN MODEL.
      */
     private void deleteTempDirectory() {
         try {
