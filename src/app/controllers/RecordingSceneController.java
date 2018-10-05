@@ -79,7 +79,7 @@ public class RecordingSceneController {
      * Task which updates the progress bar for the specified recording time.
      * Should be executed on a new Thread.
      */
-    public Task startWorker() {
+    private Task startWorker() {
         return new Task() {
 
             @Override

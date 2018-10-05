@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.views.ErrorScene">
+<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ErrorSceneController">
    <children>
       <Label layoutX="45.0" layoutY="82.0" text="Could not find the following names:" textFill="WHITE" />
       <Label layoutX="105.0" layoutY="113.0" text="Names go here" textFill="WHITE" />
@@ -16,6 +16,6 @@
             <Image url="@images/warning.png" />
          </image>
       </ImageView>
-      <Button layoutX="125.0" layoutY="147.0" mnemonicParsing="false" style="-fx-background-color: grey;" text="Button" />
+      <Button layoutX="125.0" layoutY="147.0" mnemonicParsing="false" onAction="#okButtonAction" style="-fx-background-color: grey;" text="OK" />
    </children>
 </AnchorPane>

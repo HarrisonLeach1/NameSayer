@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.model.*;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +12,16 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
@@ -34,11 +39,15 @@ public class MainMenuController implements Initializable {
     @FXML private Pane _dataPane, _recPane, _searchPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
-    @FXML private ListView<Name> _selectedList;
+    @FXML private ListView<Practisable> _selectedList;
+    @FXML private ListView<String> _previewList;
     @FXML private TreeView<NameVersion> _recList;
+    @FXML private TextField _searchBox;
+    @FXML private Label _fileNameLabel;
 
 
-    private IDataModel dataModel = new DataModel();
+    private IDataModel dataModel = DataModel.getInstance();
+    private ArrayList<Practisable> _playList;
 
 
     /**
@@ -86,6 +95,62 @@ public class MainMenuController implements Initializable {
     }
 
     /**
+     * When the find and play button is pressed the searched name is retrieved
+     * and the user is moved to the play scene. If searched name does not exist
+     * the user is notified.
+     * @param event
+     * @throws IOException
+     */
+    public void playSearchPressed(ActionEvent event) throws IOException {
+        try {
+            // create a new playlist loader and retrieve the playlist created
+            PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
+            ArrayList<Practisable> list = new ArrayList<>(loader.getNameList());
+            moveToPlayScene(list, event);
+
+            // if the name is not found perform action
+        } catch (NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Opens a file chooser which allows the user to upload the playlist they wish
+     * to practise.
+     * @param event
+     * @throws IOException
+     */
+    public void chooseFilePressed(ActionEvent event) throws IOException {
+        // initialise file chooser
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select PlayList");
+
+        // only show text files
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        // open file chooser
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(window);
+
+        if (selectedFile != null) {
+            loadFile(selectedFile);
+        }
+    }
+
+    /**
+     * If a valid playlist has been loaded in by the user, moves to the play scene
+     * to pracitse the playlist. Otherwise, does nothing.
+     * @param event
+     * @throws IOException
+     */
+    public void playFilePressed(ActionEvent event) throws IOException {
+        if (_playList != null) {
+            moveToPlayScene(_playList,event);
+        }
+    }
+
+    /**
      * All checked items in the CheckListView are added to the selected list of names
      * to be practised by the user.
      */
@@ -111,7 +176,7 @@ public class MainMenuController implements Initializable {
      * All selected items in the selected list are removed from the selected list.
      */
     public void removeButtonPressed() {
-        ObservableList<Name> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
+        ObservableList<Practisable> itemsToDelete = _selectedList.getSelectionModel().getSelectedItems();
         _selectedList.getItems().removeAll(itemsToDelete);
     }
 
@@ -140,25 +205,13 @@ public class MainMenuController implements Initializable {
         // if no items are selected, do not switch scenes.
         if(_selectedList.getItems().size() == 0){ return; }
 
-        // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        Parent playerParent = loader.load();
-
-        // pass selected items to the next controller
-        PlaySceneController controller = loader.getController();
-        controller.initModel(new PractiseListModel(_selectedList.getItems()));
-
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
+        moveToPlayScene(new ArrayList<>(_selectedList.getItems()), event);
     }
 
     /**
      * Plays the currently selected user recording in the list of user recordings.
      */
-    public void playButtonPressed() {
+    public void playUserRecordingPressed() {
         TreeItem<NameVersion> selectedItem = _recList.getSelectionModel().getSelectedItem();
         if (selectedItem != null) {
             NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
@@ -167,7 +220,74 @@ public class MainMenuController implements Initializable {
                 currentUserRecording.playRecording();
             }
         }
+    }
 
+    /**
+     * Given a practise list, redirects the user to the play scene to practise the list of names.
+     * @param list
+     * @param event
+     * @throws IOException
+     */
+    private void moveToPlayScene(ArrayList<Practisable> list , ActionEvent event) throws IOException {
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
+        Parent playerParent = loader.load();
+
+        // pass selected items to the next controller
+        PlaySceneController controller = loader.getController();
+        controller.initModel(new PractiseListModel(list));
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.setScene(playerScene);
+    }
+
+    /**
+     * Given a file which represents the user playlist of names to practise, updates the
+     * previewList with the names. If all names are found in the database, the playlist
+     * field is loaded with names to practise.
+     * @param selectedFile
+     * @throws FileNotFoundException
+     */
+    private void loadFile(File selectedFile) throws FileNotFoundException{
+        _fileNameLabel.setText("  " + selectedFile.getName());
+        PlaylistLoader loader = new PlaylistLoader(selectedFile);
+
+        // create a load worker for loading in the names in the file
+        LoadTask loadWorker = new LoadTask(loader);
+
+        _previewList.getItems().addAll(loader.getStringList());
+
+        // when finished update the list view
+        loadWorker.setOnSucceeded(e -> {
+            _playList = loadWorker.getValue();
+        });
+
+        // if failed, notify the user which names are missing
+        loadWorker.setOnFailed(e -> {
+            System.out.println(loadWorker.getException().getMessage()); // stub
+        });
+
+        new Thread(loadWorker).start();
+    }
+
+    /**
+     * The LoadTask executes the loading of the playlist with names on a background thread
+     * to avoid GUI unresponsiveness.
+     */
+    private static class LoadTask extends Task<ArrayList<Practisable>> {
+        private PlaylistLoader _loader;
+
+        private LoadTask(PlaylistLoader loader) {
+         _loader = loader;
+        }
+
+        @Override
+        protected ArrayList<Practisable> call() throws NameNotFoundException {
+            return new ArrayList<>(_loader.getNameList());
+        }
     }
 }
 

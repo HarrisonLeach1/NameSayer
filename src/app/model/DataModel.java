@@ -9,6 +9,21 @@ import java.util.*;
 public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
     public static final String USER_DATABASE = "./userRecordings/";
+    public static final DataModel INSTANCE = new DataModel();
+	private final HashMap<String, Name> _databaseTable;
+
+	private DataModel() {
+    	_databaseTable = createNameTable(DATABASE);
+	}
+
+	/**
+	 * Returns the singleton instance of the DataModel, used for loading
+	 * in the recording databases.
+	 * @return instance of DataModel
+	 */
+	public static DataModel getInstance() {
+    	return INSTANCE;
+	}
 
     /**
      * Creates a TreeItem that contains all recordings in the database
@@ -17,7 +32,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<NameVersion> loadDatabaseTree(){
 		TreeViewFactory checkTree = new CheckTreeViewFactory();
 		CheckBoxTreeItem<NameVersion> root = new CheckBoxTreeItem<>();
-		return checkTree.getTreeRoot(root, getNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
 	}
 
     /**
@@ -27,7 +42,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<NameVersion> loadUserDatabaseTree(){
 		TreeViewFactory checkTree = new RegularTreeViewFactory();
 		TreeItem<NameVersion> root = new TreeItem<>();
-		return checkTree.getTreeRoot(root, getNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
 	}
 
 	/**
@@ -35,7 +50,7 @@ public class DataModel implements IDataModel{
 	 * @return ArrayList
 	 */
 	public List<Name> loadDatabaseList() {
-		HashMap<String, Name> nameTable = getNameTable(DATABASE);
+		HashMap<String, Name> nameTable = createNameTable(DATABASE);
 
 		List<Name> nameList = new ArrayList<>();
 
@@ -63,7 +78,7 @@ public class DataModel implements IDataModel{
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
-	private HashMap<String, Name> getNameTable(String database) {
+	private HashMap<String, Name> createNameTable(String database) {
 		HashMap<String, Name> nameTable = new HashMap<>();
 
 		File databaseFolder = new File(database);
@@ -81,13 +96,16 @@ public class DataModel implements IDataModel{
 				NameVersion nameVersion = new NameVersion(database + file.getName());
 
 				// if other versions of the same nameVersion exist, add it to the name
-				if (nameTable.containsKey(nameVersion.getShortName())) {
-					Name currentName = nameTable.get(nameVersion.getShortName());
+				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
+					Name currentName = nameTable.get(nameVersion.getShortName().toLowerCase());
 					currentName.add(nameVersion);
 				} else { // otherwise create a new Name, add version to the Name
 					Name name = new Name(nameVersion.getShortName());
 					name.add(nameVersion);
-					nameTable.put(nameVersion.getShortName(),name);
+					nameTable.put(nameVersion.getShortName().toLowerCase(), name);
+
+					// initialises the good version to be used as the recording for this name
+					name.selectGoodVersion();
 				}
 			}
 		}
@@ -96,4 +114,7 @@ public class DataModel implements IDataModel{
 	}
 
 
+	public HashMap<String, Name> getDatabaseTable() {
+		return _databaseTable;
+	}
 }

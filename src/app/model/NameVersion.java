@@ -140,6 +140,10 @@ public class NameVersion {
         return _shortName;
     }
 
+    public String getFileName() {
+        return _fileName;
+    }
+
     public String getDateCreated() {
         return _dateCreated;
     }
