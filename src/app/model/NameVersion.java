@@ -63,14 +63,17 @@ public class NameVersion {
      * Retrieves just the name of the recording excluding the creation date, time and file extension.
      */
     private void parseShortName() {
-        // get the last part of the file name
-        String dateTimeRemoved = _fileName.substring(_fileName.lastIndexOf('_') + 1);
+        // find the index of the third underscore (the start of the name)
+        int startIndex = _fileName.indexOf("_", _fileName.indexOf("_", _fileName.indexOf("_") + 1) + 1);
 
-        // remove the file extension
-        String uncapitalisedName =  dateTimeRemoved.split("\\.")[0];
+        // find the index of the dot extension (the end of the name)
+        int lastIndex = _fileName.lastIndexOf(".");
+
+        // parse the name and replace underscores with spaces
+        String nameString = _fileName.substring(startIndex + 1, lastIndex).replaceAll("_", " ");
 
         // capitalise the name
-        _shortName = uncapitalisedName.substring(0, 1).toUpperCase() + uncapitalisedName.substring(1);
+        _shortName = capitalise(nameString);
     }
 
     public void playRecording() {
@@ -127,6 +130,11 @@ public class NameVersion {
         return false;
     }
 
+    private String capitalise(String name) {
+        return name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+
+
     /**
      * Indicates if this recording version has previously been marked as being of
      * bad quality
@@ -153,7 +161,7 @@ public class NameVersion {
     }
 
     public void setDisplayName(String s) {
-        _displayName = s;
+        _displayName = capitalise(s);
     }
 
     @Override

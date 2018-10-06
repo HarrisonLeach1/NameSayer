@@ -40,7 +40,7 @@ public class ConcatenatedName implements Practisable {
     }
 
     /**
-     *  Converts a string of names into a list of name objects found the DataModel search table
+     * Converts a string of names into a list of name objects found the DataModel search table
      * @param names the string of names
      * @return list of Name objects
      * @throws NameNotFoundException

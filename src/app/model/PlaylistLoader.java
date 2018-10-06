@@ -33,7 +33,8 @@ public class PlaylistLoader {
         // for each string in the list of input strings, create a new name object
         for (String nameString : _stringList) {
             try {
-                nameList.add(new ConcatenatedName(nameString));
+                ConcatenatedName name = new ConcatenatedName(nameString);
+                nameList.add(name);
 
             } catch (NameNotFoundException e) {
                 missingNames += e.getMissingNames() +"\n";
