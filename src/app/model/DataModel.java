@@ -5,6 +5,7 @@ import javafx.scene.control.TreeItem;
 import sun.util.resources.cldr.st.CalendarData_st_LS;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class DataModel implements IDataModel{
@@ -140,5 +141,91 @@ public class DataModel implements IDataModel{
 		}
 
 		return nameTable;
+	}
+
+	public List<ConcatenatedName> loadSingleNameToList(String name) {
+		return new ArrayList<>(Arrays.asList(createConcatenatedName(name)));
+	}
+
+	public List<ConcatenatedName> loadFileToList(File playlistFile) throws FileNotFoundException {
+		Scanner input = new Scanner(playlistFile);
+		List<ConcatenatedName> nameList = new ArrayList<>();
+
+		// load in each line of the text file, and use each string to create a new Name object
+		while (input.hasNextLine()) {
+			String inputString = input.nextLine();
+
+			ConcatenatedName concatenatedName = createConcatenatedName(inputString);
+
+			nameList.add(concatenatedName);
+		}
+
+		return nameList;
+	}
+
+	private ConcatenatedName createConcatenatedName(String inputString) {
+		List<Name> notConcatenatedNames = new ArrayList<>();
+
+		// replace all hyphens with spaces
+		String splitString = inputString.replaceAll("-", " ");
+
+		// parse strings into a list of strings
+		List<String> stringList = new ArrayList<>(Arrays.asList(splitString.split(" ")));
+
+		String missingNames = "";
+
+		for (String str : stringList) {
+			if (_databaseTable.containsKey(str.toLowerCase())) {
+				notConcatenatedNames.add(_databaseTable.get(str.toLowerCase()));
+			} else {
+				missingNames += str + " ";
+			}
+		}
+
+		ConcatenatedName concatenatedName = new ConcatenatedName(notConcatenatedNames, inputString);
+
+		if(!missingNames.isEmpty()) {
+			concatenatedName.setMissingNames(missingNames);
+		}
+
+		return concatenatedName;
+	}
+
+	/**
+	 * Converts a string of names into a list of name objects found the DataModel search table
+	 * @param names the string of names
+	 * @return list of Name objects
+	 * @throws NameNotFoundException
+	 */
+	private List<Name> stringsToList(String names) throws NameNotFoundException {
+		// replace all hyphens with spaces
+		names = names.replaceAll("-"," ");
+
+		// parse strings into a list of strings
+		List<String> stringList = new ArrayList<>(Arrays.asList(names.split(" ")));
+
+		List<Name> nameList = new ArrayList<>();
+
+		// get the DataModel table which references the names with their associated strings
+		HashMap<String, Name> searchTable = DataModel.getInstance().getDatabaseTable();
+
+		// initialise the variable to store names that are not found
+		String missingNames = "";
+
+		// for each string, retrieve the Name object associated with the specific string key
+		for (String str : stringList) {
+			if (searchTable.containsKey(str.toLowerCase())) {
+				nameList.add(searchTable.get(str.toLowerCase()));
+			} else {
+				missingNames += str + "\n";
+			}
+		}
+
+		// if there are missing names in the string, notify by throwing an exception
+		if (!missingNames.equals("")) {
+			throw new NameNotFoundException(missingNames);
+		}
+
+		return nameList;
 	}
 }
