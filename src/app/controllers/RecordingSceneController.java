@@ -43,14 +43,14 @@ public class RecordingSceneController {
         _progressBar.setProgress(0);
         _cancelBtn.setDisable(false);
 
-        recordWorker = startWorker();
+        recordWorker = recordWorker();
 
         // bind worker to display progress bar updates
-        _progressBar.progressProperty().unbind();
         _progressBar.progressProperty().bind(recordWorker.progressProperty());
 
         // when the specified recording time is finished, close the window
         recordWorker.setOnSucceeded(event -> {
+            _progressBar.progressProperty().unbind();
             Stage window = (Stage)_cancelBtn.getScene().getWindow();
             window.close();
         });
@@ -79,7 +79,7 @@ public class RecordingSceneController {
      * Task which updates the progress bar for the specified recording time.
      * Should be executed on a new Thread.
      */
-    private Task startWorker() {
+    private Task recordWorker() {
         return new Task() {
 
             @Override

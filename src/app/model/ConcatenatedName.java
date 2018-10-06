@@ -15,10 +15,11 @@ public class ConcatenatedName implements Practisable {
     private final String _displayName;
     private List<Name> _names;
     private String _stringOfPaths;
+    private String _missingNames = "";
 
-    public ConcatenatedName(String names) throws NameNotFoundException {
-        _displayName = names;
-        _names = stringsToList(names);
+    public ConcatenatedName(List<Name> names, String displayName) {
+        _displayName = displayName;
+        _names= names;
 
         makeTempDirectory();
         cutSilence();
@@ -34,49 +35,13 @@ public class ConcatenatedName implements Practisable {
             System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
+            Process process  = builder.start();
 
-        } catch (IOException e) {
+            process.waitFor();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Converts a string of names into a list of name objects found the DataModel search table
-     * @param names the string of names
-     * @return list of Name objects
-     * @throws NameNotFoundException
-     */
-    private List<Name> stringsToList(String names) throws NameNotFoundException {
-        // replace all hyphens with spaces
-        names = names.replaceAll("-"," ");
-
-        // parse strings into a list of strings
-        List<String> stringList = new ArrayList<>(Arrays.asList(names.split(" ")));
-
-        List<Name> nameList = new ArrayList<>();
-
-        // get the DataModel table which references the names with their associated strings
-        HashMap<String, Name> searchTable = DataModel.getInstance().getDatabaseTable();
-
-        // initialise the variable to store names that are not found
-        String missingNames = "";
-
-        // for each string, retrieve the Name object associated with the specific string key
-        for (String str : stringList) {
-            if (searchTable.containsKey(str.toLowerCase())) {
-                nameList.add(searchTable.get(str.toLowerCase()));
-            } else {
-                missingNames += str + "\n";
-            }
-        }
-
-        // if there are missing names in the string, notify by throwing an exception
-        if (!missingNames.equals("")) {
-            throw new NameNotFoundException(missingNames);
-        }
-
-        return nameList;
     }
 
     /**
@@ -222,5 +187,13 @@ public class ConcatenatedName implements Practisable {
     @Override
     public String getDateTimeCreated() {
         return "";
+    }
+
+    public void setMissingNames(String missingNames) {
+        _missingNames = missingNames;
+    }
+
+    public String getMissingNames() {
+        return _missingNames;
     }
 }

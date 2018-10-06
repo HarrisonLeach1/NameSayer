@@ -27,16 +27,18 @@ import java.util.ResourceBundle;
  * The IPractiseListModel then passes information back to the PlaySceneController
  * to update the view.
  */
-public class PlaySceneController implements Initializable {
+public class PlaySceneController implements DataModelListener,Initializable {
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
-    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
+    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter;
     @FXML private Slider _volumeSlider;
+    @FXML private ProgressBar _levelProgress;
     @FXML private ProgressBar _playBar;
-    private Task playing;
+    private Task _playing;
 
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
+    private boolean _firstComparison;
 
     /**
      * Loads in the practise list model that stores the list of selected names from
@@ -50,6 +52,7 @@ public class PlaySceneController implements Initializable {
         _volumeSlider.setMin(0);
         _volumeSlider.setMax(2.0);
         _volumeSlider.setValue(1.0);
+        DataModel.getInstance().addListener(this);
     }
 
     /**
@@ -118,9 +121,31 @@ public class PlaySceneController implements Initializable {
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
-        new Thread(playing).start();
-        _playBar.progressProperty().bind(playing.progressProperty());
-        _currentName.playRecording(_volumeSlider.getValue());
+        _playing = playWorker();
+        _playBar.progressProperty().bind(_playing.progressProperty());
+
+        _playing.setOnSucceeded( e -> {
+            stopProgress();
+        });
+        new Thread(_playing).start();
+
+    }
+
+    /**
+     * Creates a new Task which allows the play funcitonality to be
+     * executed on a new thread.
+     */
+    private Task playWorker() {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                // play user recording
+                _currentName.playRecording(_volumeSlider.getValue());
+                return true;
+            }
+        };
+
     }
 
     /**
@@ -142,13 +167,38 @@ public class PlaySceneController implements Initializable {
      * Plays the user's recording then the original recording.
      * Allows the user to judge their pronunciation.
      */
-    public void compareButtonPressed() throws IOException, InterruptedException {
-        new Thread(playing).start();
-        _playBar.progressProperty().bind(playing.progressProperty());
-        ProcessBuilder builder = new ProcessBuilder("_practiseListModel.compareUserRecording(_volumeSlider.getValue())");
-        Process pro = builder.start();
-        pro.waitFor();
-        stopProgress();
+    public void compareButtonPressed() throws IOException {
+        _playing = compareWorker();
+        _playBar.progressProperty().bind(this._playing.progressProperty());
+
+        _playing.setOnSucceeded( e -> {
+            if (_firstComparison) {
+                openLevelScene();
+                _firstComparison = false;
+            }
+            stopProgress();
+        });
+
+        new Thread(_playing).start();
+
+    }
+
+    /**
+     * Creates a new Task which allows the comparison funcitonality to be
+     * executed on a new thread.
+     */
+    private Task compareWorker() {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                // play user recording
+                _practiseListModel.compareUserRecording(_volumeSlider.getValue());
+
+                return true;
+            }
+        };
+
     }
 
     /**
@@ -157,6 +207,30 @@ public class PlaySceneController implements Initializable {
     public void badButtonPressed() throws IOException {
         _currentName.setBadQuality();
         _bad_Label.setVisible(true);
+    }
+
+    @Override
+    public void updateProgressToUser(int experience) {
+        int currentLevelProgress = experience % 100;
+        int currentLevel = experience / 100;
+        _levelProgress.setProgress(currentLevelProgress / 100.0);
+        _levelCounter.setText(String.valueOf(currentLevel));
+
+    }
+
+    private void openLevelScene() {
+        Parent playerParent = null;
+        try {
+            playerParent = FXMLLoader.load(getClass().getResource("/app/views/LevelScene.fxml"));
+            Scene playerScene = new Scene(playerParent);
+            Stage window = new Stage();
+
+            window.setScene(playerScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -174,6 +248,8 @@ public class PlaySceneController implements Initializable {
             _badBtn.setDisable(true);
         }
         _dateTimeLabel.setText(_currentName.getDateTimeCreated());
+
+        _firstComparison = true;
 
         checkBounds();
     }
@@ -220,16 +296,10 @@ public class PlaySceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        playing = new Task() {
+        _playing = new Task() {
             @Override
-            protected Object call() {
-
+            protected Object call() throws Exception {
                 return null;
-            }
-
-            @Override
-            protected void updateProgress(double workDone, double max) {
-                super.updateProgress(workDone, max);
             }
         };
     }
@@ -237,7 +307,7 @@ public class PlaySceneController implements Initializable {
     private void stopProgress(){
         _playBar.progressProperty().unbind();
         _playBar.setProgress(0);
-        playing.cancel();
+        _playing.cancel();
     }
 
 }

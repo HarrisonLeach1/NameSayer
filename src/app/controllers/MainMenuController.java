@@ -35,7 +35,7 @@ import static app.model.DataModel.USER_DATABASE;
  * The IDataModel then passes information back to the MainMenuController
  * to update the view.
  */
-public class MainMenuController implements Initializable {
+public class MainMenuController implements Initializable, DataModelListener {
 
     @FXML private SplitPane _mainPane;
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
@@ -45,11 +45,9 @@ public class MainMenuController implements Initializable {
     @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
-    @FXML private Label _fileNameLabel;
-
-
-    private IDataModel dataModel = DataModel.getInstance();
-
+    @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
+    @FXML private ProgressBar _levelProgress;
+    private File _selectedFile;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -57,13 +55,35 @@ public class MainMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _dataList.getItems().addAll(dataModel.loadDatabaseList());
+        _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
+        _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
+
+        _playList.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
+            @Override
+            protected void updateItem(ConcatenatedName c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(c.toString());
+                    if (!c.getMissingNames().equals("")) {
+                        setStyle("-fx-background-color: rgba(255,0,0,0.5)");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
+
+        DataModel.getInstance().addListener(this);
     }
 
     public void handleStartUpAction(){
         _startPane.toBack();
+        openStreakWindow();
     }
 
     public void handleQuitAction(ActionEvent event){
@@ -79,7 +99,7 @@ public class MainMenuController implements Initializable {
         if(event.getSource() == _viewDataBtn){
             _dataPane.toFront();
         } else if(event.getSource() == _viewRecBtn){
-            _recList.setRoot(dataModel.loadUserDatabaseTree());
+            _recList.setRoot(DataModel.getInstance().loadUserDatabaseTree());
             _recList.setShowRoot(false);
             _recPane.toFront();
         } else if(event.getSource() == _searchMenuBtn){
@@ -91,9 +111,6 @@ public class MainMenuController implements Initializable {
 
             // when test mic scene is closed, delete the test audio file
             window.setScene(playerScene);
-            window.setOnCloseRequest(event1 -> {
-
-            });
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
         }
@@ -111,21 +128,28 @@ public class MainMenuController implements Initializable {
             loadErrorMessage("ERROR: Search is empty");
             return;
         }
-        try {
-            // create a new playlist loader and retrieve the playlist created
-            PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
-            ArrayList<Practisable> list = new ArrayList<>(loader.getNameList());
-            moveToPlayScene(list, event);
+        Task<List<ConcatenatedName>> loadWorker = loadSingleNameWorker();
 
-            // if the name is not found display error message
-        } catch (NameNotFoundException e) {
-            loadErrorMessage(e.getMessage());
-            deleteTempDirectory();
-        }
+        // when finished update the list view
+        loadWorker.setOnSucceeded(e -> {
+            moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
+        });
+
+        new Thread(loadWorker).start();
     }
 
-    private void showErrorScene(NameNotFoundException e) {
-
+    /**
+     * The loadFileWorker executes the loading of the playlist with names on a background thread
+     * to avoid GUI unresponsiveness.
+     */
+    private Task loadSingleNameWorker() {
+        return new Task() {
+            @Override
+            protected List<ConcatenatedName> call() throws Exception {
+                // load name through data model
+                return DataModel.getInstance().loadSingleNameToList(_searchBox.getText());
+            }
+        };
     }
 
     /**
@@ -134,7 +158,7 @@ public class MainMenuController implements Initializable {
      * @param event
      * @throws IOException
      */
-    public void chooseFilePressed(ActionEvent event) throws IOException {
+    public void chooseFilePressed(ActionEvent event) {
         // initialise file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select PlayList");
@@ -164,6 +188,42 @@ public class MainMenuController implements Initializable {
         } else {
             loadErrorMessage("ERROR: List is empty");
         }
+    }
+
+    /**
+     * Given a file which represents the user playlist of names to practise, updates the
+     * previewList with the names. If all names are found in the database, the playlist
+     * field is loaded with names to practise.
+     * @param selectedFile
+     * @throws FileNotFoundException
+     */
+    private void loadFile(File selectedFile) {
+        _fileNameLabel.setText("  " + selectedFile.getName());
+        _selectedFile = selectedFile;
+
+        // create a load worker for loading in the names in the file
+        Task<List<ConcatenatedName>> loadWorker = loadFileWorker();
+
+        // when finished update the list view
+        loadWorker.setOnSucceeded(e -> {
+            _playList.getItems().addAll(loadWorker.getValue());
+        });
+
+        new Thread(loadWorker).start();
+    }
+
+    /**
+     * The loadFileWorker executes the loading of the playlist with names on a background thread
+     * to avoid GUI unresponsiveness.
+     */
+    private Task loadFileWorker() {
+        return new Task() {
+            @Override
+            protected List<ConcatenatedName> call() throws Exception {
+                // load file through data model
+                return DataModel.getInstance().loadFileToList(_selectedFile);
+            }
+        };
     }
 
     /**
@@ -238,17 +298,31 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    @Override
+    public void updateProgressToUser(int experience) {
+        int currentLevelProgress = experience % 100;
+        int currentLevel = experience / 100;
+        _levelProgress.setProgress(currentLevelProgress / 100.0);
+        _levelCounter.setText(String.valueOf(currentLevel));
+
+    }
+
     /**
      * Given a practise list, redirects the user to the play scene to practise the list of names.
      * @param list
      * @param event
      * @throws IOException
      */
-    private void moveToPlayScene(List<Practisable> list , ActionEvent event) throws IOException {
+    private void moveToPlayScene(List<Practisable> list , ActionEvent event) {
         // load in the new scene
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        Parent playerParent = loader.load();
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // pass selected items to the next controller
         PlaySceneController controller = loader.getController();
@@ -258,34 +332,6 @@ public class MainMenuController implements Initializable {
         Scene playerScene = new Scene(playerParent);
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(playerScene);
-    }
-
-    /**
-     * Given a file which represents the user playlist of names to practise, updates the
-     * previewList with the names. If all names are found in the database, the playlist
-     * field is loaded with names to practise.
-     * @param selectedFile
-     * @throws FileNotFoundException
-     */
-    private void loadFile(File selectedFile) throws FileNotFoundException{
-        _fileNameLabel.setText("  " + selectedFile.getName());
-        PlaylistLoader loader = new PlaylistLoader(selectedFile);
-
-        // create a load worker for loading in the names in the file
-        LoadTask loadWorker = new LoadTask(loader);
-
-        // when finished update the list view
-        loadWorker.setOnSucceeded(e -> {
-            _playList.getItems().addAll(loadWorker.getValue());
-        });
-
-        // if failed, notify the user which names are missing
-        loadWorker.setOnFailed(e -> {
-            loadErrorMessage(loadWorker.getException().getMessage()); // stub
-            deleteTempDirectory();
-        });
-
-        new Thread(loadWorker).start();
     }
 
     /**
@@ -316,25 +362,23 @@ public class MainMenuController implements Initializable {
         window.showAndWait();
     }
 
-    /**
-     * The LoadTask executes the loading of the playlist with names on a background thread
-     * to avoid GUI unresponsiveness.
-     */
-    private static class LoadTask extends Task<List<ConcatenatedName>> {
-        private PlaylistLoader _loader;
+    private void openStreakWindow() {
+        Parent playerParent = null;
+        try {
+            playerParent = FXMLLoader.load(getClass().getResource("/app/views/StreakScene.fxml"));
+            Scene playerScene = new Scene(playerParent);
+            Stage window = new Stage();
 
-        private LoadTask(PlaylistLoader loader) {
-         _loader = loader;
-        }
-
-        @Override
-        protected List<ConcatenatedName> call() throws NameNotFoundException {
-            return _loader.getNameList();
+            window.setScene(playerScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     /**
-     * Deletes the temporary directory for storing modified audio files.
+     * Deletes the temporary directory for storing modified audio files. PUT IN MODEL.
      */
     private void deleteTempDirectory() {
         try {

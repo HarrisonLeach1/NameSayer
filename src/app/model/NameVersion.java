@@ -81,9 +81,11 @@ public class NameVersion {
             String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _fileName + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
+            Process process = builder.start();
 
-        } catch (IOException e) {
+            process.waitFor();
+
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
