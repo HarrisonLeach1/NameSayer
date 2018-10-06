@@ -76,9 +76,9 @@ public class NameVersion {
         _shortName = capitalise(nameString);
     }
 
-    public void playRecording() {
+    public void playRecording(double volume) {
         try {
-            String cmd = "ffplay " + _fileName + " -autoexit -nodisp";
+            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _fileName + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();

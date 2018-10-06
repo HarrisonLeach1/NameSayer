@@ -6,7 +6,7 @@ public interface Practisable {
     /**
      * Plays the recording of either a concatenated name or single name
      */
-    void playRecording();
+    void playRecording(double volume);
 
     /**
      * Returns true if the user can rate this object as being of bad quality,

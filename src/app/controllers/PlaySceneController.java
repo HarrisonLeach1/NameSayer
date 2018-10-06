@@ -106,7 +106,7 @@ public class PlaySceneController {
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
-        _currentName.playRecording();
+        _currentName.playRecording(1.0);
     }
 
     /**

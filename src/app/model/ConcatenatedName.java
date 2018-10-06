@@ -27,9 +27,11 @@ public class ConcatenatedName implements Practisable {
         concatenateAudio();
     }
 
-    public void playRecording() {
+    public void playRecording(double volume) {
+        String file = FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
         try {
-            String cmd = "ffplay " + FOLDER + _displayName.replaceAll(" ","_") + EXTENSION + " -autoexit -nodisp";
+            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + file + " -autoexit -nodisp";
+            System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
