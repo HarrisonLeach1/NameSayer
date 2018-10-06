@@ -102,15 +102,20 @@ public class MainMenuController implements Initializable {
      * @throws IOException
      */
     public void playSearchPressed(ActionEvent event) throws IOException {
+        if (_searchBox.getText().trim().isEmpty()) {
+            loadErrorMessage("ERROR: Search is empty");
+            return;
+        }
         try {
             // create a new playlist loader and retrieve the playlist created
             PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
             ArrayList<Practisable> list = new ArrayList<>(loader.getNameList());
             moveToPlayScene(list, event);
 
-            // if the name is not found perform action
+            // if the name is not found display error message
         } catch (NameNotFoundException e) {
             loadErrorMessage(e.getMessage());
+            deleteTempDirectory();
         }
     }
 
@@ -271,7 +276,8 @@ public class MainMenuController implements Initializable {
 
         // if failed, notify the user which names are missing
         loadWorker.setOnFailed(e -> {
-            System.out.println(loadWorker.getException().getMessage()); // stub
+            loadErrorMessage(loadWorker.getException().getMessage()); // stub
+            deleteTempDirectory();
         });
 
         new Thread(loadWorker).start();
@@ -282,11 +288,16 @@ public class MainMenuController implements Initializable {
      * they have made an incorrect selection
      * @param message
      */
-    private void loadErrorMessage(String message) throws IOException {
+    private void loadErrorMessage(String message) {
         // load in the new scene
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
-        Parent playerParent = loader.load();
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // pass selected items to the next controller
         ErrorSceneController controller = loader.getController();
@@ -314,6 +325,21 @@ public class MainMenuController implements Initializable {
         @Override
         protected List<ConcatenatedName> call() throws NameNotFoundException {
             return _loader.getNameList();
+        }
+    }
+
+    /**
+     * Deletes the temporary directory for storing modified audio files.
+     */
+    private void deleteTempDirectory() {
+        try {
+            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

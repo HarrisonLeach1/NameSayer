@@ -67,7 +67,7 @@ public class ConcatenatedName implements Practisable {
             if (searchTable.containsKey(str.toLowerCase())) {
                 nameList.add(searchTable.get(str.toLowerCase()));
             } else {
-                missingNames += str + " ";
+                missingNames += str + "\n";
             }
         }
 

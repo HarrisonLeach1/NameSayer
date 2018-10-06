@@ -37,7 +37,7 @@ public class PlaylistLoader {
                 nameList.add(name);
 
             } catch (NameNotFoundException e) {
-                missingNames += e.getMissingNames() +"\n";
+                missingNames += e.getMissingNames();
             }
         }
 

@@ -122,6 +122,8 @@ public class PlaySceneController {
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
+        deleteTempDirectory();
+
         // switch scenes
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(playerScene);
@@ -185,6 +187,21 @@ public class PlaySceneController {
 
         _keepBtn.setDisable(true);
         _compareBtn.setDisable(true);
+    }
+
+    /**
+     * Deletes the temporary directory for storing modified audio files.
+     */
+    private void deleteTempDirectory() {
+        try {
+            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
