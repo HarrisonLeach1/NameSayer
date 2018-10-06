@@ -2,6 +2,7 @@ package app.model;
 
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
+import sun.util.resources.cldr.st.CalendarData_st_LS;
 
 import java.io.File;
 import java.util.*;
@@ -9,11 +10,15 @@ import java.util.*;
 public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
     public static final String USER_DATABASE = "./userRecordings/";
-    public static final DataModel INSTANCE = new DataModel();
+    private static DataModel _instance;
 	private final HashMap<String, Name> _databaseTable;
+	private List<DataModelListener> _listeners;
+	private User _user;
 
 	private DataModel() {
+		_user = new User();
     	_databaseTable = createNameTable(DATABASE);
+		_listeners = new ArrayList<>();
 	}
 
 	/**
@@ -22,7 +27,10 @@ public class DataModel implements IDataModel{
 	 * @return instance of DataModel
 	 */
 	public static DataModel getInstance() {
-    	return INSTANCE;
+    	if (_instance == null) {
+			_instance = new DataModel();
+		}
+		return _instance;
 	}
 
     /**
@@ -69,6 +77,27 @@ public class DataModel implements IDataModel{
 		return nameList;
 	}
 
+	public void addListener(DataModelListener listener) {
+		_listeners.add(listener);
+		listener.updateProgressToUser(_user.getUserXP());
+	}
+
+	public void updateUserXP() {
+		_user.updateUserXP();
+		int experience = _user.getUserXP();
+			for(DataModelListener l : _listeners) {
+				l.updateProgressToUser(experience);
+			}
+	}
+
+	public int getDailyStreak() {
+		return _user.getDailyStreak();
+	}
+
+	public HashMap<String, Name> getDatabaseTable() {
+		return _databaseTable;
+	}
+
 	/**
 	 * Given a the path to a non-empty folder, all files are converted to NameVersion objects
 	 * and are stored in their respective Name which is an encapsulated collection of versions.
@@ -111,10 +140,5 @@ public class DataModel implements IDataModel{
 		}
 
 		return nameTable;
-	}
-
-
-	public HashMap<String, Name> getDatabaseTable() {
-		return _databaseTable;
 	}
 }

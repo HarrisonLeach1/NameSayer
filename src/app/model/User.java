@@ -8,30 +8,24 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class UserModel {
+public class User {
     private static final File DATA_FILE = new File(".userData.txt");
-    private static final UserModel INSTANCE = new UserModel();
     private int _streakCount = 1;
     private LocalDate _lastLogin = LocalDate.now();
-    private int _userXP = 0;
+    private int _userXP = 100;
 
-    private UserModel() {
+    public User() {
         readUserData();
         updateStreak();
-    }
-
-    public static UserModel getInstance() {
-        return INSTANCE;
     }
 
     public int getDailyStreak() {
         return _streakCount;
     }
 
-    public int updateUserXP() {
-        _userXP += 10;
+    public void updateUserXP() {
+        _userXP += 20;
         writeUserData();
-        return _userXP;
     }
 
     private void updateStreak() {
@@ -83,5 +77,9 @@ public class UserModel {
         } catch (FileNotFoundException e) {
             writeUserData();
         }
+    }
+
+    public int getUserXP() {
+        return _userXP;
     }
 }

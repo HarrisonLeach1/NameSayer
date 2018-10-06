@@ -35,7 +35,7 @@ import static app.model.DataModel.USER_DATABASE;
  * The IDataModel then passes information back to the MainMenuController
  * to update the view.
  */
-public class MainMenuController implements Initializable {
+public class MainMenuController implements Initializable, DataModelListener {
 
     @FXML private Pane _dataPane, _recPane, _searchPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
@@ -44,11 +44,8 @@ public class MainMenuController implements Initializable {
     @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
-    @FXML private Label _fileNameLabel, _streakCounter;
-
-
-    private IDataModel dataModel = DataModel.getInstance();
-
+    @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
+    @FXML private ProgressBar _levelProgress;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -56,12 +53,12 @@ public class MainMenuController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _dataList.getItems().addAll(dataModel.loadDatabaseList());
+        _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
-        _streakCounter.setText(String.valueOf(UserModel.getInstance().getDailyStreak()));
+        _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
 
-        openStreakWindow();
+        DataModel.getInstance().addListener(this);
     }
 
     /**
@@ -73,7 +70,7 @@ public class MainMenuController implements Initializable {
         if(event.getSource() == _viewDataBtn){
             _dataPane.toFront();
         } else if(event.getSource() == _viewRecBtn){
-            _recList.setRoot(dataModel.loadUserDatabaseTree());
+            _recList.setRoot(DataModel.getInstance().loadUserDatabaseTree());
             _recList.setShowRoot(false);
             _recPane.toFront();
         } else if(event.getSource() == _searchMenuBtn){
@@ -232,6 +229,15 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    @Override
+    public void updateProgressToUser(int experience) {
+        int currentLevelProgress = experience % 100;
+        int currentLevel = experience / 100;
+        _levelProgress.setProgress(currentLevelProgress / 100.0);
+        _levelCounter.setText(String.valueOf(currentLevel));
+
+    }
+
     /**
      * Given a practise list, redirects the user to the play scene to practise the list of names.
      * @param list
@@ -275,7 +281,7 @@ public class MainMenuController implements Initializable {
 
         // if failed, notify the user which names are missing
         loadWorker.setOnFailed(e -> {
-            loadErrorMessage(loadWorker.getException().getMessage()); // stub
+            loadErrorMessage(loadWorker.getException().getMessage());
             deleteTempDirectory();
         });
 
@@ -324,21 +330,6 @@ public class MainMenuController implements Initializable {
         @Override
         protected List<ConcatenatedName> call() throws NameNotFoundException {
             return _loader.getNameList();
-        }
-    }
-
-    private void openStreakWindow() {
-        Parent playerParent = null;
-        try {
-            playerParent = FXMLLoader.load(getClass().getResource("/app/views/StreakScene.fxml"));
-            Scene playerScene = new Scene(playerParent);
-            Stage window = new Stage();
-
-            window.setScene(playerScene);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
