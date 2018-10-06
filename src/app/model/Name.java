@@ -76,8 +76,8 @@ public class Name implements Practisable{
         return _goodVersion.getDateCreated() + " " + _goodVersion.getTimeCreated();
     }
 
-    public void playRecording() {
-        selectGoodVersion().playRecording();
+    public void playRecording(double volume) {
+        selectGoodVersion().playRecording(volume);
     }
 
     @Override

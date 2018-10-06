@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class PlaySceneController {
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
+    @FXML private Slider _volumeSlider;
 
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
@@ -40,6 +42,9 @@ public class PlaySceneController {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
         makeTransition();
+        _volumeSlider.setMin(0);
+        _volumeSlider.setMax(2.0);
+        _volumeSlider.setValue(1.0);
     }
 
     /**
@@ -106,7 +111,7 @@ public class PlaySceneController {
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
-        _currentName.playRecording();
+        _currentName.playRecording(_volumeSlider.getValue());
     }
 
     /**
@@ -116,6 +121,8 @@ public class PlaySceneController {
         // load in the main menu scene
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
+
+        deleteTempDirectory();
 
         // switch scenes
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -127,7 +134,7 @@ public class PlaySceneController {
      * Allows the user to judge their pronunciation.
      */
     public void compareButtonPressed() {
-        _practiseListModel.compareUserRecording();
+        _practiseListModel.compareUserRecording(_volumeSlider.getValue());
     }
 
     /**
@@ -180,6 +187,21 @@ public class PlaySceneController {
 
         _keepBtn.setDisable(true);
         _compareBtn.setDisable(true);
+    }
+
+    /**
+     * Deletes the temporary directory for storing modified audio files.
+     */
+    private void deleteTempDirectory() {
+        try {
+            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

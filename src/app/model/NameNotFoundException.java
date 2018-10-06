@@ -9,7 +9,7 @@ public class NameNotFoundException extends Exception {
     private final String _missingNames;
 
     public NameNotFoundException(String missingNames) {
-        super("The following Name(s) cannot be found: " + missingNames);
+        super("The following Name(s) cannot be found: \n\n" + missingNames);
         _missingNames = missingNames;
     }
 

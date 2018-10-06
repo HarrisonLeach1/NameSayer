@@ -42,7 +42,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<NameVersion> loadUserDatabaseTree(){
 		TreeViewFactory checkTree = new RegularTreeViewFactory();
 		TreeItem<NameVersion> root = new TreeItem<>();
-		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(USER_DATABASE));
 	}
 
 	/**

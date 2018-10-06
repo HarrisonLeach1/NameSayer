@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import static app.model.DataModel.USER_DATABASE;
@@ -40,14 +41,13 @@ public class MainMenuController implements Initializable {
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Practisable> _selectedList;
-    @FXML private ListView<String> _previewList;
+    @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel;
 
 
     private IDataModel dataModel = DataModel.getInstance();
-    private ArrayList<Practisable> _playList;
 
 
     /**
@@ -102,16 +102,25 @@ public class MainMenuController implements Initializable {
      * @throws IOException
      */
     public void playSearchPressed(ActionEvent event) throws IOException {
+        if (_searchBox.getText().trim().isEmpty()) {
+            loadErrorMessage("ERROR: Search is empty");
+            return;
+        }
         try {
             // create a new playlist loader and retrieve the playlist created
             PlaylistLoader loader = new PlaylistLoader(_searchBox.getText());
             ArrayList<Practisable> list = new ArrayList<>(loader.getNameList());
             moveToPlayScene(list, event);
 
-            // if the name is not found perform action
+            // if the name is not found display error message
         } catch (NameNotFoundException e) {
-            e.printStackTrace();
+            loadErrorMessage(e.getMessage());
+            deleteTempDirectory();
         }
+    }
+
+    private void showErrorScene(NameNotFoundException e) {
+
     }
 
     /**
@@ -140,13 +149,15 @@ public class MainMenuController implements Initializable {
 
     /**
      * If a valid playlist has been loaded in by the user, moves to the play scene
-     * to pracitse the playlist. Otherwise, does nothing.
+     * to practise the playlist. Otherwise, does nothing.
      * @param event
      * @throws IOException
      */
     public void playFilePressed(ActionEvent event) throws IOException {
-        if (_playList != null) {
-            moveToPlayScene(_playList,event);
+        if (_playList.getItems().size() != 0) {
+            moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
+        } else {
+            loadErrorMessage("ERROR: List is empty");
         }
     }
 
@@ -217,7 +228,7 @@ public class MainMenuController implements Initializable {
             NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
 
             if(currentUserRecording != null) {
-                currentUserRecording.playRecording();
+                currentUserRecording.playRecording(1.0);
             }
         }
     }
@@ -228,7 +239,7 @@ public class MainMenuController implements Initializable {
      * @param event
      * @throws IOException
      */
-    private void moveToPlayScene(ArrayList<Practisable> list , ActionEvent event) throws IOException {
+    private void moveToPlayScene(List<Practisable> list , ActionEvent event) throws IOException {
         // load in the new scene
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
@@ -236,7 +247,7 @@ public class MainMenuController implements Initializable {
 
         // pass selected items to the next controller
         PlaySceneController controller = loader.getController();
-        controller.initModel(new PractiseListModel(list));
+        controller.initModel(new PractiseListModel(new ArrayList<>(list)));
 
         // switch scenes
         Scene playerScene = new Scene(playerParent);
@@ -258,26 +269,53 @@ public class MainMenuController implements Initializable {
         // create a load worker for loading in the names in the file
         LoadTask loadWorker = new LoadTask(loader);
 
-        _previewList.getItems().addAll(loader.getStringList());
-
         // when finished update the list view
         loadWorker.setOnSucceeded(e -> {
-            _playList = loadWorker.getValue();
+            _playList.getItems().addAll(loadWorker.getValue());
         });
 
         // if failed, notify the user which names are missing
         loadWorker.setOnFailed(e -> {
-            System.out.println(loadWorker.getException().getMessage()); // stub
+            loadErrorMessage(loadWorker.getException().getMessage()); // stub
+            deleteTempDirectory();
         });
 
         new Thread(loadWorker).start();
     }
 
     /**
+     * Given a message, displays an error pop-up to the user indicating that
+     * they have made an incorrect selection
+     * @param message
+     */
+    private void loadErrorMessage(String message) {
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // pass selected items to the next controller
+        ErrorSceneController controller = loader.getController();
+        controller.setMessage(message);
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = new Stage();
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
+    }
+
+    /**
      * The LoadTask executes the loading of the playlist with names on a background thread
      * to avoid GUI unresponsiveness.
      */
-    private static class LoadTask extends Task<ArrayList<Practisable>> {
+    private static class LoadTask extends Task<List<ConcatenatedName>> {
         private PlaylistLoader _loader;
 
         private LoadTask(PlaylistLoader loader) {
@@ -285,8 +323,23 @@ public class MainMenuController implements Initializable {
         }
 
         @Override
-        protected ArrayList<Practisable> call() throws NameNotFoundException {
-            return new ArrayList<>(_loader.getNameList());
+        protected List<ConcatenatedName> call() throws NameNotFoundException {
+            return _loader.getNameList();
+        }
+    }
+
+    /**
+     * Deletes the temporary directory for storing modified audio files.
+     */
+    private void deleteTempDirectory() {
+        try {
+            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

@@ -16,7 +16,8 @@ public class Recording {
 
     /**
      * A recording is created by associated it with a name parameter. The user
-     * recording version is differentiated by it's creation time.
+     * recording version is differentiated by it's creation time. If the name contains
+     * spaces they are replaced with underscores in the file name.
      * @param name
      */
     public Recording(String name) {
@@ -24,7 +25,7 @@ public class Recording {
         Date date = new Date();
         String dateTime = formatter.format(date);
 
-        _fileName = USER_DATABASE + "se206_" + dateTime + "_" + name + ".wav";
+        _fileName = USER_DATABASE + "se206_" + dateTime + "_" + name.replaceAll(" ","_") + ".wav";
     }
 
     /**
