@@ -18,7 +18,7 @@ public interface IPractiseListModel {
      * Allows the user to compare their production of a name to the
      * original recording.
      */
-    void compareUserRecording();
+    void compareUserRecording(double volume);
 
     /**
      * Allows the user to cancel while they are recording their own

@@ -30,10 +30,10 @@ public class PractiseListModel implements IPractiseListModel{
      * Compares the users production of a name to the database name by
      * starting on a new thread.
      */
-    public void compareUserRecording() {
+    public void compareUserRecording(double volume) {
         if (_currentUserCreatedName == null) { return; }
 
-        compareWorker = compareWorker();
+        compareWorker = compareWorker(volume);
         new Thread(compareWorker).start();
 
     }
@@ -77,21 +77,22 @@ public class PractiseListModel implements IPractiseListModel{
     /**
      * Creates a new Task which plays the user recording then the
      * database recording
+     * @param volume
      */
-    private Task compareWorker() {
+    private Task compareWorker(double volume) {
         return new Task() {
 
             @Override
             protected Object call() throws Exception {
                 // play user recording
-                _currentUserCreatedName.playRecording();
+                _currentUserCreatedName.playRecording(volume);
                 try {
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 // play database recording
-                _practiseList.get(_currentIndex).playRecording();
+                _practiseList.get(_currentIndex).playRecording(volume);
                 return true;
             }
         };

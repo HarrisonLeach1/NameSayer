@@ -223,7 +223,7 @@ public class MainMenuController implements Initializable {
             NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
 
             if(currentUserRecording != null) {
-                currentUserRecording.playRecording();
+                currentUserRecording.playRecording(1.0);
             }
         }
     }
