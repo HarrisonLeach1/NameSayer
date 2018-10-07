@@ -8,7 +8,6 @@
 
 3. Go to directory containing jar file.
 
-4. Type "java -jar NameSayer_part3.jar" into the terminal.
+4. Enter `java -jar NameSayer_part3.jar` into the terminal.
 
-5. Press Enter.
 
