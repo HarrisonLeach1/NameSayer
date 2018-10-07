@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="200.0" prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ErrorSceneController">
+<AnchorPane prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ErrorSceneController">
    <children>
-      <HBox alignment="CENTER" layoutY="65.0" prefHeight="70.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+      <HBox alignment="CENTER" layoutY="65.0" prefHeight="70.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
          <children>
             <VBox alignment="CENTER" prefHeight="70.0" prefWidth="354.0">
                <children>
@@ -33,6 +33,6 @@
             <Image url="@images/warning.png" />
          </image>
       </ImageView>
-      <Button layoutX="125.0" layoutY="147.0" mnemonicParsing="false" onAction="#okButtonAction" style="-fx-background-color: grey;" text="OK" />
+      <Button layoutX="125.0" layoutY="147.0" mnemonicParsing="false" onAction="#okButtonAction" style="-fx-background-color: grey;" text="OK" AnchorPane.bottomAnchor="0.0" />
    </children>
 </AnchorPane>
