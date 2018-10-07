@@ -256,6 +256,11 @@
                   </AnchorPane>
                   <AnchorPane fx:id="_searchPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #728184;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
+                        <Label fx:id="_fileNameLabel1" layoutX="378.0" layoutY="179.0" prefHeight="30.0" prefWidth="140.0" style="-fx-background-color: #3E3B3F; -fx-border-color: white;" text="  Save Playlist" textFill="WHITE">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
                         <Label layoutX="584.0" layoutY="83.0" text="Search for Name" textFill="WHITE" AnchorPane.leftAnchor="584.0" AnchorPane.topAnchor="85.0">
                            <font>
                               <Font size="20.0" />
