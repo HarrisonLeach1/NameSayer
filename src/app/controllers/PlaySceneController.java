@@ -218,6 +218,7 @@ public class PlaySceneController implements DataModelListener,Initializable {
 
     }
 
+
     private void openLevelScene() {
         Parent playerParent = null;
         try {
