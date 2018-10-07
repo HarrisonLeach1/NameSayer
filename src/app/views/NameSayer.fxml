@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckListView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
+<AnchorPane fx:id="_windowPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
    <children>
       <AnchorPane fx:id="_startPane" layoutX="10.0" layoutY="10.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #474448;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -85,9 +85,9 @@
                   </Label>
                   <Label layoutX="63.0" layoutY="41.0" text="Daily Streak:" textFill="WHITE" />
                   <Label fx:id="_streakCounter" layoutX="159.0" layoutY="41.0" text="1" textFill="WHITE" />
-                  <ProgressBar fx:id="_levelProgress" layoutX="939.0" layoutY="38.0" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="939.0" />
-                  <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" />
-                  <Label layoutX="849.0" layoutY="41.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" AnchorPane.leftAnchor="849.0" />
+                  <ProgressBar fx:id="_levelProgress" layoutX="939.0" layoutY="38.0" prefWidth="200.0" progress="0.0" AnchorPane.rightAnchor="60.0" />
+                  <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" AnchorPane.rightAnchor="270.0" />
+                  <Label layoutX="849.0" layoutY="41.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" AnchorPane.rightAnchor="300.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
@@ -239,7 +239,7 @@
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="83.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <children>
                                                       <Button id="play_data" mnemonicParsing="false" onAction="#handleStartAction" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
-                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#randomiseButtonPressed" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
+                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#databaseShuffleButtonPressed" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="next" text="Shuffle" textFill="WHITE" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="30.0" />
@@ -261,7 +261,7 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="_searchBox" layoutX="584.0" layoutY="123.0" prefHeight="33.0" prefWidth="380.0" promptText="Enter name here" AnchorPane.leftAnchor="584.0" AnchorPane.topAnchor="123.0" />
+                        <TextField fx:id="_searchBox" layoutX="584.0" layoutY="123.0" prefHeight="33.0" prefWidth="380.0" promptText="Enter name here" AnchorPane.leftAnchor="584.0" AnchorPane.topAnchor="125.0" />
                         <Label layoutX="199.0" layoutY="87.0" text="Text file input selection" textFill="WHITE" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="85.0">
                            <font>
                               <Font size="20.0" />
@@ -290,7 +290,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Button layoutX="976.0" layoutY="122.0" mnemonicParsing="false" onAction="#playSearchPressed" prefHeight="30.0" prefWidth="41.0" style="-fx-border-color: white;" AnchorPane.leftAnchor="976.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="122.0">
+                        <Button layoutX="976.0" layoutY="122.0" mnemonicParsing="false" onAction="#playSearchPressed" prefHeight="30.0" prefWidth="41.0" style="-fx-border-color: white;" AnchorPane.leftAnchor="976.0" AnchorPane.topAnchor="125.0">
                            <styleClass>
                               <String fx:value="play" />
                               <String fx:value="menu" />
@@ -303,15 +303,30 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <Button layoutX="752.0" layoutY="298.0" mnemonicParsing="false" onAction="#playFilePressed" prefHeight="50.0" prefWidth="100.0" style="-fx-border-color: white;" text="Play File" AnchorPane.leftAnchor="752.0" AnchorPane.rightAnchor="218.0" AnchorPane.topAnchor="298.0">
+                        <Button layoutX="718.0" layoutY="334.0" mnemonicParsing="false" onAction="#playFilePressed" prefHeight="25.0" prefWidth="170.0" style="-fx-border-color: limegreen; -fx-border-width: 2;" text="Play Playlist" AnchorPane.bottomAnchor="325.0" AnchorPane.leftAnchor="718.0">
                            <styleClass>
                               <String fx:value="menu" />
-                              <String fx:value="play" />
+                              <String fx:value="menu-test_mic" />
                            </styleClass>
                         </Button>
                         <Button layoutX="755.0" layoutY="167.0" mnemonicParsing="false" onAction="#playSearchPressed" prefHeight="30.0" style="-fx-border-color: white;" text="Add to Playlist">
                            <styleClass>
                               <String fx:value="play" />
+                              <String fx:value="menu" />
+                           </styleClass>
+                        </Button>
+                        <Button id="randomise" fx:id="random_btn11" layoutX="718.0" layoutY="433.0" mnemonicParsing="false" onAction="#playListShuffleButtonPressed" prefHeight="27.0" prefWidth="170.0" style="-fx-border-color: magenta; -fx-border-width: 2;" styleClass="menu-test_mic" text="Shuffle" textFill="WHITE" AnchorPane.bottomAnchor="233.0" AnchorPane.leftAnchor="718.0" />
+                        <Button id="remove" fx:id="remove_btn1" layoutX="717.0" layoutY="390.0" mnemonicParsing="false" onAction="#clearPlayListButtonPressed" prefHeight="25.0" prefWidth="170.0" style="-fx-border-color: tomato; -fx-border-width: 2;" styleClass="menu-test_mic" text="Clear Playlist" textFill="WHITE" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="717.0" />
+                        <Button layoutX="470.0" layoutY="179.0" mnemonicParsing="false" onAction="#savePlaylistPressed" prefHeight="30.0" prefWidth="50.0">
+                           <graphic>
+                              <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@images/save.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <styleClass>
+                              <String fx:value="menu-test_mic" />
                               <String fx:value="menu" />
                            </styleClass>
                         </Button>

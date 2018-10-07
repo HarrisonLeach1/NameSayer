@@ -2,10 +2,10 @@ package app.model;
 
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
-import sun.util.resources.cldr.st.CalendarData_st_LS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 public class DataModel implements IDataModel{
@@ -227,5 +227,20 @@ public class DataModel implements IDataModel{
 		}
 
 		return nameList;
+	}
+
+	/**
+	 * Deletes the temporary directory for storing modified audio files.
+	 */
+	public void deleteTempDirectory() {
+		try {
+			String cmd = "rm -rf " + ConcatenatedName.TEMP_FOLDER;
+
+			ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+			builder.start();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
