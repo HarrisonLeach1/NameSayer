@@ -48,6 +48,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
+    private String _missingNames;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -60,25 +61,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         _searchPane.toFront();
         _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
 
-        _playList.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
-            @Override
-            protected void updateItem(ConcatenatedName c, boolean empty) {
-                super.updateItem(c, empty);
-                if (empty) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(c.toString());
-                    if (!c.getMissingNames().equals("")) {
-                        setStyle("-fx-background-color: rgba(255,0,0,0.5)");
-                    } else {
-                        setStyle("");
-                    }
-                }
-            }
-        });
-
-        DataModel.getInstance().addListener(this);
+        setupPlaylist();
     }
 
     public void handleStartUpAction(){
@@ -89,31 +72,6 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void handleQuitAction(ActionEvent event){
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.close();
-    }
-    /**
-     * Handles any user input event related to the switching tabs.
-     * @param event
-     * @throws IOException
-     */
-    public void handleMenuAction(ActionEvent event) throws IOException {
-        if(event.getSource() == _viewDataBtn){
-            _dataPane.toFront();
-        } else if(event.getSource() == _viewRecBtn){
-            _recList.setRoot(DataModel.getInstance().loadUserDatabaseTree());
-            _recList.setShowRoot(false);
-            _recPane.toFront();
-        } else if(event.getSource() == _searchMenuBtn){
-            _searchPane.toFront();
-        } else if(event.getSource() == _testMicBtn){
-            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
-            Scene playerScene = new Scene(playerParent);
-            Stage window = new Stage();
-
-            // when test mic scene is closed, delete the test audio file
-            window.setScene(playerScene);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.showAndWait();
-        }
     }
 
     /**
@@ -132,7 +90,11 @@ public class MainMenuController implements Initializable, DataModelListener {
 
         // when finished update the list view
         loadWorker.setOnSucceeded(e -> {
-            moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
+            if(!_missingNames.isEmpty()) {
+                loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
+            } else {
+                moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
+            }
         });
 
         new Thread(loadWorker).start();
@@ -147,7 +109,9 @@ public class MainMenuController implements Initializable, DataModelListener {
             @Override
             protected List<ConcatenatedName> call() throws Exception {
                 // load name through data model
-                return DataModel.getInstance().loadSingleNameToList(_searchBox.getText());
+                List<ConcatenatedName> list = DataModel.getInstance().loadSingleNameToList(_searchBox.getText());
+                compileMissingNames(list);
+                return list;
             }
         };
     }
@@ -183,10 +147,15 @@ public class MainMenuController implements Initializable, DataModelListener {
      * @throws IOException
      */
     public void playFilePressed(ActionEvent event) throws IOException {
-        if (_playList.getItems().size() != 0) {
-            moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
-        } else {
+        if (_playList.getItems().size() == 0) {
             loadErrorMessage("ERROR: List is empty");
+            return;
+        }
+
+        if (!_missingNames.isEmpty()){
+            loadErrorMessage("ERROR: Playlist contains missing name(s) \n\n" + _missingNames);
+        } else {
+            moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
         }
     }
 
@@ -221,9 +190,21 @@ public class MainMenuController implements Initializable, DataModelListener {
             @Override
             protected List<ConcatenatedName> call() throws Exception {
                 // load file through data model
-                return DataModel.getInstance().loadFileToList(_selectedFile);
+                List<ConcatenatedName> list = DataModel.getInstance().loadFileToList(_selectedFile);
+                compileMissingNames(list);
+                return list;
             }
         };
+    }
+
+    private void compileMissingNames(List<ConcatenatedName> list) {
+        _missingNames = "";
+        for(ConcatenatedName name : list) {
+            String missing = name.getMissingNames();
+            if (!missing.isEmpty()) {
+                _missingNames += missing +"\n";
+            }
+        }
     }
 
     /**
@@ -264,9 +245,24 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
+     * All ConcatenatedName items in the playlist are removed
+     */
+    public void clearPlayListButtonPressed() {
+        _playList.getItems().clear();
+        _fileNameLabel.setText("   No file selected");
+    }
+
+    /**
+     * The order of the ConcatenatedName items in the playlist is shuffled randomly
+     */
+    public void playListShuffleButtonPressed() {
+        Collections.shuffle(_playList.getItems());
+    }
+
+    /**
      * The order of the NameVersion items in the selected list of Names is shuffled randomly
      */
-    public void randomiseButtonPressed() {
+    public void databaseShuffleButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
     }
 
@@ -305,6 +301,55 @@ public class MainMenuController implements Initializable, DataModelListener {
         _levelProgress.setProgress(currentLevelProgress / 100.0);
         _levelCounter.setText(String.valueOf(currentLevel));
 
+    }
+
+    /**
+     * Handles any user input event related to the switching tabs.
+     * @param event
+     * @throws IOException
+     */
+    public void handleMenuAction(ActionEvent event) throws IOException {
+        if(event.getSource() == _viewDataBtn){
+            _dataPane.toFront();
+        } else if(event.getSource() == _viewRecBtn){
+            _recList.setRoot(DataModel.getInstance().loadUserDatabaseTree());
+            _recList.setShowRoot(false);
+            _recPane.toFront();
+        } else if(event.getSource() == _searchMenuBtn){
+            _searchPane.toFront();
+        } else if(event.getSource() == _testMicBtn){
+            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
+            Scene playerScene = new Scene(playerParent);
+            Stage window = new Stage();
+
+            // when test mic scene is closed, delete the test audio file
+            window.setScene(playerScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.showAndWait();
+        }
+    }
+
+    private void setupPlaylist() {
+        _playList.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
+            @Override
+            protected void updateItem(ConcatenatedName c, boolean empty) {
+                super.updateItem(c, empty);
+                if (empty) {
+                    setText(null);
+                    setStyle("");
+                } else {
+                    setText(c.toString());
+                    if (!c.getMissingNames().equals("")) {
+                        setStyle("-fx-background-color: rgba(255,0,0,0.5)");
+                        setTooltip( new Tooltip("Missing Name(s): " + c.getMissingNames()));
+                    } else {
+                        setStyle("");
+                        setTooltip( new Tooltip("All Names Found!"));
+                    }
+                }
+            }
+        });
+        DataModel.getInstance().addListener(this);
     }
 
     /**
@@ -372,21 +417,6 @@ public class MainMenuController implements Initializable, DataModelListener {
             window.setScene(playerScene);
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Deletes the temporary directory for storing modified audio files. PUT IN MODEL.
-     */
-    private void deleteTempDirectory() {
-        try {
-            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
-
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
-
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+<?import org.controlsfx.control.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -16,9 +24,9 @@
 <?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckListView?>
-
 <?import javafx.scene.control.ProgressBar?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
    <children>
       <SplitPane fx:id="_mainPane" dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -185,7 +193,7 @@
                                                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="83.0" spacing="20.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                    <children>
                                                       <Button id="play_data" mnemonicParsing="false" onAction="#handleStartAction" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="play" text="Start" textFill="WHITE" />
-                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#randomiseButtonPressed" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="next" text="Randomise" textFill="WHITE" />
+                                                      <Button id="randomise" fx:id="random_btn1" mnemonicParsing="false" onAction="#databaseShuffleButtonPressed" prefHeight="25.0" prefWidth="95.0" style="-fx-border-color: white;" styleClass="next" text="Shuffle" textFill="WHITE" />
                                                    </children>
                                                    <padding>
                                                       <Insets bottom="30.0" />
@@ -202,23 +210,23 @@
                   </AnchorPane>
                   <AnchorPane fx:id="_searchPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #728184;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <Label layoutX="200.0" layoutY="138.0" text="Search for Name" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="80.0">
+                        <Label layoutX="200.0" layoutY="51.0" text="Search for Name" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="51.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="_searchBox" layoutX="200.0" layoutY="178.0" prefHeight="33.0" prefWidth="380.0" promptText="Enter name here" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="120.0" />
-                        <Label layoutX="218.0" layoutY="264.0" text="Text file input selection" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="180.0">
+                        <TextField fx:id="_searchBox" layoutX="200.0" layoutY="91.0" prefHeight="33.0" prefWidth="380.0" promptText="Enter name here" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="91.0" />
+                        <Label layoutX="200.0" layoutY="151.0" text="Text file input selection" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="151.0">
                            <font>
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <Label fx:id="_fileNameLabel" layoutX="232.0" layoutY="310.0" prefHeight="30.0" prefWidth="304.0" style="-fx-background-color: #3E3B3F; -fx-border-color: white;" text="    No file selected" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="220.0">
+                        <Label fx:id="_fileNameLabel" layoutX="200.0" layoutY="191.0" prefHeight="30.0" prefWidth="304.0" style="-fx-background-color: #3E3B3F; -fx-border-color: white;" text="    No file selected" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="191.0">
                            <font>
                               <Font name="System Italic" size="15.0" />
                            </font>
                         </Label>
-                        <Button layoutX="520.0" layoutY="313.0" mnemonicParsing="false" onAction="#chooseFilePressed" prefHeight="30.0" prefWidth="53.0" AnchorPane.topAnchor="220.0">
+                        <Button layoutX="520.0" layoutY="191.0" mnemonicParsing="false" onAction="#chooseFilePressed" prefHeight="30.0" prefWidth="53.0" AnchorPane.topAnchor="191.0">
                            <graphic>
                               <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -229,25 +237,28 @@
                            <styleClass>
                               <String fx:value="menu-test_mic" />
                               <String fx:value="menu" />
-                           </styleClass></Button>
-                        <ListView fx:id="_playList" layoutX="233.0" layoutY="362.0" prefHeight="353.0" prefWidth="371.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="290.0" />
-                        <Label layoutX="234.0" layoutY="236.0" text="File Preview" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="260.0">
+                           </styleClass>
+                        </Button>
+                        <ListView fx:id="_playList" layoutX="200.0" layoutY="261.0" prefHeight="353.0" prefWidth="371.0" AnchorPane.bottomAnchor="79.0" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="261.0" />
+                        <Label layoutX="200.0" layoutY="231.0" text="Playlist Preview" textFill="WHITE" AnchorPane.leftAnchor="200.0" AnchorPane.topAnchor="231.0">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <Button layoutX="750.0" layoutY="109.0" mnemonicParsing="false" onAction="#playSearchPressed" prefHeight="50.0" prefWidth="100.0" style="-fx-border-color: white;" text="Find and Play" AnchorPane.leftAnchor="750.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="110.0">
+                        <Button layoutX="750.0" layoutY="81.0" mnemonicParsing="false" onAction="#playSearchPressed" prefHeight="50.0" prefWidth="100.0" style="-fx-border-color: white;" text="Find and Play" AnchorPane.leftAnchor="750.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="81.0">
                            <styleClass>
                               <String fx:value="play" />
                               <String fx:value="menu" />
                            </styleClass>
                         </Button>
-                        <Button layoutX="749.0" layoutY="222.0" mnemonicParsing="false" onAction="#playFilePressed" prefHeight="50.0" prefWidth="100.0" style="-fx-border-color: white;" text="Play File" AnchorPane.leftAnchor="750.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="220.0">
+                        <Button layoutX="750.0" layoutY="191.0" mnemonicParsing="false" onAction="#playFilePressed" prefHeight="50.0" prefWidth="100.0" style="-fx-border-color: white;" text="Play File" AnchorPane.leftAnchor="750.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="191.0">
                            <styleClass>
                               <String fx:value="menu" />
                               <String fx:value="play" />
                            </styleClass>
                         </Button>
+                        <Button id="randomise" fx:id="random_btn11" layoutX="401.0" layoutY="638.0" mnemonicParsing="false" onAction="#playListShuffleButtonPressed" prefHeight="27.0" prefWidth="170.0" style="-fx-border-color: white;" styleClass="next" text="Shuffle" textFill="WHITE" />
+                        <Button id="remove" fx:id="remove_btn1" layoutX="200.0" layoutY="638.0" mnemonicParsing="false" onAction="#clearPlayListButtonPressed" prefHeight="25.0" prefWidth="170.0" style="-fx-border-color: white;" styleClass="bad" text="Clear Playlist" textFill="WHITE" />
                      </children>
                      <opaqueInsets>
                         <Insets />
