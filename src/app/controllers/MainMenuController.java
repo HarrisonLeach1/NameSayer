@@ -57,6 +57,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        _startPane.toFront();
         _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
@@ -466,6 +467,9 @@ public class MainMenuController implements Initializable, DataModelListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void savePlaylistPressed(ActionEvent actionEvent) {
     }
 }
 

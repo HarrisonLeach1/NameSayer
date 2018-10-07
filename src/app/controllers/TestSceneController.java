@@ -69,7 +69,9 @@ public class TestSceneController implements Initializable {
             super.updateProgress(workDone, max);
         }
     };
-
+    /**
+     * Calculates the microphone input and turns it into an integer
+     */
     public static int calculateRMSLevel(byte[] audioData) {
         long lSum = 0;
         for (int i = 0; i < audioData.length; i++)
@@ -106,12 +108,10 @@ public class TestSceneController implements Initializable {
         _progress.progressProperty().bind(test.progressProperty());
     }
 
+    /**
+     * Safely ends the microphone input loop
+     */
     public void endTest(){
         test.cancel();
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
     }
 }
