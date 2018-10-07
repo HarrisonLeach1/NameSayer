@@ -80,14 +80,14 @@ public class DataModel implements IDataModel{
 
 	public void addListener(DataModelListener listener) {
 		_listeners.add(listener);
-		listener.updateProgressToUser(_user.getUserXP());
+		listener.notifyProgress(_user.getUserXP());
 	}
 
 	public void updateUserXP() {
 		_user.updateUserXP();
 		int experience = _user.getUserXP();
 			for(DataModelListener l : _listeners) {
-				l.updateProgressToUser(experience);
+				l.notifyProgress(experience);
 			}
 	}
 

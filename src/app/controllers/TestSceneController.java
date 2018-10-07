@@ -12,7 +12,11 @@ import javax.sound.sampled.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
+/**
+ * A TestSceneController holds the responsibility of receiving input events
+ * from the user while the test window is open. It then translates them
+ * into actions on the views.
+ */
 public class TestSceneController implements Initializable {
 
     @FXML
@@ -83,8 +87,7 @@ public class TestSceneController implements Initializable {
     }
 
     /**
-     * Deletes the test recording when the user exits the window.
-     *
+     * Ends the test and closes the window.
      * @param event
      */
     public void handleReturnAction(ActionEvent event) {
