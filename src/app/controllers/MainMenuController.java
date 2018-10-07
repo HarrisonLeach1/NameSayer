@@ -265,9 +265,16 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
+     * The order of the ConcatenatedName items in the playlist is shuffled randomly
+     */
+    public void playListShuffleButtonPressed() {
+        Collections.shuffle(_playList.getItems());
+    }
+
+    /**
      * The order of the NameVersion items in the selected list of Names is shuffled randomly
      */
-    public void randomiseButtonPressed() {
+    public void databaseShuffleButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
     }
 
