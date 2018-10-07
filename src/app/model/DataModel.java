@@ -2,12 +2,21 @@ package app.model;
 
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
-import sun.util.resources.cldr.st.CalendarData_st_LS;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * The DataModel singleton object represents the database in which practise and user recordings
+ * are loaded in from and saved to.
+ *
+ * The displayable databases are returned in Tree View form and List View form, which allows
+ * them to be easily presented to the user.
+ */
 public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
     public static final String USER_DATABASE = "./userRecordings/";
@@ -80,14 +89,17 @@ public class DataModel implements IDataModel{
 
 	public void addListener(DataModelListener listener) {
 		_listeners.add(listener);
-		listener.updateProgressToUser(_user.getUserXP());
+		listener.notifyProgress(_user.getUserXP());
 	}
 
+	/**
+	 * Updates the experience of the user object
+	 */
 	public void updateUserXP() {
 		_user.updateUserXP();
 		int experience = _user.getUserXP();
 			for(DataModelListener l : _listeners) {
-				l.updateProgressToUser(experience);
+				l.notifyProgress(experience);
 			}
 	}
 
@@ -143,10 +155,23 @@ public class DataModel implements IDataModel{
 		return nameTable;
 	}
 
+	/**
+	 * Given a single name string, returns a list of list of concatenated names containing
+	 * this name.
+	 * @param name
+	 * @return
+	 */
 	public List<ConcatenatedName> loadSingleNameToList(String name) {
 		return new ArrayList<>(Arrays.asList(createConcatenatedName(name)));
 	}
 
+	/**
+	 * Given a file, returns a list of ConcatenatedName objects in which each line of the
+	 * file is converted to a ConcatenatedName object in the list.
+	 * @param playlistFile
+	 * @return
+	 * @throws FileNotFoundException
+	 */
 	public List<ConcatenatedName> loadFileToList(File playlistFile) throws FileNotFoundException {
 		Scanner input = new Scanner(playlistFile);
 		List<ConcatenatedName> nameList = new ArrayList<>();
@@ -163,6 +188,11 @@ public class DataModel implements IDataModel{
 		return nameList;
 	}
 
+	/**
+	 * Given an input string, returns a Concatenated Name object from the string.
+	 * @param inputString
+	 * @return
+	 */
 	private ConcatenatedName createConcatenatedName(String inputString) {
 		List<Name> notConcatenatedNames = new ArrayList<>();
 
@@ -227,5 +257,47 @@ public class DataModel implements IDataModel{
 		}
 
 		return nameList;
+	}
+
+	/**
+	 * Deletes the temporary directory for storing modified audio files.
+	 */
+	public void deleteTempDirectory() {
+		try {
+			String cmd = "rm -rf " + ConcatenatedName.TEMP_FOLDER;
+
+			ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+			builder.start();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Given a list of concatenated names and a playlist name, creates a text
+	 * file storing the strings of all the names.
+	 * @param list
+	 * @param fileName
+	 */
+	public void savePlaylist(List<ConcatenatedName> list, String fileName) {
+		// replace all spaces with underscores
+		fileName = fileName.replaceAll(" ","_") +".txt";
+		File file = new File(fileName);
+
+		try {
+			file.createNewFile();
+
+			FileWriter fw = new FileWriter(file);
+
+			// for each name write it on a new line of the file
+			for(ConcatenatedName name : list) {
+				fw.write(name.toString() + "\r\n");
+			}
+
+			fw.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

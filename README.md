@@ -8,7 +8,14 @@
 
 3. Go to directory containing jar file.
 
-4. Type "java -jar NameSayer_part3.jar" into the terminal.
+4. Enter `java -jar NameSayer_part3.jar` into the terminal.
 
-5. Press Enter.
+## Special Features:
+Upload Multiple text files
+Level up by making good recordings
+Shuffle text file playlist
+and more....
+
+Target Audience:
+Adults
 

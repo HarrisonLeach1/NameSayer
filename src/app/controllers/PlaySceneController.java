@@ -27,7 +27,7 @@ import java.util.ResourceBundle;
  * The IPractiseListModel then passes information back to the PlaySceneController
  * to update the view.
  */
-public class PlaySceneController implements DataModelListener,Initializable {
+public class PlaySceneController implements DataModelListener {
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter;
@@ -156,7 +156,7 @@ public class PlaySceneController implements DataModelListener,Initializable {
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
-        deleteTempDirectory();
+        DataModel.getInstance().deleteTempDirectory();
 
         // switch scenes
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -209,8 +209,14 @@ public class PlaySceneController implements DataModelListener,Initializable {
         _bad_Label.setVisible(true);
     }
 
+    /**
+     * Updates the _levelCounter to display the users current level.
+     * Updates the _levelProgress to display the user experience progress towards
+     * the next level.
+     * @param experience
+     */
     @Override
-    public void updateProgressToUser(int experience) {
+    public void notifyProgress(int experience) {
         int currentLevelProgress = experience % 100;
         int currentLevel = experience / 100;
         _levelProgress.setProgress(currentLevelProgress / 100.0);
@@ -218,13 +224,20 @@ public class PlaySceneController implements DataModelListener,Initializable {
 
     }
 
+
+    /**
+     * Opens the level scene to the user which allows them to decide whether or not
+     * they have pronounced the name well.
+     */
     private void openLevelScene() {
         Parent playerParent = null;
         try {
+            // load in scene
             playerParent = FXMLLoader.load(getClass().getResource("/app/views/LevelScene.fxml"));
             Scene playerScene = new Scene(playerParent);
             Stage window = new Stage();
 
+            // open scene
             window.setScene(playerScene);
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
@@ -234,14 +247,17 @@ public class PlaySceneController implements DataModelListener,Initializable {
     }
 
     /**
-     * Whenever the user moves to a new name the scene is reinitialised
+     * Whenever the user moves to a new name the scene is reinitialised.
+     *
      */
     private void makeTransition() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
 
+        // change displayed name
         _displayName.setText("Name: " + _currentName.toString());
 
+        // decides whether or not to give users the ability to rate the recording
         if (_currentName.isRateable()) {
             _badBtn.setDisable(false);
         } else {
@@ -249,6 +265,7 @@ public class PlaySceneController implements DataModelListener,Initializable {
         }
         _dateTimeLabel.setText(_currentName.getDateTimeCreated());
 
+        // is set to true so that the user has the ability to gain experience again
         _firstComparison = true;
 
         checkBounds();
@@ -280,30 +297,8 @@ public class PlaySceneController implements DataModelListener,Initializable {
     }
 
     /**
-     * Deletes the temporary directory for storing modified audio files.
+     * The progress bar is disabled to indicate that no audio is playing.
      */
-    private void deleteTempDirectory() {
-        try {
-            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
-
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        _playing = new Task() {
-            @Override
-            protected Object call() throws Exception {
-                return null;
-            }
-        };
-    }
-
     private void stopProgress(){
         _playBar.progressProperty().unbind();
         _playBar.setProgress(0);

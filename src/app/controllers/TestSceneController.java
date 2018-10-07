@@ -12,8 +12,12 @@ import javax.sound.sampled.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
-public class TestSceneController implements Initializable {
+/**
+ * A TestSceneController holds the responsibility of receiving input events
+ * from the user while the test window is open. It then translates them
+ * into actions on the views.
+ */
+public class TestSceneController {
 
     @FXML
     private ProgressBar _progress;
@@ -65,7 +69,9 @@ public class TestSceneController implements Initializable {
             super.updateProgress(workDone, max);
         }
     };
-
+    /**
+     * Calculates the microphone input and turns it into an integer
+     */
     public static int calculateRMSLevel(byte[] audioData) {
         long lSum = 0;
         for (int i = 0; i < audioData.length; i++)
@@ -83,8 +89,7 @@ public class TestSceneController implements Initializable {
     }
 
     /**
-     * Deletes the test recording when the user exits the window.
-     *
+     * Ends the test and closes the window.
      * @param event
      */
     public void handleReturnAction(ActionEvent event) {
@@ -103,12 +108,10 @@ public class TestSceneController implements Initializable {
         _progress.progressProperty().bind(test.progressProperty());
     }
 
+    /**
+     * Safely ends the microphone input loop
+     */
     public void endTest(){
         test.cancel();
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
     }
 }
