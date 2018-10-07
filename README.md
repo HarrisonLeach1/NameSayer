@@ -17,5 +17,5 @@ Shuffle text file playlist
 and more....
 
 Target Audience:
-Cats.
+Adults
 
