@@ -282,17 +282,17 @@ public class DataModel implements IDataModel{
 	 */
 	public void savePlaylist(List<ConcatenatedName> list, String fileName) {
 		// replace all spaces with underscores
-		fileName = fileName.replaceAll(" ","_");
+		fileName = fileName.replaceAll(" ","_") +".txt";
 		File file = new File(fileName);
 
 		try {
 			file.createNewFile();
 
-			FileWriter fw = new FileWriter(file,true);
+			FileWriter fw = new FileWriter(file);
 
 			// for each name write it on a new line of the file
 			for(ConcatenatedName name : list) {
-				fw.write(name.toString());
+				fw.write(name.toString() + "\r\n");
 			}
 
 			fw.close();

@@ -330,7 +330,7 @@
                         </Button>
                         <Button id="randomise" fx:id="random_btn11" layoutX="718.0" layoutY="433.0" mnemonicParsing="false" onAction="#playListShuffleButtonPressed" prefHeight="27.0" prefWidth="170.0" style="-fx-border-color: magenta; -fx-border-width: 2;" styleClass="menu-test_mic" text="Shuffle" textFill="WHITE" AnchorPane.bottomAnchor="233.0" AnchorPane.leftAnchor="718.0" />
                         <Button id="remove" fx:id="remove_btn1" layoutX="717.0" layoutY="390.0" mnemonicParsing="false" onAction="#clearPlayListButtonPressed" prefHeight="25.0" prefWidth="170.0" style="-fx-border-color: tomato; -fx-border-width: 2;" styleClass="menu-test_mic" text="Clear Playlist" textFill="WHITE" AnchorPane.bottomAnchor="278.0" AnchorPane.leftAnchor="717.0" />
-                        <Button layoutX="470.0" layoutY="179.0" mnemonicParsing="false" onAction="#savePlaylistPressed" prefHeight="30.0" prefWidth="50.0">
+                        <Button layoutX="470.0" layoutY="179.0" mnemonicParsing="false" onAction="#savePlayListPressed" prefHeight="30.0" prefWidth="50.0">
                            <graphic>
                               <ImageView fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                  <image>

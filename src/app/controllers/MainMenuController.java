@@ -294,6 +294,39 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
+     * Saves the playlist of ConcatenatedNames that is currently listed in the listview
+     */
+    public void savePlayListPressed(ActionEvent event) {
+        if (_playList.getItems().size() == 0) { // check if list is empty
+            loadErrorMessage("ERROR: List is empty");
+            return;
+        }
+
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/SavePlaylistScene.fxml"));
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // pass selected items to the next controller
+        SavePlaylistController controller = loader.getController();
+        controller.givePlayList(_playList.getItems());
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = new Stage();
+
+        // open save scene
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
+    }
+
+    /**
      * The order of the ConcatenatedName items in the playlist is shuffled randomly
      */
     public void playListShuffleButtonPressed() {
