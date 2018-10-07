@@ -265,6 +265,14 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
+     * All ConcatenatedName items in the playlist are removed
+     */
+    public void clearPlayListButtonPressed() {
+        _playList.getItems().clear();
+        _fileNameLabel.setText("   No file selected");
+    }
+
+    /**
      * The order of the ConcatenatedName items in the playlist is shuffled randomly
      */
     public void playListShuffleButtonPressed() {
