@@ -1,70 +1,95 @@
 package app.controllers;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import java.io.File;
-import java.io.IOException;
+
+import javax.sound.sampled.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static app.model.DataModel.USER_DATABASE;
-import static app.model.Recording.RECORD_TIME;
 
 public class TestSceneController implements Initializable {
 
-    @FXML private Button _playBtn,_okBtn;
-    @FXML private ProgressBar _progress;
-
-    public static final String TEST_FILE = ".test.wav";
-
+    @FXML
+    private ProgressBar _progress;
     /**
      * When the test mic scene opens the users mic is recorded for five seconds.
      * The progress bar is updated to indicate how much time is left for testing.
      */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        try {
-            String cmd = "mkdir -p " + USER_DATABASE + "; ffmpeg -y -f alsa -t " + RECORD_TIME + " -i default "+ USER_DATABASE + TEST_FILE;
+    Task test = new Task() {
+        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+        TargetDataLine targetLine;
+        {
+            try {
+                targetLine = (TargetDataLine) AudioSystem.getLine(info);
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        protected Object call() {
+            try {
+                //Microphone
+                targetLine.open();
+                targetLine.start();
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
+                byte[] data = new byte[targetLine.getBufferSize() / 5];
 
-        } catch (IOException e) {
-            e.printStackTrace();
+                while (true) {
+                    targetLine.read(data, 0, data.length);
+                    int level = calculateRMSLevel(data);
+                    updateProgress(level,100);
+                }
+            } catch (LineUnavailableException lue) {
+                lue.printStackTrace();
+            }
+            return null;
         }
 
-        // create new timeline which updates the progress bar for 5 seconds
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(_progress.progressProperty(), 0)),
-                new KeyFrame(Duration.seconds(5), e -> {
-                    _playBtn.setDisable(false);
-                    _okBtn.setDisable(false);
-                }, new KeyValue(_progress.progressProperty(), 1))
-        );
-        timeline.setCycleCount(1);
-        timeline.play();
-    }
+        @Override
+        protected void cancelled() {
+            targetLine.stop();
+            targetLine.close();
+            super.cancelled();
+        }
 
+
+        @Override
+        protected void updateProgress(double workDone, double max) {
+            super.updateProgress(workDone, max);
+        }
+    };
+
+    public static int calculateRMSLevel(byte[] audioData) {
+        long lSum = 0;
+        for (int i = 0; i < audioData.length; i++)
+            lSum = lSum + audioData[i];
+
+        double dAvg = lSum / audioData.length;
+        double sumMeanSquare = 0d;
+
+        for (int j = 0; j < audioData.length; j++)
+            sumMeanSquare += Math.pow(audioData[j] - dAvg, 2d);
+
+        double averageMeanSquare = sumMeanSquare / audioData.length;
+
+        return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
+    }
 
     /**
      * Deletes the test recording when the user exits the window.
+     *
      * @param event
      */
     public void handleReturnAction(ActionEvent event) {
+        endTest();
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        File file = new File(USER_DATABASE + TEST_FILE);
-        if (file.exists()) {
-            file.delete();
-        }
         window.close();
     }
 
@@ -72,15 +97,18 @@ public class TestSceneController implements Initializable {
      * Plays back the test recording to the user.
      */
     public void handlePlayAction(ActionEvent event) {
-        try {
-            String cmd = "ffplay " + USER_DATABASE + TEST_FILE + " -autoexit -nodisp";
-
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.setOnCloseRequest(event1 -> endTest());
+        new Thread(test).start();
+        _progress.progressProperty().bind(test.progressProperty());
     }
 
+    public void endTest(){
+        test.cancel();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 }

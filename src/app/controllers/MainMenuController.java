@@ -37,7 +37,8 @@ import static app.model.DataModel.USER_DATABASE;
  */
 public class MainMenuController implements Initializable {
 
-    @FXML private Pane _dataPane, _recPane, _searchPane;
+    @FXML private SplitPane _mainPane;
+    @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
     @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Practisable> _selectedList;
@@ -61,6 +62,14 @@ public class MainMenuController implements Initializable {
         _searchPane.toFront();
     }
 
+    public void handleStartUpAction(){
+        _startPane.toBack();
+    }
+
+    public void handleQuitAction(ActionEvent event){
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window.close();
+    }
     /**
      * Handles any user input event related to the switching tabs.
      * @param event
@@ -83,12 +92,8 @@ public class MainMenuController implements Initializable {
             // when test mic scene is closed, delete the test audio file
             window.setScene(playerScene);
             window.setOnCloseRequest(event1 -> {
-                File file = new File(USER_DATABASE + "_test.wav");
-                if (file.exists()){
-                    file.delete();
-                }
-            });
 
+            });
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
         }

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.TestSceneController">
+<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.TestSceneController">
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -22,22 +22,13 @@
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
             <ProgressBar fx:id="_progress" layoutX="50.0" layoutY="30.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="72.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="30.0" />
-            <Button fx:id="_playBtn" disable="true" layoutX="61.0" layoutY="70.0" mnemonicParsing="false" onAction="#handlePlayAction" prefWidth="70.0" text="Play" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="50.0" AnchorPane.topAnchor="70.0">
+            <Button fx:id="_playBtn" layoutX="80.0" layoutY="70.0" mnemonicParsing="false" onAction="#handlePlayAction" prefWidth="70.0" text="Start" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="70.0">
                <styleClass>
                   <String fx:value="play" />
                   <String fx:value="menu" />
                </styleClass>
             </Button>
-            <Button fx:id="_okBtn" defaultButton="true" disable="true" layoutX="150.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleReturnAction" prefWidth="50.0" text="OK" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.topAnchor="70.0">
-               <styleClass>
-                  <String fx:value="menu-test_mic" />
-                  <String fx:value="menu" />
-               </styleClass>
-               <effect>
-                  <DropShadow color="#ffffff00" />
-               </effect>
-            </Button>
-            <Button fx:id="cancel_btn" defaultButton="true" layoutX="189.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleReturnAction" prefWidth="70.0" text="Cancel" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="70.0">
+            <Button fx:id="cancel_btn" defaultButton="true" layoutX="211.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleReturnAction" prefWidth="70.0" text="OK" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="70.0">
                <styleClass>
                   <String fx:value="menu-test_mic" />
                   <String fx:value="menu" />

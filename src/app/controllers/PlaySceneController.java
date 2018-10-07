@@ -1,20 +1,23 @@
 package app.controllers;
 
 import app.model.*;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * A PlaySceneController holds the responsibility of receiving input events
@@ -24,11 +27,13 @@ import java.util.List;
  * The IPractiseListModel then passes information back to the PlaySceneController
  * to update the view.
  */
-public class PlaySceneController {
+public class PlaySceneController implements Initializable {
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel;
     @FXML private Slider _volumeSlider;
+    @FXML private ProgressBar _playBar;
+    private Task playing;
 
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
@@ -54,6 +59,7 @@ public class PlaySceneController {
     public void nextButtonPressed() {
         _currentName = _practiseListModel.nextName();
         makeTransition();
+        stopProgress();
     }
 
     /**
@@ -63,6 +69,7 @@ public class PlaySceneController {
     public void previousButtonPressed() {
         _currentName = _practiseListModel.previousName();
         makeTransition();
+        stopProgress();
     }
 
     /**
@@ -111,6 +118,8 @@ public class PlaySceneController {
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
+        new Thread(playing).start();
+        _playBar.progressProperty().bind(playing.progressProperty());
         _currentName.playRecording(_volumeSlider.getValue());
     }
 
@@ -133,8 +142,13 @@ public class PlaySceneController {
      * Plays the user's recording then the original recording.
      * Allows the user to judge their pronunciation.
      */
-    public void compareButtonPressed() {
-        _practiseListModel.compareUserRecording(_volumeSlider.getValue());
+    public void compareButtonPressed() throws IOException, InterruptedException {
+        new Thread(playing).start();
+        _playBar.progressProperty().bind(playing.progressProperty());
+        ProcessBuilder builder = new ProcessBuilder("_practiseListModel.compareUserRecording(_volumeSlider.getValue())");
+        Process pro = builder.start();
+        pro.waitFor();
+        stopProgress();
     }
 
     /**
@@ -202,6 +216,28 @@ public class PlaySceneController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        playing = new Task() {
+            @Override
+            protected Object call() {
+
+                return null;
+            }
+
+            @Override
+            protected void updateProgress(double workDone, double max) {
+                super.updateProgress(workDone, max);
+            }
+        };
+    }
+
+    private void stopProgress(){
+        _playBar.progressProperty().unbind();
+        _playBar.setProgress(0);
+        playing.cancel();
     }
 
 }
