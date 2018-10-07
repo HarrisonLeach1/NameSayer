@@ -422,5 +422,8 @@ public class MainMenuController implements Initializable, DataModelListener {
             e.printStackTrace();
         }
     }
+
+    public void savePlaylistPressed(ActionEvent actionEvent) {
+    }
 }
 
