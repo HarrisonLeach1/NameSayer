@@ -33,8 +33,17 @@
         radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
 }
 .menu:pressed {
+
+}
+.menu:hover{
     -fx-border-color: white;
 }
+.l:hover{
+     -fx-background-color: red;
+}
+ .l:pressed{
+     -fx-background-color: blue;
+ }
 .menu Text {
     -fx-fill: white;
     -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );
