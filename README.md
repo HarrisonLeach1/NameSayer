@@ -10,4 +10,12 @@
 
 4. Enter `java -jar NameSayer_part3.jar` into the terminal.
 
+## Special Features:
+Upload Multiple text files
+Level up by making good recordings
+Shuffle text file playlist
+and more....
+
+Target Audience:
+Cats.
 

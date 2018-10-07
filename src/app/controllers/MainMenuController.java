@@ -56,6 +56,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        _startPane.toFront();
         _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
