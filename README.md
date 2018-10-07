@@ -13,7 +13,7 @@
 ## Special Features:
 Upload Multiple text files
 Level up by making good recordings
-Shuffle text file playlist
+Creating and saving custom playlists
 and more....
 
 Target Audience:
