@@ -68,6 +68,7 @@ public class MainMenuController implements Initializable, DataModelListener {
                     setText(null);
                     setStyle("");
                 } else {
+                    setTooltip( new Tooltip("text"));
                     setText(c.toString());
                     if (!c.getMissingNames().equals("")) {
                         setStyle("-fx-background-color: rgba(255,0,0,0.5)");
@@ -372,21 +373,6 @@ public class MainMenuController implements Initializable, DataModelListener {
             window.setScene(playerScene);
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Deletes the temporary directory for storing modified audio files. PUT IN MODEL.
-     */
-    private void deleteTempDirectory() {
-        try {
-            String cmd = "rm -rf " + ConcatenatedName.FOLDER;
-
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
