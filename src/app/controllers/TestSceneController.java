@@ -17,7 +17,7 @@ import java.util.ResourceBundle;
  * from the user while the test window is open. It then translates them
  * into actions on the views.
  */
-public class TestSceneController implements Initializable {
+public class TestSceneController {
 
     @FXML
     private ProgressBar _progress;

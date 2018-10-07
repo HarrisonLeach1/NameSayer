@@ -112,6 +112,24 @@ public class MainMenuController implements Initializable, DataModelListener {
         new Thread(loadWorker).start();
     }
 
+    public void addToPlaylistPressed(ActionEvent event) {
+        if (_searchBox.getText().trim().isEmpty()) {
+            loadErrorMessage("ERROR: Search is empty");
+            return;
+        }
+
+        Task<List<ConcatenatedName>> loadWorker = loadSingleNameWorker();
+
+        // when finished update the list view
+        loadWorker.setOnSucceeded(e -> {
+            if(!_missingNames.isEmpty()) {
+                loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
+            } else {
+                _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
+            }
+        });
+        new Thread(loadWorker).start();
+    }
     /**
      * The loadSingleNameWorker executes the loading of the name on a background thread
      * to avoid GUI unresponsiveness.
