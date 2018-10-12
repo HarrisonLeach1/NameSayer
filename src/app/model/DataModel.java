@@ -18,16 +18,16 @@ import java.util.*;
  * them to be easily presented to the user.
  */
 public class DataModel implements IDataModel{
-    public static final String DATABASE = "./names/";
     public static final String USER_DATABASE = "./userRecordings/";
     private static DataModel _instance;
-	private final HashMap<String, Name> _databaseTable;
+    private String _database = "./names/";
+	private HashMap<String, Name> _databaseTable;
 	private List<DataModelListener> _listeners;
 	private User _user;
 
 	private DataModel() {
 		_user = new User();
-    	_databaseTable = createNameTable(DATABASE);
+    	_databaseTable = createNameTable(_database);
 		_listeners = new ArrayList<>();
 	}
 
@@ -50,7 +50,7 @@ public class DataModel implements IDataModel{
 	public TreeItem<NameVersion> loadDatabaseTree(){
 		TreeViewFactory checkTree = new CheckTreeViewFactory();
 		CheckBoxTreeItem<NameVersion> root = new CheckBoxTreeItem<>();
-		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(_database));
 	}
 
     /**
@@ -68,7 +68,7 @@ public class DataModel implements IDataModel{
 	 * @return ArrayList
 	 */
 	public List<Name> loadDatabaseList() {
-		HashMap<String, Name> nameTable = createNameTable(DATABASE);
+		HashMap<String, Name> nameTable = createNameTable(_database);
 
 		List<Name> nameList = new ArrayList<>();
 
@@ -299,5 +299,14 @@ public class DataModel implements IDataModel{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Changes the directory of names that this Database refers to.
+	 */
+	public void setDatabase(File database) {
+        _database = database.getName();
+
+        _databaseTable = createNameTable(_database);
 	}
 }
