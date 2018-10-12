@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static app.model.DataModel.USER_DATABASE;
-
 /**
  * A MainMenuController holds the responsibility of receiving input events
  * from the user at the main menu and then translating them into actions on the
@@ -314,7 +312,7 @@ public class MainMenuController implements Initializable, DataModelListener {
 
         // pass selected items to the next controller
         SavePlaylistController controller = loader.getController();
-        controller.givePlayList(_playList.getItems());
+        controller.setPlayList(_playList.getItems());
 
         // switch scenes
         Scene playerScene = new Scene(playerParent);
