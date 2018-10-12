@@ -18,9 +18,9 @@ import java.util.*;
  * them to be easily presented to the user.
  */
 public class DataModel implements IDataModel{
-    public static final String USER_DATABASE = "./userRecordings/";
+    public static final File USER_DATABASE = new File("./userRecordings/");
     private static DataModel _instance;
-    private String _database = "./names/";
+    private File _database = new File("./names/");
 	private HashMap<String, Name> _databaseTable;
 	private List<DataModelListener> _listeners;
 	private User _user;
@@ -112,7 +112,7 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Given a the path to a non-empty folder, all files are converted to NameVersion objects
+	 * Given a non-empty folder, all files are converted to NameVersion objects
 	 * and are stored in their respective Name which is an encapsulated collection of versions.
 	 * Each Name as a value in the HashMap and are keyed by a string corresponding to their name.
 	 *
@@ -120,10 +120,9 @@ public class DataModel implements IDataModel{
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
-	private HashMap<String, Name> createNameTable(String database) {
+	private HashMap<String, Name> createNameTable(File databaseFolder) {
 		HashMap<String, Name> nameTable = new HashMap<>();
 
-		File databaseFolder = new File(database);
 		if(!databaseFolder.exists()){
 			return new HashMap<>();
 		}
@@ -135,7 +134,7 @@ public class DataModel implements IDataModel{
 			if (file.isFile()) {
 
 				// retrieve full file name and create a NameVersion object from it
-				NameVersion nameVersion = new NameVersion(database + file.getName());
+				NameVersion nameVersion = new NameVersion(databaseFolder.getName().replaceAll(" ","\\ ") + "/" + file.getName());
 
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
@@ -305,10 +304,21 @@ public class DataModel implements IDataModel{
 	 * Changes the directory of names that this Database refers to.
 	 */
 	public void setDatabase(File database) {
-        _database = database.getName();
+        _database = database;
         System.out.println(_database);
 
         _databaseTable = createNameTable(_database);
+	}
+
+	/**
+	 * Returns the name of the database that this data model represents.
+	 *
+	 * The name of the database is determined initially by the name of the
+	 * directory which it references.
+	 * @return name of the database
+	 */
+	public String getDatabaseName() {
+		return _database.getName();
 	}
 
 	/**
@@ -316,11 +326,9 @@ public class DataModel implements IDataModel{
 	 *
 	 * Note that this does not refer to the number of files within the folder,
 	 * but rather the number of unique names.
-	 * @return
+	 * @return number of Names in the database
 	 */
 	public int getDatabaseNameCount() {
-		_databaseTable.keySet().size();
+		return _databaseTable.keySet().size();
 	}
-
-
 }

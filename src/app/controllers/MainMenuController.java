@@ -67,6 +67,10 @@ public class MainMenuController implements Initializable, DataModelListener {
         setupPlaylist();
 
         DataModel.getInstance().addListener(this);
+
+        // change GUI labels
+        _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
+        _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
     }
 
     /**
@@ -103,7 +107,7 @@ public class MainMenuController implements Initializable, DataModelListener {
 
         if (selectedDirectory != null) {
             // change database
-            DataModel.getInstance().setDatabase();
+            DataModel.getInstance().setDatabase(selectedDirectory);
 
             // change GUI labels
             _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
