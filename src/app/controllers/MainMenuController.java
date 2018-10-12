@@ -354,16 +354,30 @@ public class MainMenuController implements Initializable, DataModelListener {
 
     /**
      * Plays the currently selected user recording in the list of user recordings.
+     * Executes a on a new thread to avoid GUI unresponsiveness.
      */
     public void playUserRecordingPressed() {
-        TreeItem<NameVersion> selectedItem = _recList.getSelectionModel().getSelectedItem();
-        if (selectedItem != null) {
-            NameVersion currentUserRecording = _recList.getSelectionModel().getSelectedItem().getValue();
-
-            if(currentUserRecording != null) {
-                currentUserRecording.playRecording(1.0);
-            }
+        if (_recList.getSelectionModel().getSelectedItem() != null) {
+            Task player = playWorker();
+            new Thread(player).start();
         }
+    }
+
+    /**
+     * Creates a new Task which allows the play functionality to be
+     * executed on a new thread.
+     */
+    private Task playWorker() {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                // play user recording
+                _recList.getSelectionModel().getSelectedItem().getValue().playRecording(1.0);
+                return true;
+            }
+        };
+
     }
 
     /**

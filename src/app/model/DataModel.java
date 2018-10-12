@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class DataModel implements IDataModel{
     public static final String DATABASE = "./names/";
-    public static final String USER_DATABASE = "./userRecordings/";
+    public static final String USER_DATABASE = "./names/";
     private static DataModel _instance;
 	private final HashMap<String, Name> _databaseTable;
 	private List<DataModelListener> _listeners;
