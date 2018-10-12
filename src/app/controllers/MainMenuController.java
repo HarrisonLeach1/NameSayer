@@ -112,6 +112,9 @@ public class MainMenuController implements Initializable, DataModelListener {
             // change GUI labels
             _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
             _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+
+            _dataList.getItems().clear();
+            _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         }
     }
 

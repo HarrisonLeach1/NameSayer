@@ -133,8 +133,12 @@ public class DataModel implements IDataModel{
 		for (File file : files) {
 			if (file.isFile()) {
 
-				// retrieve full file name and create a NameVersion object from it
-				NameVersion nameVersion = new NameVersion(databaseFolder.getName().replaceAll(" ","\\ ") + "/" + file.getName());
+				// define the path the recording will use to find it's wav file
+				// if the folder has spaces they must be replaced "\ " to be interpreted by a bash process
+				String fileName = databaseFolder.getName().replaceAll(" ","\\\\ ") + "/" + file.getName();
+
+				// create a name version object for the recording file
+				NameVersion nameVersion = new NameVersion(fileName);
 
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
