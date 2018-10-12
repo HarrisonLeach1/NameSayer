@@ -306,7 +306,21 @@ public class DataModel implements IDataModel{
 	 */
 	public void setDatabase(File database) {
         _database = database.getName();
+        System.out.println(_database);
 
         _databaseTable = createNameTable(_database);
 	}
+
+	/**
+	 * Returns the number of name objects contained within this database.
+	 *
+	 * Note that this does not refer to the number of files within the folder,
+	 * but rather the number of unique names.
+	 * @return
+	 */
+	public int getDatabaseNameCount() {
+		_databaseTable.keySet().size();
+	}
+
+
 }
