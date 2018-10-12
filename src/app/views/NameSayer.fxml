@@ -332,7 +332,7 @@
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
-                              <Button mnemonicParsing="false" onAction="#handleStartUpAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: limegreen; -fx-border-width: 5;" text="Select Database">
+                              <Button mnemonicParsing="false" onAction="#handleSelectDatabaseAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: limegreen; -fx-border-width: 5;" text="Select Database">
                                  <font>
                                     <Font name="System Bold" size="20.0" />
                                  </font>

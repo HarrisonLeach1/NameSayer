@@ -43,7 +43,7 @@ public class DataModel implements IDataModel{
 		return _instance;
 	}
 
-    /**
+	/**
      * Creates a TreeItem that contains all recordings in the database
      * as descendants. Uses the TreeViewFactory.
      */
