@@ -18,16 +18,17 @@ import java.util.*;
  * them to be easily presented to the user.
  */
 public class DataModel implements IDataModel{
-    public static final String DATABASE = "./names/";
-    public static final String USER_DATABASE = "./names/";
+    public static final File USER_DATABASE = new File("./userRecordings/");
     private static DataModel _instance;
-	private final HashMap<String, Name> _databaseTable;
+    private File _database = new File("./names/");
+	private HashMap<String, Name> _databaseTable;
 	private List<DataModelListener> _listeners;
 	private User _user;
+	private List<String> _nameStrings;
 
 	private DataModel() {
 		_user = new User();
-    	_databaseTable = createNameTable(DATABASE);
+    	_databaseTable = createNameTable(_database);
 		_listeners = new ArrayList<>();
 	}
 
@@ -43,14 +44,14 @@ public class DataModel implements IDataModel{
 		return _instance;
 	}
 
-    /**
+	/**
      * Creates a TreeItem that contains all recordings in the database
      * as descendants. Uses the TreeViewFactory.
      */
 	public TreeItem<NameVersion> loadDatabaseTree(){
 		TreeViewFactory checkTree = new CheckTreeViewFactory();
 		CheckBoxTreeItem<NameVersion> root = new CheckBoxTreeItem<>();
-		return checkTree.getTreeRoot(root, createNameTable(DATABASE));
+		return checkTree.getTreeRoot(root, createNameTable(_database));
 	}
 
     /**
@@ -68,7 +69,7 @@ public class DataModel implements IDataModel{
 	 * @return ArrayList
 	 */
 	public List<Name> loadDatabaseList() {
-		HashMap<String, Name> nameTable = createNameTable(DATABASE);
+		HashMap<String, Name> nameTable = createNameTable(_database);
 
 		List<Name> nameList = new ArrayList<>();
 
@@ -87,13 +88,20 @@ public class DataModel implements IDataModel{
 		return nameList;
 	}
 
+	/**
+	 * Registers a listener with this data model object. The registered
+	 * listener is notified of any events in which the users progress is
+	 * changed.
+	 * @param listener
+	 */
 	public void addListener(DataModelListener listener) {
 		_listeners.add(listener);
 		listener.notifyProgress(_user.getUserXP());
 	}
 
 	/**
-	 * Updates the experience of the user object
+	 * Updates the experience of the user object and notifies any registered
+	 * listeners.
 	 */
 	public void updateUserXP() {
 		_user.updateUserXP();
@@ -103,16 +111,8 @@ public class DataModel implements IDataModel{
 			}
 	}
 
-	public int getDailyStreak() {
-		return _user.getDailyStreak();
-	}
-
-	public HashMap<String, Name> getDatabaseTable() {
-		return _databaseTable;
-	}
-
 	/**
-	 * Given a the path to a non-empty folder, all files are converted to NameVersion objects
+	 * Given a non-empty folder, all files are converted to NameVersion objects
 	 * and are stored in their respective Name which is an encapsulated collection of versions.
 	 * Each Name as a value in the HashMap and are keyed by a string corresponding to their name.
 	 *
@@ -120,10 +120,10 @@ public class DataModel implements IDataModel{
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
-	private HashMap<String, Name> createNameTable(String database) {
+	private HashMap<String, Name> createNameTable(File databaseFolder) {
 		HashMap<String, Name> nameTable = new HashMap<>();
+		_nameStrings = new ArrayList<>();
 
-		File databaseFolder = new File(database);
 		if(!databaseFolder.exists()){
 			return new HashMap<>();
 		}
@@ -134,8 +134,15 @@ public class DataModel implements IDataModel{
 		for (File file : files) {
 			if (file.isFile()) {
 
-				// retrieve full file name and create a NameVersion object from it
-				NameVersion nameVersion = new NameVersion(database + file.getName());
+				// define the path the recording will use to find it's wav file
+				// if the folder has spaces they must be replaced "\ " to be interpreted by a bash process
+				String fileName = databaseFolder.getName().replaceAll(" ","\\\\ ") + "/" + file.getName();
+
+				// create a name version object for the recording file
+				NameVersion nameVersion = new NameVersion(fileName);
+
+				// update the list of all names
+				_nameStrings.add(nameVersion.getShortName());
 
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
@@ -222,45 +229,8 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Converts a string of names into a list of name objects found the DataModel search table
-	 * @param names the string of names
-	 * @return list of Name objects
-	 * @throws NameNotFoundException
-	 */
-	private List<Name> stringsToList(String names) throws NameNotFoundException {
-		// replace all hyphens with spaces
-		names = names.replaceAll("-"," ");
-
-		// parse strings into a list of strings
-		List<String> stringList = new ArrayList<>(Arrays.asList(names.split(" ")));
-
-		List<Name> nameList = new ArrayList<>();
-
-		// get the DataModel table which references the names with their associated strings
-		HashMap<String, Name> searchTable = DataModel.getInstance().getDatabaseTable();
-
-		// initialise the variable to store names that are not found
-		String missingNames = "";
-
-		// for each string, retrieve the Name object associated with the specific string key
-		for (String str : stringList) {
-			if (searchTable.containsKey(str.toLowerCase())) {
-				nameList.add(searchTable.get(str.toLowerCase()));
-			} else {
-				missingNames += str + "\n";
-			}
-		}
-
-		// if there are missing names in the string, notify by throwing an exception
-		if (!missingNames.equals("")) {
-			throw new NameNotFoundException(missingNames);
-		}
-
-		return nameList;
-	}
-
-	/**
-	 * Deletes the temporary directory for storing modified audio files.
+	 * Deletes the temporary directory for storing modified audio files if
+	 * it exists.
 	 */
 	public void deleteTempDirectory() {
 		try {
@@ -299,5 +269,44 @@ public class DataModel implements IDataModel{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Changes the directory of names that this Database refers to, and
+	 * resets the name table in which the names are stored.
+	 */
+	public void setDatabase(File database) {
+        _database = database;
+        _databaseTable = createNameTable(_database);
+	}
+
+	/**
+	 * Returns the name of the database that this data model represents.
+	 *
+	 * The name of the database is determined initially by the name of the
+	 * directory which it references.
+	 * @return name of the database
+	 */
+	public String getDatabaseName() {
+		return _database.getName();
+	}
+
+	/**
+	 * Returns the number of name objects contained within this database.
+	 *
+	 * Note that this does not refer to the number of files within the folder,
+	 * but rather the number of unique names.
+	 * @return number of Names in the database
+	 */
+	public int getDatabaseNameCount() {
+		return _databaseTable.keySet().size();
+	}
+
+	public int getDailyStreak() {
+		return _user.getDailyStreak();
+	}
+
+	public List<String> getNameStrings() {
+		return _nameStrings;
 	}
 }

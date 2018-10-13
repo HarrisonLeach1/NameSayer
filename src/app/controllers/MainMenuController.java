@@ -12,10 +12,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -44,7 +46,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
-    @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
+    @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
     private String _missingNames;
@@ -61,10 +63,39 @@ public class MainMenuController implements Initializable, DataModelListener {
         _searchPane.toFront();
         _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
 
+        // change GUI labels
+        _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
+        _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+
         setupPlaylist();
+
+        setupSearchBox();
 
         DataModel.getInstance().addListener(this);
     }
+
+    /**
+     * Initialises the search box to allow for autocompletion when the user
+     * begins typing a name. Initially the autocomplete contains all database names,
+     * then changes based on the users search. When the user enters a space or hyphen
+     * the autocomplete return to all database names.
+     */
+    private void setupSearchBox() {
+        TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
+
+        _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            // if the user types a hyphen or space, reset the autocomplete to all names
+            if (newValue.endsWith(" ") || newValue.endsWith("-")) {
+                List<String> autoCompleteList = new ArrayList<>();
+                for(String name : DataModel.getInstance().getNameStrings()) {
+                    autoCompleteList.add(newValue + name);
+                }
+                TextFields.bindAutoCompletion(_searchBox, autoCompleteList);
+            }
+        });
+    }
+
 
     /**
      * When the start button is pressed, the user is displayed the search pane.
@@ -82,6 +113,33 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void handleQuitAction(ActionEvent event){
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.close();
+    }
+
+    /**
+     * When the user wants to select a database of names to practise. They are
+     * taken to a directory chooser window to select the directory. Once the directory
+     * is selected the database is loaded in and the database GUI labels are updated.
+     */
+    public void handleSelectDatabaseAction(ActionEvent event) {
+        // initialise directory chooser
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select Database");
+
+        // open directory chooser
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        File selectedDirectory = directoryChooser.showDialog(window);
+
+        if (selectedDirectory != null) {
+            // change database
+            DataModel.getInstance().setDatabase(selectedDirectory);
+
+            // change GUI labels
+            _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
+            _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+
+            _dataList.getItems().clear();
+            _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
+        }
     }
 
     /**
@@ -110,6 +168,11 @@ public class MainMenuController implements Initializable, DataModelListener {
         new Thread(loadWorker).start();
     }
 
+    /**
+     * Adds the string that is currently typed in the search box to be added to
+     * the playlist.
+     * @param event
+     */
     public void addToPlaylistPressed(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
@@ -128,6 +191,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         });
         new Thread(loadWorker).start();
     }
+
     /**
      * The loadSingleNameWorker executes the loading of the name on a background thread
      * to avoid GUI unresponsiveness.
@@ -530,9 +594,6 @@ public class MainMenuController implements Initializable, DataModelListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void savePlaylistPressed(ActionEvent actionEvent) {
     }
 }
 
