@@ -83,11 +83,17 @@ public class MainMenuController implements Initializable, DataModelListener {
      * the autocomplete return to all database names.
      */
     private void setupSearchBox() {
-        TextFields.bindAutoCompletion(_searchBox, DataModel.getNameStrings());
+        TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
 
         _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            List<String> autoCompleteList = new ArrayList<>();
+
+            // if the user types a hyphen or space, reset the autocomplete to all names
             if (newValue.endsWith(" ") || newValue.endsWith("-")) {
-                TextFields.bindAutoCompletion(_searchBox, newValue + getNameStrings());
+                for(String name : DataModel.getInstance().getNameStrings()) {
+                    autoCompleteList.add(newValue + name);
+                }
+                TextFields.bindAutoCompletion(_searchBox, autoCompleteList);
             }
         });
     }
