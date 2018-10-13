@@ -20,6 +20,7 @@ public class RecordingSceneController {
 
     private Task recordWorker;
     private IPractiseListModel _practiseListModel;
+    private boolean _recording = false;
 
     /**
      * Initialises the controller with the practise list model to be used.
@@ -35,7 +36,10 @@ public class RecordingSceneController {
      * The users voice is recorded and the time left to record is indicated
      * by the progress bar.
      */
-    public void startButtonPressed() {
+    public void recordButtonPressed() {
+
+        Stage window = (Stage)_startBtn.getScene().getWindow();
+
         // tell model to create recording
         _practiseListModel.createUserRecording();
 
@@ -51,7 +55,6 @@ public class RecordingSceneController {
         // when the specified recording time is finished, close the window
         recordWorker.setOnSucceeded(event -> {
             _progressBar.progressProperty().unbind();
-            Stage window = (Stage)_cancelBtn.getScene().getWindow();
             window.close();
         });
 

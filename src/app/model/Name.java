@@ -3,6 +3,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A Name object represents a unique name that may have
+ */
 public class Name implements Practisable{
     private final String _name;
     private List<NameVersion> _nameVersions;
@@ -71,14 +74,15 @@ public class Name implements Practisable{
         selectGoodVersion().setBadQuality();
     }
 
+    public void playRecording(double volume) {
+        selectGoodVersion().playRecording(volume);
+    }
+
     @Override
     public String getDateTimeCreated() {
         return _goodVersion.getDateCreated() + " " + _goodVersion.getTimeCreated();
     }
 
-    public void playRecording(double volume) {
-        selectGoodVersion().playRecording(volume);
-    }
 
     @Override
     public boolean isRateable() {

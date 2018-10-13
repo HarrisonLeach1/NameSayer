@@ -15,6 +15,12 @@ public interface IPractiseListModel {
     void createUserRecording();
 
     /**
+     * Allows the user to specify when they have finished recording
+     * their own production of a name.
+     */
+    void finishUserRecording();
+
+    /**
      * Allows the user to compare their production of a name to the
      * original recording.
      */

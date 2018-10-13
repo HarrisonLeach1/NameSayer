@@ -24,6 +24,7 @@ public class DataModel implements IDataModel{
 	private HashMap<String, Name> _databaseTable;
 	private List<DataModelListener> _listeners;
 	private User _user;
+	private List<String> _nameStrings;
 
 	private DataModel() {
 		_user = new User();
@@ -121,6 +122,7 @@ public class DataModel implements IDataModel{
 	 */
 	private HashMap<String, Name> createNameTable(File databaseFolder) {
 		HashMap<String, Name> nameTable = new HashMap<>();
+		_nameStrings = new ArrayList<>();
 
 		if(!databaseFolder.exists()){
 			return new HashMap<>();
@@ -138,6 +140,9 @@ public class DataModel implements IDataModel{
 
 				// create a name version object for the recording file
 				NameVersion nameVersion = new NameVersion(fileName);
+
+				// update the list of all names
+				_nameStrings.add(nameVersion.getShortName());
 
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
@@ -301,7 +306,7 @@ public class DataModel implements IDataModel{
 		return _user.getDailyStreak();
 	}
 
-	public HashMap<String, Name> getDatabaseTable() {
-		return _databaseTable;
+	public List<String> getNameStrings() {
+		return _nameStrings;
 	}
 }

@@ -2,6 +2,12 @@ package app.model;
 
 import java.io.IOException;
 
+/**
+ * A Practisable object represents an object that can be used in
+ * a PractiseListModel.
+ *
+ * As such it can be played, and give date and rating information.
+ */
 public interface Practisable {
     /**
      * Plays the recording of either a concatenated name or single name

@@ -20,10 +20,19 @@ public class PractiseListModel implements IPractiseListModel{
 
     /**
      * Creates a new recording for the currently indexed NameVersion object
+     * and keeps it
      */
     public void createUserRecording() {
         _currentUserRecording = new Recording(_practiseList.get(_currentIndex).toString());
-        _currentUserCreatedName = _currentUserRecording.createRecording();
+        _currentUserCreatedName = _currentUserRecording.startRecording();
+    }
+
+    /**
+     * The created recording is stopped and saved to a file which is accessible
+     * by the user.
+     */
+    public void finishUserRecording() {
+        _currentUserRecording.finishRecording();
     }
 
     /**
