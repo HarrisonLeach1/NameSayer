@@ -52,6 +52,7 @@ public class Recording {
     public NameVersion startRecording() {
         try {
             String cmd = "mkdir -p " + USER_DATABASE.getName() + "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
+            System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             _recordingProcess = builder.start();
@@ -69,7 +70,7 @@ public class Recording {
     public void finishRecording() {
         OutputStream in = _recordingProcess.getOutputStream();
         PrintWriter stdin = new PrintWriter(in);
-        stdin.println("q");
+        stdin.print("q");
         stdin.close();
     }
 

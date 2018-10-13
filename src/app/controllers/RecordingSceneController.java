@@ -15,12 +15,11 @@ import static app.model.Recording.RECORD_TIME;
  */
 public class RecordingSceneController {
 
-    @FXML private Button _startBtn, _cancelBtn;
+    @FXML private Button _startBtn, _finishBtn, _cancelBtn;
     @FXML private ProgressBar _progressBar = new ProgressBar(0);
 
     private Task recordWorker;
     private IPractiseListModel _practiseListModel;
-    private boolean _recording = false;
 
     /**
      * Initialises the controller with the practise list model to be used.
@@ -29,6 +28,7 @@ public class RecordingSceneController {
     public void initModel(IPractiseListModel model) {
         _practiseListModel = model;
         _cancelBtn.setDisable(true);
+        _finishBtn.setDisable(true);
     }
 
     /**
@@ -37,15 +37,13 @@ public class RecordingSceneController {
      * by the progress bar.
      */
     public void recordButtonPressed() {
-
-        Stage window = (Stage)_startBtn.getScene().getWindow();
-
         // tell model to create recording
         _practiseListModel.createUserRecording();
 
         _startBtn.setDisable(true);
         _progressBar.setProgress(0);
         _cancelBtn.setDisable(false);
+        _finishBtn.setDisable(false);
 
         recordWorker = recordWorker();
 
@@ -55,19 +53,25 @@ public class RecordingSceneController {
         // when the specified recording time is finished, close the window
         recordWorker.setOnSucceeded(event -> {
             _progressBar.progressProperty().unbind();
+            Stage window = (Stage)_startBtn.getScene().getWindow();
             window.close();
         });
 
         new Thread(recordWorker).start();
     }
 
+    public void finishButtonPressed() {
+        recordWorker.cancel(true);
+        _practiseListModel.finishUserRecording();
+        Stage window = (Stage)_startBtn.getScene().getWindow();
+        window.close();
+    }
+
     /**
-     * Cancels the new user recording, closing the recording window.
+     * Cancels the new user recording and deletes the recording file.
+     * Closes the recording window.
      */
     public void cancelButtonPressed() {
-        _startBtn.setDisable(false);
-        _cancelBtn.setDisable(true);
-
         recordWorker.cancel(true);
         _progressBar.progressProperty().unbind();
         _progressBar.setProgress(0);
@@ -87,10 +91,7 @@ public class RecordingSceneController {
 
             @Override
             protected Object call() throws Exception {
-                for (int i = 0; i < RECORD_TIME * 100; i++) {
-                    Thread.sleep(10);
-                    updateProgress(i+1,500);
-                }
+                Thread.sleep(RECORD_TIME * 1000);
                 return true;
             }
         };

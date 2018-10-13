@@ -33,7 +33,7 @@
                   <String fx:value="menu" />
                </styleClass>
             </Button>
-            <Button fx:id="_cancelBtn" defaultButton="true" layoutX="118.0" layoutY="91.0" mnemonicParsing="false" onAction="#cancelButtonPressed" prefHeight="25.0" prefWidth="65.0" text="Cancel" textFill="WHITE">
+            <Button fx:id="_cancelBtn" defaultButton="true" layoutX="221.0" layoutY="91.0" mnemonicParsing="false" onAction="#cancelButtonPressed" prefHeight="25.0" prefWidth="65.0" text="Cancel" textFill="WHITE">
                <styleClass>
                   <String fx:value="menu-test_mic" />
                   <String fx:value="menu" />
@@ -41,6 +41,12 @@
                <effect>
                   <DropShadow color="#ffffff00" />
                </effect>
+            </Button>
+            <Button fx:id="_finishBtn" layoutX="84.0" layoutY="91.0" mnemonicParsing="false" onAction="#finishButtonPressed" prefHeight="25.0" prefWidth="132.0" text="Finish Recording" textFill="WHITE">
+               <styleClass>
+                  <String fx:value="play" />
+                  <String fx:value="menu" />
+               </styleClass>
             </Button>
          </children>
       </AnchorPane>
