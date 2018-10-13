@@ -25,7 +25,7 @@ public class Recording {
         Date date = new Date();
         String dateTime = formatter.format(date);
 
-        _fileName = USER_DATABASE + "se206_" + dateTime + "_" + name.replaceAll(" ","_") + ".wav";
+        _fileName = USER_DATABASE.getName()  + "/se206_" + dateTime + "_" + name.replaceAll(" ","_") + ".wav";
     }
 
     /**
@@ -49,7 +49,7 @@ public class Recording {
      */
     public NameVersion createRecording() {
         try {
-            String cmd = "mkdir -p " + USER_DATABASE+ "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
+            String cmd = "mkdir -p " + USER_DATABASE.getName() + "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             process = builder.start();

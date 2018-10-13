@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -46,7 +47,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
-    @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
+    @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
     private String _missingNames;
@@ -66,6 +67,10 @@ public class MainMenuController implements Initializable, DataModelListener {
         setupPlaylist();
 
         DataModel.getInstance().addListener(this);
+
+        // change GUI labels
+        _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
+        _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
     }
 
     /**
@@ -84,6 +89,33 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void handleQuitAction(ActionEvent event){
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.close();
+    }
+
+    /**
+     * When the user wants to select a database of names to practise. They are
+     * taken to a directory chooser window to select the directory. Once the directory
+     * is selected the database is loaded in and the database GUI labels are updated.
+     */
+    public void handleSelectDatabaseAction(ActionEvent event) {
+        // initialise directory chooser
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Select Database");
+
+        // open directory chooser
+        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+        File selectedDirectory = directoryChooser.showDialog(window);
+
+        if (selectedDirectory != null) {
+            // change database
+            DataModel.getInstance().setDatabase(selectedDirectory);
+
+            // change GUI labels
+            _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
+            _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+
+            _dataList.getItems().clear();
+            _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
+        }
     }
 
     /**
@@ -130,6 +162,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         });
         new Thread(loadWorker).start();
     }
+
     /**
      * The loadSingleNameWorker executes the loading of the name on a background thread
      * to avoid GUI unresponsiveness.
