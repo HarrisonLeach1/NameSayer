@@ -87,13 +87,20 @@ public class DataModel implements IDataModel{
 		return nameList;
 	}
 
+	/**
+	 * Registers a listener with this data model object. The registered
+	 * listener is notified of any events in which the users progress is
+	 * changed.
+	 * @param listener
+	 */
 	public void addListener(DataModelListener listener) {
 		_listeners.add(listener);
 		listener.notifyProgress(_user.getUserXP());
 	}
 
 	/**
-	 * Updates the experience of the user object
+	 * Updates the experience of the user object and notifies any registered
+	 * listeners.
 	 */
 	public void updateUserXP() {
 		_user.updateUserXP();
@@ -101,14 +108,6 @@ public class DataModel implements IDataModel{
 			for(DataModelListener l : _listeners) {
 				l.notifyProgress(experience);
 			}
-	}
-
-	public int getDailyStreak() {
-		return _user.getDailyStreak();
-	}
-
-	public HashMap<String, Name> getDatabaseTable() {
-		return _databaseTable;
 	}
 
 	/**
@@ -225,45 +224,8 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Converts a string of names into a list of name objects found the DataModel search table
-	 * @param names the string of names
-	 * @return list of Name objects
-	 * @throws NameNotFoundException
-	 */
-	private List<Name> stringsToList(String names) throws NameNotFoundException {
-		// replace all hyphens with spaces
-		names = names.replaceAll("-"," ");
-
-		// parse strings into a list of strings
-		List<String> stringList = new ArrayList<>(Arrays.asList(names.split(" ")));
-
-		List<Name> nameList = new ArrayList<>();
-
-		// get the DataModel table which references the names with their associated strings
-		HashMap<String, Name> searchTable = DataModel.getInstance().getDatabaseTable();
-
-		// initialise the variable to store names that are not found
-		String missingNames = "";
-
-		// for each string, retrieve the Name object associated with the specific string key
-		for (String str : stringList) {
-			if (searchTable.containsKey(str.toLowerCase())) {
-				nameList.add(searchTable.get(str.toLowerCase()));
-			} else {
-				missingNames += str + "\n";
-			}
-		}
-
-		// if there are missing names in the string, notify by throwing an exception
-		if (!missingNames.equals("")) {
-			throw new NameNotFoundException(missingNames);
-		}
-
-		return nameList;
-	}
-
-	/**
-	 * Deletes the temporary directory for storing modified audio files.
+	 * Deletes the temporary directory for storing modified audio files if
+	 * it exists.
 	 */
 	public void deleteTempDirectory() {
 		try {
@@ -305,12 +267,11 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Changes the directory of names that this Database refers to.
+	 * Changes the directory of names that this Database refers to, and
+	 * resets the name table in which the names are stored.
 	 */
 	public void setDatabase(File database) {
         _database = database;
-        System.out.println(_database);
-
         _databaseTable = createNameTable(_database);
 	}
 
@@ -334,5 +295,13 @@ public class DataModel implements IDataModel{
 	 */
 	public int getDatabaseNameCount() {
 		return _databaseTable.keySet().size();
+	}
+
+	public int getDailyStreak() {
+		return _user.getDailyStreak();
+	}
+
+	public HashMap<String, Name> getDatabaseTable() {
+		return _databaseTable;
 	}
 }

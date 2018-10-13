@@ -144,6 +144,11 @@ public class MainMenuController implements Initializable, DataModelListener {
         new Thread(loadWorker).start();
     }
 
+    /**
+     * Adds the string that is currently typed in the search box to be added to
+     * the playlist.
+     * @param event
+     */
     public void addToPlaylistPressed(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
@@ -551,9 +556,6 @@ public class MainMenuController implements Initializable, DataModelListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void savePlaylistPressed(ActionEvent actionEvent) {
     }
 }
 
