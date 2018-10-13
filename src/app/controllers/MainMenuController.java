@@ -17,6 +17,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,14 +65,33 @@ public class MainMenuController implements Initializable, DataModelListener {
         _searchPane.toFront();
         _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
 
-        setupPlaylist();
-
-        DataModel.getInstance().addListener(this);
-
         // change GUI labels
         _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
         _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+
+        setupPlaylist();
+
+        setupSearchBox();
+
+        DataModel.getInstance().addListener(this);
     }
+
+    /**
+     * Initialises the search box to allow for autocompletion when the user
+     * begins typing a name. Initially the autocomplete contains all database names,
+     * then changes based on the users search. When the user enters a space or hyphen
+     * the autocomplete return to all database names.
+     */
+    private void setupSearchBox() {
+        TextFields.bindAutoCompletion(_searchBox, DataModel.getNameStrings());
+
+        _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.endsWith(" ") || newValue.endsWith("-")) {
+                TextFields.bindAutoCompletion(_searchBox, newValue + getNameStrings());
+            }
+        });
+    }
+
 
     /**
      * When the start button is pressed, the user is displayed the search pane.
