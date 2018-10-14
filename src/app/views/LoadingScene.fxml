@@ -8,7 +8,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LoadingController">
+<AnchorPane prefHeight="188.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LoadingController">
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -21,7 +21,16 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="350.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <ProgressIndicator fx:id="_loadIndicator" layoutX="76.0" layoutY="19.0" prefHeight="82.0" prefWidth="99.0" progress="0.0" AnchorPane.bottomAnchor="19.0" AnchorPane.leftAnchor="76.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="19.0" />
+            <ProgressIndicator fx:id="_loadIndicator" layoutX="126.0" layoutY="14.0" prefHeight="82.0" prefWidth="99.0" progress="0.0" />
+            <Button defaultButton="true" layoutX="140.0" layoutY="99.0" mnemonicParsing="false" onAction="#cancelLoading" prefWidth="70.0" text="Cancel" textFill="WHITE">
+               <effect>
+                  <DropShadow color="#ffffff00" />
+               </effect>
+               <styleClass>
+                  <String fx:value="menu-test_mic" />
+                  <String fx:value="menu" />
+               </styleClass>
+            </Button>
          </children>
       </AnchorPane>
    </children>

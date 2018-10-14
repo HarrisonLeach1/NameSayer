@@ -47,7 +47,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
-    private String _missingNames;
+    private String _missingNames = "";
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -96,11 +96,12 @@ public class MainMenuController implements Initializable, DataModelListener {
             loadErrorMessage("ERROR: Search is empty");
             return;
         }
-        Task<List<ConcatenatedName>> loadWorker = loadSingleNameWorker();
+        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
 
         // when finished update the list view
         loadWorker.setOnSucceeded(e -> {
             if(!_missingNames.isEmpty()) {
+                _missingNames = DataModel.getInstance().getMissingNames();
                 loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
             } else {
                 moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
@@ -116,10 +117,11 @@ public class MainMenuController implements Initializable, DataModelListener {
             return;
         }
 
-        Task<List<ConcatenatedName>> loadWorker = loadSingleNameWorker();
+        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
 
         // when finished update the list view
         loadWorker.setOnSucceeded(e -> {
+            _missingNames = DataModel.getInstance().getMissingNames();
             if(!_missingNames.isEmpty()) {
                 loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
             } else {
@@ -127,23 +129,6 @@ public class MainMenuController implements Initializable, DataModelListener {
             }
         });
         new Thread(loadWorker).start();
-    }
-    /**
-     * The loadSingleNameWorker executes the loading of the name on a background thread
-     * to avoid GUI unresponsiveness.
-     */
-    private Task loadSingleNameWorker() {
-        return new Task() {
-            @Override
-            protected List<ConcatenatedName> call() throws Exception {
-                // load name through data model
-                List<ConcatenatedName> list = DataModel.getInstance().loadSingleNameToList(_searchBox.getText());
-
-                // compile missing names into a string to display to the user if needed
-                compileMissingNames(list);
-                return list;
-            }
-        };
     }
 
     /**
@@ -202,7 +187,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         _selectedFile = selectedFile;
 
         // create a load worker for loading in the names in the file
-        Task<List<ConcatenatedName>> loadWorker = loadFileWorker();
+        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadFileWorker(selectedFile);
 
         // load in the new scene
         FXMLLoader loader = new FXMLLoader();
@@ -225,6 +210,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         // when finished update the list view and close the loader
         loadWorker.setOnSucceeded(e -> {
             _playList.getItems().addAll(loadWorker.getValue());
+            _missingNames = DataModel.getInstance().getMissingNames();
             window.close();
         });
 
@@ -232,40 +218,6 @@ public class MainMenuController implements Initializable, DataModelListener {
         window.setScene(playerScene);
         window.initModality(Modality.APPLICATION_MODAL);
         window.showAndWait();
-    }
-
-    /**
-     * The loadFileWorker executes the loading of the playlist with names on a background thread
-     * to avoid GUI unresponsiveness.
-     */
-    private Task loadFileWorker() {
-        return new Task() {
-            @Override
-            protected List<ConcatenatedName> call() throws Exception {
-                // load file through data model
-                List<ConcatenatedName> list = DataModel.getInstance().loadFileToList(_selectedFile);
-                compileMissingNames(list);
-                return list;
-            }
-        };
-    }
-
-    /**
-     * Updates the _missingNames field to store the names of the given list which are
-     * not contained within the database.
-     * @param list
-     */
-    private void compileMissingNames(List<ConcatenatedName> list) {
-        _missingNames = "";
-        // loop through all names in the list
-        for(ConcatenatedName name : list) {
-            String missing = name.getMissingNames();
-
-            // if some names are missing, update the _missingNames field
-            if (!missing.isEmpty()) {
-                _missingNames += missing +"\n";
-            }
-        }
     }
 
     /**

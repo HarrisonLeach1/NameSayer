@@ -3,6 +3,7 @@ package app.controllers;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressIndicator;
+import javafx.stage.Stage;
 
 /**
  * A LoadingController holds the responsibility of receiving input events
@@ -14,6 +15,8 @@ public class LoadingController {
 
     @FXML private ProgressIndicator _loadIndicator;
 
+    private Task _loadTask;
+
     /**
      * Given a task, this method animates the progress indicator to indicate to
      * the user that the task is occurring. When the task is finished the
@@ -22,12 +25,21 @@ public class LoadingController {
      * @param loadTask
      */
     public void showTaskLoading(Task loadTask) {
+        _loadTask = loadTask;
 
         // bind task progress to indeterminate progress indicator
         _loadIndicator.progressProperty().bind(loadTask.progressProperty());
 
         // execute the task on a new thread
         new Thread(loadTask).start();
+    }
+
+    public void cancelLoading() {
+        _loadTask.cancel();
+
+        Stage window = (Stage)_loadIndicator.getScene().getWindow();
+        window.close();
+
     }
 
 }
