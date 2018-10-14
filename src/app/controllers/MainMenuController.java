@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static app.model.DataModel.USER_DATABASE;
-
 /**
  * A MainMenuController holds the responsibility of receiving input events
  * from the user at the main menu and then translating them into actions on the
@@ -206,12 +204,34 @@ public class MainMenuController implements Initializable, DataModelListener {
         // create a load worker for loading in the names in the file
         Task<List<ConcatenatedName>> loadWorker = loadFileWorker();
 
-        // when finished update the list view
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/LoadingScene.fxml"));
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // pass the task to be loaded to the controller
+        LoadingController controller = loader.getController();
+        controller.showTaskLoading(loadWorker);
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = new Stage();
+
+        // when finished update the list view and close the loader
         loadWorker.setOnSucceeded(e -> {
             _playList.getItems().addAll(loadWorker.getValue());
+            window.close();
         });
 
-        new Thread(loadWorker).start();
+        // open save scene
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
     }
 
     /**
@@ -532,9 +552,6 @@ public class MainMenuController implements Initializable, DataModelListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void savePlaylistPressed(ActionEvent actionEvent) {
     }
 }
 
