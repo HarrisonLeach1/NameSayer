@@ -8,13 +8,14 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ErrorSceneController">
+<AnchorPane prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ConfirmSceneController">
    <children>
       <HBox alignment="CENTER" layoutY="65.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
          <children>
             <VBox alignment="CENTER" prefWidth="354.0" spacing="10.0">
                <children>
-                  <Label fx:id="_errorMessage" alignment="CENTER" contentDisplay="CENTER" textFill="WHITE" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="299.0" text="WARNING: Do you want to continue?" textFill="WHITE" />
+                  <Label fx:id="_confirmMessage" alignment="CENTER" contentDisplay="CENTER" textFill="WHITE" />
                   <Label textFill="WHITE" />
                </children>
                <opaqueInsets>

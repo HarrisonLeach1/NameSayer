@@ -103,7 +103,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         // when finished update the list view
         loadWorker.setOnSucceeded(e -> {
             if(!_missingNames.isEmpty()) {
-                loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
+                loadConfirmMessage("Could not find the following name(s): \n\n" + _missingNames);
             } else {
                 moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
             }
@@ -503,6 +503,34 @@ public class MainMenuController implements Initializable, DataModelListener {
 
         // pass selected items to the next controller
         ErrorSceneController controller = loader.getController();
+        controller.setMessage(message);
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = new Stage();
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
+    }
+
+    /**
+     * Given a message, displays an confirm action pop-up to the user displaying the
+     * message to the user and asking if they want to continue with their actions.
+     * @param message
+     */
+    private void loadConfirmMessage(String message) {
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/ConfirmScene.fxml"));
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // pass selected items to the next controller
+        ConfirmSceneController controller = loader.getController();
         controller.setMessage(message);
 
         // switch scenes
