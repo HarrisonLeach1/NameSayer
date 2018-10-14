@@ -169,7 +169,7 @@ public class PlaySceneController implements DataModelListener {
      */
     public void compareButtonPressed() throws IOException {
         _playing = compareWorker();
-        _playBar.progressProperty().bind(this._playing.progressProperty());
+        _playBar.progressProperty().bind(_playing.progressProperty());
 
         _playing.setOnSucceeded( e -> {
             if (_firstComparison) {
