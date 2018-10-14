@@ -2,7 +2,9 @@ package app.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.stage.Stage;
 
 /**
  * An ConfirmSceneController holds the responsibility of receiving input events
@@ -12,11 +14,30 @@ import javafx.scene.control.Label;
  */
 public class ConfirmSceneController {
     @FXML private Label _confirmMessage;
+    private boolean _saidYes = false;
 
+    /**
+     * Updates the user's decision to positive and closes the confirmation window.
+     * @param event
+     */
     public void yesButtonAction(ActionEvent event) {
+        _saidYes = true;
+
+        // close window
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.close();
     }
 
+    /**
+     * Updates the user's decision to negative and closes the confirmation window.
+     * @param event
+     */
     public void noButtonAction(ActionEvent event) {
+        _saidYes = false;
+
+        // close window
+        Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        window.close();
     }
 
     /**
@@ -26,5 +47,14 @@ public class ConfirmSceneController {
      */
     public void setMessage(String message) {
         _confirmMessage.setText(message);
+    }
+
+    /**
+     * Returns the users decision, indicates whether they pressed the yes, no, or
+     * neither button.
+     * @return
+     */
+    public boolean saidYes() {
+        return _saidYes;
     }
 }
