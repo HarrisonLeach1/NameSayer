@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="300.0" style="-fx-background-color: #474448;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ErrorSceneController">
+   <children>
+      <HBox alignment="CENTER" layoutY="65.0" prefWidth="200.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="65.0">
+         <children>
+            <VBox alignment="CENTER" prefWidth="354.0" spacing="10.0">
+               <children>
+                  <Label fx:id="_errorMessage" alignment="CENTER" contentDisplay="CENTER" textFill="WHITE" />
+                  <Label textFill="WHITE" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" top="10.0" />
+         </padding>
+      </HBox>
+      <ImageView fitHeight="49.0" fitWidth="57.0" layoutX="122.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="39.0" fitWidth="41.0" layoutX="130.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/warning.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="_yesButton" layoutX="89.0" layoutY="123.0" mnemonicParsing="false" onAction="#yesButtonAction" style="-fx-background-color: grey;" text="Yes" AnchorPane.bottomAnchor="12.0" />
+      <Button fx:id="_noButton" layoutX="170.0" layoutY="123.0" mnemonicParsing="false" onAction="#noButtonAction" style="-fx-background-color: grey;" text="No" AnchorPane.bottomAnchor="12.0" />
+   </children>
+</AnchorPane>
