@@ -118,7 +118,7 @@ public class DataModel implements IDataModel{
 	 * and are stored in their respective Name which is an encapsulated collection of versions.
 	 * Each Name as a value in the HashMap and are keyed by a string corresponding to their name.
 	 *
-	 * A HashMap was used to allow for time-efficient search and retrieval.
+	 * A HashMap is used to allow for time-efficient search and retrieval.
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
@@ -189,7 +189,7 @@ public class DataModel implements IDataModel{
 	public Task loadFileWorker(File playlistFile) {
 		return new Task() {
 			@Override
-			protected List<ConcatenatedName> call() throws Exception {
+			protected List<ConcatenatedName> call() throws FileNotFoundException {
 				Scanner input = new Scanner(playlistFile);
 				List<ConcatenatedName> nameList = new ArrayList<>();
 
@@ -197,12 +197,20 @@ public class DataModel implements IDataModel{
 				while (input.hasNextLine()) {
 					String inputString = input.nextLine();
 
-					ConcatenatedName concatenatedName = createConcatenatedName(inputString);
+					// if the concatenation of a name is interrupted ask for the cause
+					ConcatenatedName concatenatedName = null;
+					try {
+						concatenatedName = createConcatenatedName(inputString);
+					} catch (InterruptedException e) {
+						// if the exception was caused by the user cancelling, it is not an error
+						if(isCancelled()){
+							break;
+						}
+						// otherwise, the interruption was unexpected and the user should be notified
+						e.printStackTrace();
+					}
 
 					nameList.add(concatenatedName);
-					if(isCancelled()) {
-						break;
-					}
 				}
 				compileMissingNames(nameList);
 				return nameList;
@@ -230,10 +238,12 @@ public class DataModel implements IDataModel{
 
 	/**
 	 * Given an input string, returns a Concatenated Name object from the string.
+	 * Different names should be separated by a space or hyphen in the input string.
 	 * @param inputString
-	 * @return
+	 * @return a ConcatenatedName corresponding to the input string
+	 * @throws InterruptedException
 	 */
-	private ConcatenatedName createConcatenatedName(String inputString) {
+	private ConcatenatedName createConcatenatedName(String inputString) throws InterruptedException {
 		List<Name> notConcatenatedNames = new ArrayList<>();
 
 		// replace all hyphens with spaces
@@ -300,7 +310,7 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Deletes the temporary directory for storing modified audio files.
+	 * Deletes the temporary directory used for storing modified audio files.
 	 */
 	public void deleteTempDirectory() {
 		try {

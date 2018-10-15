@@ -34,12 +34,17 @@ public class LoadingController {
         new Thread(loadTask).start();
     }
 
+    /**
+     * Cancels the given task that is being loaded and closes this window.
+     * The termination of the task is executed gracefully via the Task cancel
+     * method.
+     */
     public void cancelLoading() {
         _loadTask.cancel();
 
+        // close window
         Stage window = (Stage)_loadIndicator.getScene().getWindow();
         window.close();
-
     }
 
 }
