@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Slider?>
@@ -18,9 +19,9 @@
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
-          <AnchorPane minHeight="70.0" prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
+          <AnchorPane minHeight="70.0" minWidth="0.0" prefHeight="94.0" prefWidth="160.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="297.0" text="Name Sayer Player" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="297.0" maxWidth="100.0" text="Name Sayer Player" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <font>
                         <Font name="Roboto Medium" size="15.0" />
                      </font>
@@ -28,12 +29,32 @@
                   <Label layoutX="849.0" layoutY="41.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" />
                   <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" />
                   <ProgressBar fx:id="_levelProgress" layoutX="939.0" layoutY="38.0" prefWidth="200.0" progress="0.0" />
+                  <ProgressBar fx:id="_micLevelProgress" layoutX="65.0" layoutY="41.0" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="65.0" />
+                  <ImageView fitHeight="60.0" fitWidth="60.0" layoutX="14.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0">
+                     <image>
+                        <Image url="@images/microphone-3404243_640.png" />
+                     </image>
+                  </ImageView>
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
                   <VBox alignment="CENTER" layoutY="228.0" prefHeight="206.0" prefWidth="750.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
+                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="play_btn1" alignment="CENTER" contentDisplay="CENTER" maxHeight="96.0" maxWidth="91.0" minHeight="45.0" minWidth="39.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="45.0" prefWidth="39.0" styleClass="sound" stylesheets="@style.css" textFill="WHITE">
+                                 <graphic>
+                                    <ImageView fitHeight="35.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@images/sound.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Slider fx:id="_volumeSlider" maxWidth="200.0" prefHeight="14.0" prefWidth="100.0" />
+                           </children>
+                        </HBox>
                         <HBox alignment="CENTER" prefHeight="93.0" prefWidth="748.0" spacing="45.0">
                            <children>
                               <Button fx:id="_prevBtn" mnemonicParsing="false" onAction="#previousButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Prev" textFill="WHITE">
@@ -45,19 +66,36 @@
                                     <Font name="System Bold" size="13.0" />
                                  </font>
                               </Button>
-                              <Button fx:id="play_btn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE">
-                                 <styleClass>
-                                    <String fx:value="circle" />
-                                    <String fx:value="play" />
-                                 </styleClass>
-                                 <graphic>
-                                    <ImageView fitHeight="55.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@images/play.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
+                              <AnchorPane prefHeight="71.0" prefWidth="34.0">
+                                 <children>
+                                    <Button fx:id="play_btn2" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <styleClass>
+                                          <String fx:value="circle" />
+                                          <String fx:value="play" />
+                                       </styleClass>
+                                       <graphic>
+                                          <ImageView fitHeight="55.0" fitWidth="66.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/play.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button fx:id="_stoB" alignment="CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" onAction="#stopButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <styleClass>
+                                          <String fx:value="circle" />
+                                          <String fx:value="play" />
+                                       </styleClass>
+                                       <graphic>
+                                          <ImageView fitHeight="49.0" fitWidth="49.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/stop.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                 </children>
+                              </AnchorPane>
                               <Button fx:id="_nextBtn" mnemonicParsing="false" onAction="#nextButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" text="Next" textFill="WHITE">
                                  <styleClass>
                                     <String fx:value="circle" />
@@ -107,6 +145,7 @@
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
+                              <ComboBox prefHeight="25.0" prefWidth="18.0" />
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                                  <children>
                                     <Button fx:id="_keepBtn" disable="true" mnemonicParsing="false" onAction="#keepButtonPressed" prefWidth="90.0" style="-fx-background-color: #283044;" text="Keep" textFill="WHITE">
@@ -133,13 +172,12 @@
                         <Font size="40.0" />
                      </font>
                   </Label>
-                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutX="-14.0" layoutY="107.0" prefHeight="100.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="210.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutY="375.0" prefHeight="100.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="220.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <font>
                         <Font size="20.0" />
                      </font>
                   </Label>
-                  <ProgressBar fx:id="_playBar" layoutX="413.0" layoutY="453.0" prefHeight="18.0" prefWidth="286.0" progress="0.0" AnchorPane.bottomAnchor="220.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="420.0" />
-                  <Slider fx:id="_volumeSlider" layoutX="529.0" layoutY="360.0" AnchorPane.bottomAnchor="321.0" AnchorPane.leftAnchor="529.0" AnchorPane.rightAnchor="529.0" />
+                  <ProgressBar fx:id="_playBar" layoutX="413.0" layoutY="453.0" minWidth="100.0" prefHeight="18.0" progress="0.0" AnchorPane.bottomAnchor="220.0" AnchorPane.leftAnchor="420.0" AnchorPane.rightAnchor="420.0" />
                   <Button fx:id="return_btn" layoutX="648.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleReturnAction" stylesheets="@style.css" text="Return to Menu" textFill="WHITE" AnchorPane.rightAnchor="0.0">
                      <styleClass>
                         <String fx:value="menu-test_mic" />

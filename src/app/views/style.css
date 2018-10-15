@@ -65,6 +65,14 @@
     -fx-padding: 10 15 13 15;
     -fx-background-insets: 1 0 0 0,1 0 1 0, 1 0 2 0, 1 0 2 0;
  }
+.sound{
+     -fx-background-radius: 10em;
+     -fx-min-width: 30px;
+     -fx-min-height: 30px;
+     -fx-max-width: 30px;
+     -fx-max-height: 30px;
+     -fx-background-color: #6E6970;
+}
 .play{
     -fx-background-color:forestgreen;
 }

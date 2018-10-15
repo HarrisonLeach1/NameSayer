@@ -15,6 +15,8 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import javax.sound.sampled.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -27,12 +29,12 @@ import java.util.ResourceBundle;
  * The IPractiseListModel then passes information back to the PlaySceneController
  * to update the view.
  */
-public class PlaySceneController implements DataModelListener {
+public class PlaySceneController implements DataModelListener, Initializable{
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter;
     @FXML private Slider _volumeSlider;
-    @FXML private ProgressBar _levelProgress;
+    @FXML private ProgressBar _levelProgress, _micLevelProgress;
     @FXML private ProgressBar _playBar;
     private Task _playing;
 
@@ -40,6 +42,74 @@ public class PlaySceneController implements DataModelListener {
     private Practisable _currentName;
     private boolean _firstComparison;
 
+    Task test = new Task() {
+        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
+        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+        TargetDataLine targetLine;
+        {
+            try {
+                targetLine = (TargetDataLine) AudioSystem.getLine(info);
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        protected Object call() {
+            try {
+                //Microphone
+                targetLine.open();
+                targetLine.start();
+
+                byte[] data = new byte[targetLine.getBufferSize() / 5];
+
+                while (true) {
+                    targetLine.read(data, 0, data.length);
+                    int level = calculateRMSLevel(data);
+                    updateProgress(level,100);
+                }
+            } catch (LineUnavailableException lue) {
+                lue.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void cancelled() {
+            targetLine.stop();
+            targetLine.close();
+            super.cancelled();
+        }
+
+
+        @Override
+        protected void updateProgress(double workDone, double max) {
+            super.updateProgress(workDone, max);
+        }
+    };
+    /**
+     * Calculates the microphone input and turns it into an integer
+     */
+    public static int calculateRMSLevel(byte[] audioData) {
+        long lSum = 0;
+        for (int i = 0; i < audioData.length; i++)
+            lSum = lSum + audioData[i];
+
+        double dAvg = lSum / audioData.length;
+        double sumMeanSquare = 0d;
+
+        for (int j = 0; j < audioData.length; j++)
+            sumMeanSquare += Math.pow(audioData[j] - dAvg, 2d);
+
+        double averageMeanSquare = sumMeanSquare / audioData.length;
+
+        return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        new Thread(test).start();
+        _micLevelProgress.progressProperty().bind(test.progressProperty());
+    }
     /**
      * Loads in the practise list model that stores the list of selected names from
      * the main menu to be practised.
@@ -153,14 +223,15 @@ public class PlaySceneController implements DataModelListener {
      */
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
+        test.cancel();
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
         DataModel.getInstance().deleteTempDirectory();
 
         // switch scenes
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
+        Stage window2 = (Stage)((Node)event.getSource()).getScene().getWindow();
+        window2.setScene(playerScene);
     }
 
     /**
