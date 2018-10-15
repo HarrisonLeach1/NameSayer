@@ -69,6 +69,7 @@ public class TestSceneController {
             super.updateProgress(workDone, max);
         }
     };
+
     /**
      * Calculates the microphone input and turns it into an integer
      */
