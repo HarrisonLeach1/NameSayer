@@ -26,7 +26,7 @@ public class ErrorSceneController {
 
     /**
      * Given a message string, when the error window is loaded in it will display
-     * this message string.
+     * this message to the user informing them of the error they have made.
      * @param message
      */
     public void setMessage(String message) {

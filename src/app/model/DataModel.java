@@ -1,5 +1,6 @@
 package app.model;
 
+import javafx.concurrent.Task;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
 
@@ -25,6 +26,7 @@ public class DataModel implements IDataModel{
 	private List<DataModelListener> _listeners;
 	private User _user;
 	private List<String> _nameStrings;
+	private String _missingNames;
 
 	private DataModel() {
 		_user = new User();
@@ -116,7 +118,7 @@ public class DataModel implements IDataModel{
 	 * and are stored in their respective Name which is an encapsulated collection of versions.
 	 * Each Name as a value in the HashMap and are keyed by a string corresponding to their name.
 	 *
-	 * A HashMap was used to allow for time-efficient search and retrieval.
+	 * A HashMap is used to allow for time-efficient search and retrieval.
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
@@ -163,44 +165,92 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Given a single name string, returns a list of list of concatenated names containing
-	 * this name.
+	 * Given a single name string, returns a task which returns a list of concatenated names
+	 * containing this name. The loadSingleNameWorker executes the loading of the name on
+	 * a background thread to avoid GUI unresponsiveness.
 	 * @param name
 	 * @return
 	 */
-	public List<ConcatenatedName> loadSingleNameToList(String name) {
-		return new ArrayList<>(Arrays.asList(createConcatenatedName(name)));
+	public Task loadSingleNameWorker(String name) {
+		return new Task() {
+			@Override
+			protected List<ConcatenatedName> call() throws Exception {
+				// load name through data model
+				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(createConcatenatedName(name)));
+
+				// compile missing names into a string to display to the user if needed
+				compileMissingNames(list);
+				return list;
+			}
+		};
 	}
 
 	/**
-	 * Given a file, returns a list of ConcatenatedName objects in which each line of the
-	 * file is converted to a ConcatenatedName object in the list.
+	 * Given a file, returns a task which returns a list of ConcatenatedName objects where
+	 * each line of the file is converted to a ConcatenatedName object in the list.
+	 * The loadFileWorker executes the parsing of the playlist file on a background thread
+	 * to avoid GUI unresponsiveness.
 	 * @param playlistFile
 	 * @return
-	 * @throws FileNotFoundException
 	 */
-	public List<ConcatenatedName> loadFileToList(File playlistFile) throws FileNotFoundException {
-		Scanner input = new Scanner(playlistFile);
-		List<ConcatenatedName> nameList = new ArrayList<>();
+	public Task loadFileWorker(File playlistFile) {
+		return new Task() {
+			@Override
+			protected List<ConcatenatedName> call() throws FileNotFoundException {
+				Scanner input = new Scanner(playlistFile);
+				List<ConcatenatedName> nameList = new ArrayList<>();
 
-		// load in each line of the text file, and use each string to create a new Name object
-		while (input.hasNextLine()) {
-			String inputString = input.nextLine();
+				// load in each line of the text file, and use each string to create a new Name object
+				while (input.hasNextLine()) {
+					String inputString = input.nextLine();
 
-			ConcatenatedName concatenatedName = createConcatenatedName(inputString);
+					// if the concatenation of a name is interrupted ask for the cause
+					ConcatenatedName concatenatedName = null;
+					try {
+						concatenatedName = createConcatenatedName(inputString);
+					} catch (InterruptedException e) {
+						// if the exception was caused by the user cancelling, it is not an error
+						if(isCancelled()){
+							break;
+						}
+						// otherwise, the interruption was unexpected and the user should be notified
+						e.printStackTrace();
+					}
 
-			nameList.add(concatenatedName);
+					nameList.add(concatenatedName);
+				}
+				compileMissingNames(nameList);
+				return nameList;
+			}
+		};
+	}
+
+	/**
+	 * Updates the _missingNames field to store the names of the given list which are
+	 * not contained within the database.
+	 * @param list
+	 */
+	private void compileMissingNames(List<ConcatenatedName> list) {
+		_missingNames = "";
+		// loop through all names in the list
+		for(ConcatenatedName name : list) {
+			String missing = name.getMissingNames();
+
+			// if some names are missing, update the _missingNames field
+			if (!missing.isEmpty()) {
+				_missingNames += missing +"\n";
+			}
 		}
-
-		return nameList;
 	}
 
 	/**
 	 * Given an input string, returns a Concatenated Name object from the string.
+	 * Different names should be separated by a space or hyphen in the input string.
 	 * @param inputString
-	 * @return
+	 * @return a ConcatenatedName corresponding to the input string
+	 * @throws InterruptedException
 	 */
-	private ConcatenatedName createConcatenatedName(String inputString) {
+	private ConcatenatedName createConcatenatedName(String inputString) throws InterruptedException {
 		List<Name> notConcatenatedNames = new ArrayList<>();
 
 		// replace all hyphens with spaces
@@ -308,5 +358,9 @@ public class DataModel implements IDataModel{
 
 	public List<String> getNameStrings() {
 		return _nameStrings;
+	}
+
+	public String getMissingNames() {
+		return _missingNames;
 	}
 }
