@@ -47,6 +47,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter;
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
+    private ConfirmSceneController _confirmationController;
     private String _missingNames = "";
 
     /**
@@ -87,7 +88,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     /**
      * When the find and play button is pressed the searched name is retrieved
      * and the user is moved to the play scene. If searched name does not exist
-     * the user is notified.
+     * the user is asked if they want to continue with the missing names.
      * @param event
      * @throws IOException
      */
@@ -98,12 +99,14 @@ public class MainMenuController implements Initializable, DataModelListener {
         }
         Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
 
-        // when finished update the list view
         loadWorker.setOnSucceeded(e -> {
-            if(!_missingNames.isEmpty()) {
+            if(!_missingNames.isEmpty()) { // if the name contains missing get user confirmation
                 _missingNames = DataModel.getInstance().getMissingNames();
-                loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
-            } else {
+                loadConfirmMessage("Could not find the following name(s): \n\n" + _missingNames);
+                if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+                    moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
+                }
+            } else { // otherwise, move on without asking
                 moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
             }
         });
@@ -156,8 +159,9 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
-     * If a valid playlist has been loaded in by the user, moves to the play scene
-     * to practise the playlist. Otherwise, the user is notified of the error
+     * If a fully valid playlist has been loaded in by the user, moves to the play scene
+     * to practise the playlist. Otherwise, the user is asked if they want to continue
+     * with the playlist that contains missing names.
      * @param event
      * @throws IOException
      */
@@ -167,9 +171,12 @@ public class MainMenuController implements Initializable, DataModelListener {
             return;
         }
 
-        // check if there are any missing names. If so, display error to the user.
+        // check if there are any missing names. If so, ask the user if they want to continue.
         if (!_missingNames.isEmpty()){
-            loadErrorMessage("ERROR: Playlist contains missing name(s) \n\n" + _missingNames);
+            loadConfirmMessage("Could not find the following name(s): \n\n" + _missingNames);
+            if(_confirmationController.saidYes()) { // If their decision is yes, move to the play scene
+                moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
+            }
         } else { // otherwise, allow user to practise.
             moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
         }
@@ -476,6 +483,34 @@ public class MainMenuController implements Initializable, DataModelListener {
         // pass selected items to the next controller
         ErrorSceneController controller = loader.getController();
         controller.setMessage(message);
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = new Stage();
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
+    }
+
+    /**
+     * Given a message, displays an confirm action pop-up to the user displaying the
+     * message to the user and asking if they want to continue with their actions.
+     * @param message
+     */
+    private void loadConfirmMessage(String message) {
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/ConfirmScene.fxml"));
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // pass selected items to the next controller
+        _confirmationController = loader.getController();
+        _confirmationController.setMessage(message);
 
         // switch scenes
         Scene playerScene = new Scene(playerParent);
