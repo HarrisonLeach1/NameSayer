@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="202.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LoadingController">
+   <children>
+      <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Loading" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="350.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <ProgressIndicator fx:id="_loadIndicator" layoutX="126.0" layoutY="14.0" prefHeight="82.0" prefWidth="99.0" progress="0.0" />
+            <Button defaultButton="true" layoutX="141.0" layoutY="113.0" mnemonicParsing="false" onAction="#cancelLoading" prefWidth="70.0" text="Cancel" textFill="WHITE">
+               <effect>
+                  <DropShadow color="#ffffff00" />
+               </effect>
+               <styleClass>
+                  <String fx:value="menu-test_mic" />
+                  <String fx:value="menu" />
+               </styleClass>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
