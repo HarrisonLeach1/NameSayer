@@ -29,7 +29,7 @@ import java.util.ResourceBundle;
  */
 public class PlaySceneController implements DataModelListener {
 
-    private static final String MISSING_MSG = "Record yourself to contribute this name! \nMissing audio: \n";
+    private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
     @FXML private Slider _volumeSlider;
