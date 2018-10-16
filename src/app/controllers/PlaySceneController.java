@@ -42,12 +42,13 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
     private boolean _firstComparison;
-    private Task test;
+    private MicTestTask _micTest;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        new Thread(test).start();
-        _micLevelProgress.progressProperty().bind(test.progressProperty());
+        _micTest = new MicTestTask();
+        new Thread(_micTest).start();
+        _micLevelProgress.progressProperty().bind(_micTest.progressProperty());
     }
     /**
      * Loads in the practise list model that stores the list of selected names from
@@ -163,7 +164,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      */
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
-        test.cancel();
+        _micTest.cancel();
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
