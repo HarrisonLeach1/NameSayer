@@ -20,11 +20,11 @@ import java.util.Scanner;
  *  it can be efficiently played, rated and displayed to the user.
  */
 public class NameVersion {
-    private String _shortName, _displayName, _fileName, _dateCreated, _timeCreated;
+    private String _shortName, _displayName, _filePath, _dateCreated, _timeCreated;
     private boolean _isBadQuality;
 
-    public NameVersion(String fileName) {
-        _fileName = fileName;
+    public NameVersion(String filePath) {
+        _filePath = filePath;
         parseShortName();
         parseVersionName();
         _isBadQuality = findQuality();
@@ -39,16 +39,20 @@ public class NameVersion {
      */
     private void parseVersionName() {
         try {
-            String[] parts = _fileName.split("_");
+            // get file name without the database folder
+            String fileName = _filePath.substring(_filePath.indexOf("/"));
+
+            // get date and time strings
+            String[] parts = fileName.split("_");
             String originalDate = parts[1] + "_" + parts[2];
 
+            // parse into date object
             DateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
-
             Date date = originalFormat.parse(originalDate);
 
+            // get more displayable format
             DateFormat newDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
             DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a");
-
             _dateCreated = newDateFormat.format(date);
             _timeCreated = newTimeFormat.format(date);
 
@@ -63,14 +67,16 @@ public class NameVersion {
      * Retrieves just the name of the recording excluding the creation date, time and file extension.
      */
     private void parseShortName() {
+        String fileName = _filePath.substring(_filePath.indexOf("/"));
+
         // find the index of the third underscore (the start of the name)
-        int startIndex = _fileName.indexOf("_", _fileName.indexOf("_", _fileName.indexOf("_") + 1) + 1);
+        int startIndex = fileName.indexOf("_", fileName.indexOf("_", fileName.indexOf("_") + 1) + 1);
 
         // find the index of the dot extension (the end of the name)
-        int lastIndex = _fileName.lastIndexOf(".");
+        int lastIndex = fileName.lastIndexOf(".");
 
         // parse the name and replace underscores with spaces
-        String nameString = _fileName.substring(startIndex + 1, lastIndex).replaceAll("_", " ");
+        String nameString = fileName.substring(startIndex + 1, lastIndex).replaceAll("_", " ");
 
         // capitalise the name
         _shortName = capitalise(nameString);
@@ -78,7 +84,7 @@ public class NameVersion {
 
     public void playRecording(double volume) {
         try {
-            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _fileName + " -autoexit -nodisp";
+            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _filePath + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             Process process = builder.start();
@@ -99,7 +105,7 @@ public class NameVersion {
         FileWriter fw = new FileWriter("bad.txt", true); //the true will append the new data
 
         if (!_isBadQuality) { // if it is not already bad quality, mark as bad quality
-            fw.write(_fileName + "\r\n");
+            fw.write(_filePath + "\r\n");
             _isBadQuality = true;
         }
         fw.close();
@@ -125,7 +131,7 @@ public class NameVersion {
         // loop through all lines of the file until the version is found, otherwise it is not bad
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if(line.equals(_fileName)) {
+            if(line.equals(_filePath)) {
                 return true;
             }
         }
@@ -150,8 +156,8 @@ public class NameVersion {
         return _shortName;
     }
 
-    public String getFileName() {
-        return _fileName;
+    public String getFilePath() {
+        return _filePath;
     }
 
     public String getDateCreated() {

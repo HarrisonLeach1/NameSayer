@@ -108,7 +108,7 @@ public class ConcatenatedName implements Practisable {
             try {
                 // 1:0 -50dB indicates that anything below -50dB is cut off from the start
                 // 1:% -50dB indicates that anything below -70dB is cut off from the end
-                String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFileName() +
+                String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFilePath() +
                         " -af silenceremove=1:0:-50dB:1:5:-70dB " + TEMP_FOLDER + name.toString() + EXTENSION;
                 System.out.println(cmd);
 
