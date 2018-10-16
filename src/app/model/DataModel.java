@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -140,8 +141,15 @@ public class DataModel implements IDataModel{
 				// if the folder has spaces they must be replaced "\ " to be interpreted by a bash process
 				String fileName = databaseFolder.getName().replaceAll(" ","\\\\ ") + "/" + file.getName();
 
-				// create a name version object for the recording file
-				NameVersion nameVersion = new NameVersion(fileName);
+				// try create a name version object for the file, if the following exceptions are thrown
+				// then the file is not a valid practise recording file. i.e. incorrect file name format
+				NameVersion nameVersion = null;
+				try {
+					nameVersion = new NameVersion(fileName);
+				} catch (ParseException | IndexOutOfBoundsException e) {
+					// if an exception has been thrown then the file is invalid, do not create a NameVersion for it
+					continue;
+				}
 
 				// update the list of all names
 				_nameStrings.add(nameVersion.getShortName());
