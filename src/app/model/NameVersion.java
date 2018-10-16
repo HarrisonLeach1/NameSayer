@@ -22,6 +22,7 @@ import java.util.Scanner;
 public class NameVersion {
     private String _shortName, _displayName, _fileName, _dateCreated, _timeCreated;
     private boolean _isBadQuality;
+    private Process _playingProcess;
 
     public NameVersion(String fileName) {
         _fileName = fileName;
@@ -76,17 +77,35 @@ public class NameVersion {
         _shortName = capitalise(nameString);
     }
 
-    public void playRecording(double volume) {
+    /**
+     * Creates a new bash process which plays the audio file associated with this NameVersion object
+     * at the given volume. Note that this method is a blocking call and as such should be executed on a
+     * new thread.
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
+     *               audio is amplified by double, etc.
+     * @throws InterruptedException
+     */
+    public void playRecording(double volume) throws InterruptedException {
         try {
             String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _fileName + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            Process process = builder.start();
+            _playingProcess = builder.start();
 
-            process.waitFor();
+            _playingProcess.waitFor();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Ends the bash process which is playing the audio file of this NameVersion object. This will
+     * cause an InterruptedException to be thrown by the playRecording method during execution.
+     */
+    public void stopRecording() {
+        if(_playingProcess != null) {
+            _playingProcess.destroy();
         }
     }
 

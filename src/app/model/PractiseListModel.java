@@ -11,7 +11,8 @@ public class PractiseListModel implements IPractiseListModel{
     private NameVersion _currentUserCreatedName;
     private int _currentIndex;
     private boolean _keepRecording;
-    private Task compareWorker;
+    private Task _currentPlayTask;
+    private Practisable _currentPlayingName;
 
     public PractiseListModel(ArrayList<Practisable> practiseList) {
         _practiseList = practiseList;
@@ -36,13 +37,74 @@ public class PractiseListModel implements IPractiseListModel{
     }
 
     /**
-     * Compares the users production of a name to the database name.
+     * Returns a task that when executed plays the audio of the current database
+     * recording.
+     *
+     * It is returned as a Task so that it can be executed on a new
+     * thread. The Task should not be cancelled by the user as it will cancel the
+     * thread but not the audio process.
+     *
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification,
+     *               2.0 mans the original audio is amplified by double, etc.
+     * @return
      */
-    public void compareUserRecording(double volume) {
-        if (_currentUserCreatedName == null) { return; }
-        _currentUserCreatedName.playRecording(volume);
-        // play database recording
-        _practiseList.get(_currentIndex).playRecording(volume);
+    public Task playTask(double volume) {
+        _currentPlayTask = new Task() {
+
+            @Override
+            protected Object call() {
+                _currentPlayingName = _practiseList.get(_currentIndex);
+                // play database recording
+                try {
+                    _currentPlayingName.playRecording(volume);
+                } catch (InterruptedException e) {
+
+                    // if the interruption was not from a cancellation call, notify user of error
+                    if(!isCancelled()) {
+                        e.printStackTrace();
+                    }
+                }
+                return true;
+            }
+        };
+
+        return _currentPlayTask;
+
+    }
+
+    /**
+     * Returns a task that when executed plays the audio of the current user created
+     * production, immediately followed by the database recording. It is returned as
+     * a task so that it can be executed on a new thread.
+     * @param volume
+     * @return a Task that plays audio of the user recording then the database recording
+     */
+    public Task compareUserRecordingTask(double volume) {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                _currentPlayingName = _practiseList.get(_currentIndex);
+                // play user recording
+                _currentUserCreatedName.playRecording(volume);
+                // play database recording
+                _currentPlayingName.playRecording(volume);
+                return true;
+            }
+        };
+    }
+
+    /**
+     * This stops the most recently returned recording task from playing audio.
+     *
+     * This method should be used to end the playTask because the implementation
+     * cancels both the task and the play process.
+     */
+    public void stopPlayTask() {
+        if(_currentPlayTask != null && !_currentPlayTask.isCancelled()) {
+            _currentPlayTask.cancel();
+            _currentPlayingName.stopRecording();
+        }
     }
 
     /**
@@ -79,6 +141,7 @@ public class PractiseListModel implements IPractiseListModel{
     public void cancelRecording(){
         _currentUserRecording.cancelRecording();
         _currentUserRecording.deleteRecording();
+        _currentUserRecording = null;
     }
 
     /**
@@ -120,6 +183,15 @@ public class PractiseListModel implements IPractiseListModel{
         }
         _currentUserRecording = null;
         _keepRecording = false;
+    }
+
+    /**
+     * Returns whether or not the current user recording created is not equal to null.
+     * @return true if there is no Recording object for this current name.
+     * Otherwise, false.
+     */
+    public boolean userHasRecorded() {
+        return _currentUserRecording != null;
     }
 
 }
