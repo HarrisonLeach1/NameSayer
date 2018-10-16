@@ -29,6 +29,76 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.MainMenuController">
    <children>
+      <AnchorPane fx:id="_startPane" layoutX="10.0" layoutY="10.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #474448;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <SplitPane dividerPositions="0.2" layoutX="213.0" layoutY="139.0" orientation="VERTICAL" prefHeight="419.0" prefWidth="371.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                     <children>
+                        <HBox alignment="CENTER" layoutX="417.0" layoutY="46.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #474448;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label styleClass="l" text="Welcome to Name Sayer" textFill="WHITE">
+                                 <font>
+                                    <Font size="35.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #6E6970;">
+                     <children>
+                        <VBox alignment="CENTER" layoutX="14.0" prefHeight="200.0" prefWidth="100.0" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#handleStartUpAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: limegreen; -fx-border-width: 5;" text="Start">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <styleClass>
+                                    <String fx:value="menu-test_mic" />
+                                    <String fx:value="menu" />
+                                 </styleClass>
+                              </Button>
+                              <Button mnemonicParsing="false" onAction="#handleSelectDatabaseAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: limegreen; -fx-border-width: 5;" text="Select Database">
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                                 <styleClass>
+                                    <String fx:value="menu-test_mic" />
+                                    <String fx:value="menu" />
+                                 </styleClass>
+                              </Button>
+                              <Label text="Selected Database:" textFill="WHITE" />
+                              <Label fx:id="_databaseLabel" text="names" textFill="WHITE" />
+                              <Label text="Valid Names:" textFill="WHITE" />
+                              <Label fx:id="_nameCountLabel" text="0" textFill="WHITE" />
+                              <Button mnemonicParsing="false" onAction="#handleQuitAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: tomato; -fx-border-width: 5;" text="Quit">
+                                 <styleClass>
+                                    <String fx:value="menu" />
+                                    <String fx:value="menu-test_mic" />
+                                 </styleClass>
+                                 <font>
+                                    <Font name="System Bold" size="20.0" />
+                                 </font>
+                              </Button>
+                              <Label />
+                           </children>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+              </items>
+            </SplitPane>
+         </children>
+      </AnchorPane>
       <SplitPane fx:id="_mainPane" dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane prefHeight="94.0" prefWidth="446.0" style="-fx-background-color: #474448;" SplitPane.resizableWithParent="false">
@@ -290,6 +360,7 @@
                               <String fx:value="menu" />
                            </styleClass>
                         </Button>
+                        <Button id="remove" layoutX="255.0" layoutY="653.0" mnemonicParsing="false" onAction="#removeFromPlaylist" prefHeight="27.0" prefWidth="160.0" style="-fx-border-color: white;" styleClass="bad" text="Remove Selected " textFill="WHITE" />
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -299,75 +370,5 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <AnchorPane fx:id="_startPane" layoutX="10.0" layoutY="10.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #474448;" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <SplitPane dividerPositions="0.2" layoutX="213.0" layoutY="139.0" orientation="VERTICAL" prefHeight="419.0" prefWidth="371.0" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <items>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                     <children>
-                        <HBox alignment="CENTER" layoutX="417.0" layoutY="46.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #474448;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <Label styleClass="l" text="Welcome to Name Sayer" textFill="WHITE">
-                                 <font>
-                                    <Font size="35.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </HBox>
-                     </children>
-                  </AnchorPane>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" style="-fx-background-color: #6E6970;">
-                     <children>
-                        <VBox alignment="CENTER" layoutX="14.0" prefHeight="200.0" prefWidth="100.0" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="-14.0" AnchorPane.topAnchor="0.0">
-                           <children>
-                              <Button mnemonicParsing="false" onAction="#handleStartUpAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: limegreen; -fx-border-width: 5;" text="Start">
-                                 <font>
-                                    <Font name="System Bold" size="20.0" />
-                                 </font>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <styleClass>
-                                    <String fx:value="menu-test_mic" />
-                                    <String fx:value="menu" />
-                                 </styleClass>
-                              </Button>
-                              <Button mnemonicParsing="false" onAction="#handleSelectDatabaseAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: limegreen; -fx-border-width: 5;" text="Select Database">
-                                 <font>
-                                    <Font name="System Bold" size="20.0" />
-                                 </font>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                                 <styleClass>
-                                    <String fx:value="menu-test_mic" />
-                                    <String fx:value="menu" />
-                                 </styleClass>
-                              </Button>
-                              <Label text="Selected Database:" textFill="WHITE" />
-                              <Label fx:id="_databaseLabel" text="names" textFill="WHITE" />
-                              <Label text="Valid Names:" textFill="WHITE" />
-                              <Label fx:id="_nameCountLabel" text="0" textFill="WHITE" />
-                              <Button mnemonicParsing="false" onAction="#handleQuitAction" prefHeight="100.0" prefWidth="405.0" style="-fx-border-color: tomato; -fx-border-width: 5;" text="Quit">
-                                 <styleClass>
-                                    <String fx:value="menu" />
-                                    <String fx:value="menu-test_mic" />
-                                 </styleClass>
-                                 <font>
-                                    <Font name="System Bold" size="20.0" />
-                                 </font>
-                              </Button>
-                              <Label />
-                           </children>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-              </items>
-            </SplitPane>
-         </children>
-      </AnchorPane>
    </children>
 </AnchorPane>
