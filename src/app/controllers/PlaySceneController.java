@@ -36,7 +36,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
-    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
+    @FXML private Label _displayName, _badLabel, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
     @FXML private Slider _volumeSlider;
     @FXML private ProgressBar _levelProgress, _micLevelProgress;
     @FXML private ProgressBar _playBar;
@@ -144,7 +144,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void nextButtonPressed() {
         _currentName = _practiseListModel.nextName();
         makeTransition();
-        stopProgress();
     }
 
     /**
@@ -154,7 +153,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void previousButtonPressed() {
         _currentName = _practiseListModel.previousName();
         makeTransition();
-        stopProgress();
     }
 
     /**
@@ -193,14 +191,13 @@ public class PlaySceneController implements DataModelListener, Initializable{
         window.initModality(Modality.APPLICATION_MODAL);
         window.showAndWait();
 
-        // enable buttons
-        _keepBtn.setDisable(false);
-        _compareBtn.setDisable(false);
+        updateUserComparisonButtons();
 
     }
 
     /**
      * Plays the currently displayed name when the user presses the play button.
+     * Executes the playing of the audio on a new thread to avoid GUI unresponsiveness.
      */
     public void playButtonPressed() {
         _playing = _practiseListModel.playTask(_volumeSlider.getValue());
@@ -208,7 +205,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
         _stopBtn.toFront();
 
         _playing.setOnSucceeded(e -> {
-            stopProgress();
+            endAudio();
         });
         new Thread(_playing).start();
 
@@ -219,8 +216,8 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * stop button.
      */
     public void stopButtonPressed() {
-        _playBtn.toFront();
         _practiseListModel.stopPlayTask();
+        endAudio();
     }
 
     /**
@@ -252,7 +249,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
                 openLevelScene();
                 _firstComparison = false;
             }
-            stopProgress();
+            endAudio();
         });
 
         new Thread(_playing).start();
@@ -264,7 +261,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      */
     public void badButtonPressed() throws IOException {
         _currentName.setBadQuality();
-        _bad_Label.setVisible(true);
+        _badLabel.setVisible(true);
     }
 
     /**
@@ -273,6 +270,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * the next level.
      * @param experience
      */
+    // TODO move calculations to user model
     @Override
     public void notifyProgress(int experience) {
         int currentLevelProgress = experience % 100;
@@ -306,30 +304,44 @@ public class PlaySceneController implements DataModelListener, Initializable{
 
     /**
      * Whenever the user moves to a new name the scene is reinitialised.
-     *
      */
     private void makeTransition() {
-        _savedLabel.setVisible(false);
-        _bad_Label.setVisible(false);
-        _playBtn.toFront();
-
+        updateUserComparisonButtons();
+        endAudio();
         updateMissingNames();
+        updateLabels();
+        updateRatingButton();
+        checkBounds();
 
-        // change displayed name
+        _practiseListModel.stopPlayTask();
+        // is set to true so that the user has the ability to gain experience again
+        _firstComparison = true;
+    }
+
+    /**
+     * Updates the Label to display which Name is currently being practised and updates
+     * its date/time information. Also removes the save and rating labels.
+     */
+    private void updateLabels() {
+        // change displayed name and its time of creation
         _displayName.setText("Name: " + _currentName.toString());
+        _dateTimeLabel.setText(_currentName.getDateTimeCreated());
 
+        _savedLabel.setVisible(false);
+        _badLabel.setVisible(false);
+    }
+
+    /**
+     * Updates the rating button depending on whether or not the current name being
+     * practised can be rated or not.
+     */
+    private void updateRatingButton() {
         // decides whether or not to give users the ability to rate the recording
         if (_currentName.isRateable()) {
             _badBtn.setDisable(false);
         } else {
             _badBtn.setDisable(true);
         }
-        _dateTimeLabel.setText(_currentName.getDateTimeCreated());
-
-        // is set to true so that the user has the ability to gain experience again
-        _firstComparison = true;
-
-        checkBounds();
     }
 
     /**
@@ -349,7 +361,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * the previous and/or next button.
      */
     private void checkBounds() {
-
         // if the user has reached the end of the list disable the next button, otherwise don't
         if (!_practiseListModel.hasNext()) {
             _nextBtn.setDisable(true);
@@ -363,18 +374,31 @@ public class PlaySceneController implements DataModelListener, Initializable{
         } else {
             _prevBtn.setDisable(false);
         }
-
-        _keepBtn.setDisable(true);
-        _compareBtn.setDisable(true);
     }
 
     /**
-     * The progress bar is disabled to indicate that no audio is playing.
+     * This method should be called when the playing of the name audio to the
+     * user has ended. Stops the progress bar, and brings the displays the play
+     * button again.
      */
-    private void stopProgress(){
+    private void endAudio(){
         _playBar.progressProperty().unbind();
         _playBar.setProgress(0);
         _playBtn.toFront();
+    }
+
+    /**
+     * Updates the compare and keep buttons depending on whether the user has
+     * made a recording that they can compare or keep.
+     */
+    private void updateUserComparisonButtons() {
+        if(_practiseListModel.userHasRecorded()) {
+            _compareBtn.setDisable(false);
+            _keepBtn.setDisable(false);
+        } else {
+            _compareBtn.setDisable(true);
+            _keepBtn.setDisable(true);
+        }
     }
 
 }

@@ -104,7 +104,9 @@ public class NameVersion {
      * cause an InterruptedException to be thrown by the playRecording method during execution.
      */
     public void stopRecording() {
-        _playingProcess.destroy();
+        if(_playingProcess != null) {
+            _playingProcess.destroy();
+        }
     }
 
     /**
