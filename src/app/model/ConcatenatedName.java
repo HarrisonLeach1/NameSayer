@@ -19,6 +19,7 @@ public class ConcatenatedName implements Practisable {
     private List<Name> _names;
     private String _stringOfPaths;
     private String _missingNames = "";
+    private Process _playingProcess;
 
     public ConcatenatedName(List<Name> names, String displayName) throws InterruptedException {
         _displayName = displayName;
@@ -32,10 +33,14 @@ public class ConcatenatedName implements Practisable {
     }
 
     /**
-     * Plays the recording via ffmpeg at the specified volume
-     * @param volume
+     * Creates a new bash process which plays the audio file associated with this ConcatenatedName object
+     * at the given volume. Note that this method is a blocking call and as such should be executed on a
+     * new thread.
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
+     *               audio is amplified by double, etc.
+     * @throws InterruptedException
      */
-    public void playRecording(double volume) {
+    public void playRecording(double volume) throws InterruptedException {
         // replace all spaces with underscores
         String file = TEMP_FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
         try {
@@ -43,13 +48,22 @@ public class ConcatenatedName implements Practisable {
             System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            Process process  = builder.start();
+            _playingProcess  = builder.start();
 
-            process.waitFor();
+            _playingProcess.waitFor();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Ends the bash process which is playing the audio file of this ConcatenatedName object.
+     * This will cause an InterruptedException to be thrown by the playRecording method
+     * during execution.
+     */
+    public void stopRecording() {
+        _playingProcess.destroy();
     }
 
     /**

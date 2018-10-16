@@ -1,5 +1,7 @@
 package app.model;
 
+import javafx.concurrent.Task;
+
 /**
  * An IPractiseListModel object represents the list of recordings that the
  * user has selected to practise from the database.
@@ -8,6 +10,33 @@ package app.model;
  * to practise their name Pronunciation.
  */
 public interface IPractiseListModel {
+    /**
+     * Returns the Practisable object that is next in the list of selected
+     * recordings to be practised.
+     */
+    Practisable nextName();
+
+    /**
+     * Returns the Practisable object that is previous in the list of selected
+     * recordings to be practised.
+     */
+    Practisable previousName();
+
+    /**
+     * Returns a task that when executed, allows the user to listen to the
+     * database recording.
+     *
+     * This method returns a task such that it can be executed on a new
+     * thread to avoid concurrency issues. The task cannot be cancelled using
+     * the Task cancel method as this task is a blocking call.
+     */
+    Task playTask(double volume);
+
+    /**
+     * Used to stop the currently playing audio from playing. This should
+     * be used instead of the playTask's cancel method.
+     */
+    void stopPlayTask();
 
     /**
      * Allows the user to create their own productions of a name.
@@ -21,10 +50,12 @@ public interface IPractiseListModel {
     void finishUserRecording();
 
     /**
-     * Allows the user to compare their production of a name to the
-     * original recording.
+     * Returns a task that when executed, allows the user to compare
+     * their production of a name to the original recording. This method
+     * returns a task such that it can be executed on a new thread to
+     * avoid concurrency issues.
      */
-    void compareUserRecording(double volume);
+    Task compareUserRecordingTask(double volume);
 
     /**
      * Allows the user to cancel while they are recording their own
@@ -37,18 +68,6 @@ public interface IPractiseListModel {
      * that they are able to access these saved past attempts of a name.
      */
     void keepRecording();
-
-    /**
-     * Returns the NameVersion object that is next in the list of selected
-     * recordings to be practised.
-     */
-    Practisable nextName();
-
-    /**
-     * Returns the NameVersion object that is previous in the list of selected
-     * recordings to be practised.
-     */
-    Practisable previousName();
 
     /**
      * Returns true if there exists a NameVersion object after the current NameVersion

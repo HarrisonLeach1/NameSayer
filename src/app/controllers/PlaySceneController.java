@@ -192,7 +192,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * Plays the currently displayed name when the user presses the play button.
      */
     public void playButtonPressed() {
-        _playing = playWorker();
+        _playing = _practiseListModel.playTask(_volumeSlider.getValue());
         _playBar.progressProperty().bind(_playing.progressProperty());
         _stopBtn.toFront();
 
@@ -204,20 +204,12 @@ public class PlaySceneController implements DataModelListener, Initializable{
     }
 
     /**
-     * Creates a new Task which allows the play funcitonality to be
-     * executed on a new thread.
+     * Stops the currently playing name from playing when the user presses the
+     * stop button.
      */
-    private Task playWorker() {
-        return new Task() {
-
-            @Override
-            protected Object call() throws Exception {
-                // play user recording
-                _currentName.playRecording(_volumeSlider.getValue());
-                return true;
-            }
-        };
-
+    public void stopButtonPressed() {
+        _playBtn.toFront();
+        _practiseListModel.stopPlayTask();
     }
 
     /**
@@ -241,7 +233,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * Allows the user to judge their pronunciation.
      */
     public void compareButtonPressed() throws IOException {
-        _playing = compareWorker();
+        _playing = _practiseListModel.compareUserRecordingTask(_volumeSlider.getValue());
         _playBar.progressProperty().bind(_playing.progressProperty());
 
         _playing.setOnSucceeded( e -> {
@@ -253,24 +245,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
         });
 
         new Thread(_playing).start();
-
-    }
-
-    /**
-     * Creates a new Task which allows the comparison funcitonality to be
-     * executed on a new thread.
-     */
-    private Task compareWorker() {
-        return new Task() {
-
-            @Override
-            protected Object call() throws Exception {
-                // play user recording
-                _practiseListModel.compareUserRecording(_volumeSlider.getValue());
-
-                return true;
-            }
-        };
 
     }
 
@@ -389,7 +363,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private void stopProgress(){
         _playBar.progressProperty().unbind();
         _playBar.setProgress(0);
-        _playing.cancel();
         _playBtn.toFront();
     }
 

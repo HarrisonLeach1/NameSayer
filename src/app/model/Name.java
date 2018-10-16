@@ -74,8 +74,23 @@ public class Name implements Practisable{
         selectGoodVersion().setBadQuality();
     }
 
-    public void playRecording(double volume) {
-        selectGoodVersion().playRecording(volume);
+    /**
+     * Plays the audio of a good quality recording that was found of this Name (if one exist).
+     * Note that this method is blocking call and so should be executed on a new thread.
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
+     *               audio is amplified by double, etc.
+     * @throws InterruptedException
+     */
+    public void playRecording(double volume) throws InterruptedException{
+        _goodVersion.playRecording(volume);
+    }
+
+    /**
+     * Stops the currently playing audio file from being played. This will cause an
+     * InterruptedException to be thrown by the playRecording method during execution.
+     */
+    public void stopRecording() {
+        _goodVersion.stopRecording();
     }
 
     @Override
