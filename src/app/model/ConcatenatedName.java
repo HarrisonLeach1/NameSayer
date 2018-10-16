@@ -20,7 +20,7 @@ public class ConcatenatedName implements Practisable {
     private String _stringOfPaths;
     private String _missingNames = "";
 
-    public ConcatenatedName(List<Name> names, String displayName) {
+    public ConcatenatedName(List<Name> names, String displayName) throws InterruptedException {
         _displayName = displayName;
         _names= names;
 
@@ -56,7 +56,7 @@ public class ConcatenatedName implements Practisable {
      * Modifies the audio files of the associated names such that they are
      * of similar volume.
      */
-    private void normaliseAudio() {
+    private void normaliseAudio() throws InterruptedException {
         try {
             for(Name name : _names) {
                 // define process for returning the mean volume of the recording
@@ -94,7 +94,7 @@ public class ConcatenatedName implements Practisable {
                 process2.waitFor();
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -103,7 +103,7 @@ public class ConcatenatedName implements Practisable {
      * Modifies the audio files of the associated names such that they do
      * not contain any unnecessary silence.
      */
-    private void cutSilence() {
+    private void cutSilence() throws InterruptedException {
         for(Name name : _names) {
             try {
                 // 1:0 -50dB indicates that anything below -50dB is cut off from the start
@@ -118,7 +118,7 @@ public class ConcatenatedName implements Practisable {
 
                 process.waitFor();
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -140,7 +140,7 @@ public class ConcatenatedName implements Practisable {
      * All modified temporary audio recordings of the names are concatenated
      * into a single recording in a temporary audio file.
      */
-    private void concatenateAudio() {
+    private void concatenateAudio() throws InterruptedException {
         //  determines the bash process option: -filter_complex '[0:0]...[<N>-1:0]concat=n=<N>:v=0:a=1[out]'
         //  where <N> is the number of recordings to be concatenated
         String bashFilter = "";
@@ -159,7 +159,7 @@ public class ConcatenatedName implements Practisable {
 
             process.waitFor();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

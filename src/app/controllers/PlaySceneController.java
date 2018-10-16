@@ -31,8 +31,9 @@ import java.util.ResourceBundle;
  */
 public class PlaySceneController implements DataModelListener, Initializable{
 
-    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
-    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter;
+    private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
+    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
+    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
     @FXML private Slider _volumeSlider;
     @FXML private ProgressBar _levelProgress, _micLevelProgress;
     @FXML private ProgressBar _playBar;
@@ -193,8 +194,9 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void playButtonPressed() {
         _playing = playWorker();
         _playBar.progressProperty().bind(_playing.progressProperty());
+        _stopBtn.toFront();
 
-        _playing.setOnSucceeded( e -> {
+        _playing.setOnSucceeded(e -> {
             stopProgress();
         });
         new Thread(_playing).start();
@@ -324,6 +326,9 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private void makeTransition() {
         _savedLabel.setVisible(false);
         _bad_Label.setVisible(false);
+        _playBtn.toFront();
+
+        updateMissingNames();
 
         // change displayed name
         _displayName.setText("Name: " + _currentName.toString());
@@ -340,6 +345,17 @@ public class PlaySceneController implements DataModelListener, Initializable{
         _firstComparison = true;
 
         checkBounds();
+    }
+
+    /**
+     * Updates the missing names label to indicate to the user whether or not a recording
+     * file of the current name was found. The user can then make a new recording of the
+     * name that they can add to the database.
+     */
+    private void updateMissingNames() {
+        if(!_currentName.getMissingNames().isEmpty()) {
+            _missingNamesLabel.setText(MISSING_MSG + _currentName.getMissingNames());
+        }
     }
 
 
@@ -374,6 +390,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
         _playBar.progressProperty().unbind();
         _playBar.setProgress(0);
         _playing.cancel();
+        _playBtn.toFront();
     }
 
 }

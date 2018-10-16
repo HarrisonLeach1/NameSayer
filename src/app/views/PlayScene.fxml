@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -15,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.PlaySceneController">
    <children>
       <SplitPane dividerPositions="0.125" layoutX="220.0" layoutY="94.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: #6E6970;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -68,19 +74,6 @@
                               </Button>
                               <AnchorPane prefHeight="71.0" prefWidth="34.0">
                                  <children>
-                                    <Button fx:id="_playBtn" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <styleClass>
-                                          <String fx:value="circle" />
-                                          <String fx:value="play" />
-                                       </styleClass>
-                                       <graphic>
-                                          <ImageView fitHeight="55.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@images/play.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
                                     <Button fx:id="_stopBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" onAction="#stopButtonPressed" prefHeight="50.0" prefWidth="60.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <styleClass>
                                           <String fx:value="circle" />
@@ -90,6 +83,19 @@
                                           <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@images/stop.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button fx:id="_playBtn" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <styleClass>
+                                          <String fx:value="circle" />
+                                          <String fx:value="play" />
+                                       </styleClass>
+                                       <graphic>
+                                          <ImageView fitHeight="55.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/play.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>
@@ -172,7 +178,7 @@
                         <Font size="40.0" />
                      </font>
                   </Label>
-                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutY="375.0" prefHeight="100.0" prefWidth="748.0" style="-fx-background-color: #575359;" text="Date/Time created" textFill="WHITE" AnchorPane.bottomAnchor="220.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                  <Label fx:id="_dateTimeLabel" alignment="CENTER" layoutX="797.0" layoutY="81.0" prefHeight="24.0" prefWidth="387.0" style="-fx-background-color: #575359;" text="Date/Time created" textAlignment="RIGHT" textFill="WHITE" AnchorPane.bottomAnchor="589.0" AnchorPane.leftAnchor="797.0" AnchorPane.rightAnchor="14.0">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -184,6 +190,11 @@
                         <String fx:value="menu" />
                      </styleClass>
                   </Button>
+                  <Label fx:id="_missingNamesLabel" alignment="TOP_LEFT" layoutX="29.0" layoutY="81.0" prefHeight="134.0" prefWidth="474.0" textFill="#ff5b5b">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
         </items>

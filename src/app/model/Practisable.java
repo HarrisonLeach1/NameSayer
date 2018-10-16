@@ -1,6 +1,7 @@
 package app.model;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * A Practisable object represents an object that can be used in
@@ -10,7 +11,8 @@ import java.io.IOException;
  */
 public interface Practisable {
     /**
-     * Plays the recording of either a concatenated name or single name
+     * Plays the recording of a practisable object which allows the user
+     * to hear a name, which they can record and compare themselves to.
      */
     void playRecording(double volume);
 
@@ -22,14 +24,26 @@ public interface Practisable {
     boolean isRateable();
 
     /**
-     * Sets the object as being of bad quality
+     * Sets the object as being of bad quality such that it will now be
+     * played less often when the associated name is requested.
      */
     void setBadQuality() throws IOException;
 
 
     /**
-     * Returns the date and time of creation of the recording
-     * @return
+     * Returns the date and time of creation of the recording in an
+     * appropriate format that can be displayed to the user. Otherwise
+     * it should return nothing, indicating it was not created at a single
+     * point in time.
+     * @return the date/time the recording was created if it has one
      */
     String getDateTimeCreated();
+
+    /**
+     * Returns a string of missing names which indicates the a displayable
+     * string of names that this Practisable object is associated with, but
+     * cannot find the recording files of.
+     * @return
+     */
+    String getMissingNames();
 }
