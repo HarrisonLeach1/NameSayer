@@ -126,7 +126,7 @@
                                           </ImageView>
                                        </graphic>
                                     </Button>
-                                    <Label fx:id="_bad_Label" prefHeight="17.0" prefWidth="109.0" text="Name Added" textFill="WHITE" visible="false" />
+                                    <Label fx:id="_badLabel" prefHeight="17.0" prefWidth="109.0" text="Name Added" textFill="WHITE" visible="false" />
                                  </children>
                               </HBox>
                            </children>

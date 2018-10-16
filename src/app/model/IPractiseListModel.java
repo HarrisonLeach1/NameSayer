@@ -82,4 +82,11 @@ public interface IPractiseListModel {
      * returns false.
      */
     boolean hasPrevious();
+
+    /**
+     * Indicates whether or not the user has created a recording for the current name they
+     * are practising.
+     * @return
+     */
+    boolean userHasRecorded();
 }

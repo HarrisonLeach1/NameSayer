@@ -12,6 +12,7 @@ public class PractiseListModel implements IPractiseListModel{
     private int _currentIndex;
     private boolean _keepRecording;
     private Task _currentPlayTask;
+    private Practisable _currentPlayingName;
 
     public PractiseListModel(ArrayList<Practisable> practiseList) {
         _practiseList = practiseList;
@@ -52,9 +53,10 @@ public class PractiseListModel implements IPractiseListModel{
 
             @Override
             protected Object call() {
+                _currentPlayingName = _practiseList.get(_currentIndex);
                 // play database recording
                 try {
-                    _practiseList.get(_currentIndex).playRecording(volume);
+                    _currentPlayingName.playRecording(volume);
                 } catch (InterruptedException e) {
 
                     // if the interruption was not from a cancellation call, notify user of error
@@ -82,10 +84,11 @@ public class PractiseListModel implements IPractiseListModel{
 
             @Override
             protected Object call() throws Exception {
+                _currentPlayingName = _practiseList.get(_currentIndex);
                 // play user recording
                 _currentUserCreatedName.playRecording(volume);
                 // play database recording
-                _practiseList.get(_currentIndex).playRecording(volume);
+                _currentPlayingName.playRecording(volume);
                 return true;
             }
         };
@@ -95,11 +98,13 @@ public class PractiseListModel implements IPractiseListModel{
      * This stops the most recently returned recording task from playing audio.
      *
      * This method should be used to end the playTask because the implementation
-     * cancels the task and the play process.
+     * cancels both the task and the play process.
      */
     public void stopPlayTask() {
-        _currentPlayTask.cancel();
-        _practiseList.get(_currentIndex).stopRecording();
+        if(_currentPlayTask != null && !_currentPlayTask.isCancelled()) {
+            _currentPlayTask.cancel();
+            _currentPlayingName.stopRecording();
+        }
     }
 
     /**
@@ -136,6 +141,7 @@ public class PractiseListModel implements IPractiseListModel{
     public void cancelRecording(){
         _currentUserRecording.cancelRecording();
         _currentUserRecording.deleteRecording();
+        _currentUserRecording = null;
     }
 
     /**
@@ -177,6 +183,15 @@ public class PractiseListModel implements IPractiseListModel{
         }
         _currentUserRecording = null;
         _keepRecording = false;
+    }
+
+    /**
+     * Returns whether or not the current user recording created is not equal to null.
+     * @return true if there is no Recording object for this current name.
+     * Otherwise, false.
+     */
+    public boolean userHasRecorded() {
+        return _currentUserRecording != null;
     }
 
 }

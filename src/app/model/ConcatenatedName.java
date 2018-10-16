@@ -63,7 +63,9 @@ public class ConcatenatedName implements Practisable {
      * during execution.
      */
     public void stopRecording() {
-        _playingProcess.destroy();
+        if(_playingProcess != null) {
+            _playingProcess.destroy();
+        }
     }
 
     /**
