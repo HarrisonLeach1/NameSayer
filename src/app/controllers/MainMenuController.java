@@ -61,7 +61,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         _startPane.toFront();
         _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        _searchPane.toFront();
+        _playList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
 
         // change GUI labels
@@ -602,6 +602,15 @@ public class MainMenuController implements Initializable, DataModelListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Removes all currently selected names from the playlist. This can be a single name
+     * or multiple names.
+     * @param event
+     */
+    public void removeFromPlaylist(ActionEvent event) {
+        _playList.getItems().removeAll(_playList.getSelectionModel().getSelectedItems());
     }
 }
 
