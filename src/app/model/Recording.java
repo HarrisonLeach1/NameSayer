@@ -2,6 +2,7 @@ package app.model;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -60,7 +61,15 @@ public class Recording {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new NameVersion(_fileName);
+
+        // since we have specified the naming format correctly, the exception will not be thrown
+        NameVersion name = null;
+        try {
+            name = new NameVersion(_fileName);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return name;
     }
 
     /**

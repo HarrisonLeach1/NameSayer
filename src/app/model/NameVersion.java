@@ -9,21 +9,29 @@ import java.util.Scanner;
 
 /**
  * A NameVersion object represents a name in a database that can be interacted with
- * by the user. A NameVersion object is usually created by providing a file name
- * in the appropirate format:
+ * by the user. A NameVersion object is usually created by providing a path to file
+ * with the following naming format:
  *
  * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * e.g. se206_2-5-2018_15-23-50_Mason.wav
  *
- *  e.g. se206_2-5-2018_15-23-50_Mason.wav
- *
- *  This NameVersion points to this file and stores information of the file such that
- *  it can be efficiently played, rated and displayed to the user.
+ * This NameVersion points to this file and stores information of the file such that
+ * it can be efficiently played, rated and displayed to the user.
  */
 public class NameVersion {
     private String _shortName, _displayName, _filePath, _dateCreated, _timeCreated;
     private boolean _isBadQuality;
 
-    public NameVersion(String filePath) {
+    /**
+     * Given the path to a valid recording file, a NameVersion object is created as playable
+     * and displayable reference to this file.
+     * If the file name is not in the valid format an IndexOutOfBoundsException or ParseException
+     * is thrown and the NameVerison object cannot be created.
+     * @param filePath
+     * @throws IndexOutOfBoundsException
+     * @throws ParseException
+     */
+    public NameVersion(String filePath) throws IndexOutOfBoundsException, ParseException {
         _filePath = filePath;
         parseShortName();
         parseVersionName();
@@ -35,45 +43,42 @@ public class NameVersion {
 
     /**
      * Parses the file name, turning the date and time format into a more presentable
-     * format to the user. The name must be in the appropriate format.
+     * format to the user. Throws an IndexOutOfBoundsException or ParseException if the
+     * file name is not in the valid format.
+     * @throws IndexOutOfBoundsException
+     * @throws ParseException
      */
-    private void parseVersionName() {
-        try {
+    private void parseVersionName() throws IndexOutOfBoundsException, ParseException{
             // get file name without the database folder
             String fileName = _filePath.substring(_filePath.indexOf("/"));
 
-            // get date and time strings
+            // get original date and time and parse into date object
             String[] parts = fileName.split("_");
             String originalDate = parts[1] + "_" + parts[2];
-
-            // parse into date object
             DateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
             Date date = originalFormat.parse(originalDate);
 
-            // get more displayable format
+            // get date and time in more displayable format
             DateFormat newDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
             DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a");
             _dateCreated = newDateFormat.format(date);
             _timeCreated = newTimeFormat.format(date);
 
             _displayName = _shortName + " " + _dateCreated + " " + _timeCreated;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * Retrieves just the name of the recording excluding the creation date, time and file extension.
+     * @throws IndexOutOfBoundsException
      */
-    private void parseShortName() {
+    private void parseShortName() throws IndexOutOfBoundsException{
         String fileName = _filePath.substring(_filePath.indexOf("/"));
 
         // find the index of the third underscore (the start of the name)
         int startIndex = fileName.indexOf("_", fileName.indexOf("_", fileName.indexOf("_") + 1) + 1);
 
-        // find the index of the dot extension (the end of the name)
-        int lastIndex = fileName.lastIndexOf(".");
+        // find the index of the .wav extension (the end of the name)
+        int lastIndex = fileName.lastIndexOf(".wav");
 
         // parse the name and replace underscores with spaces
         String nameString = fileName.substring(startIndex + 1, lastIndex).replaceAll("_", " ");
