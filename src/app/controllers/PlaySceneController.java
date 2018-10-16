@@ -30,15 +30,18 @@ import java.util.ResourceBundle;
  * to update the view.
  */
 public class PlaySceneController implements DataModelListener, Initializable{
-
+    private static final double MIN_VOLUME = 0;
+    private static final double MAX_VOLUME = 2.0;
+    private static final double INITIAL_VOLUME = 1.0;
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
+
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
     @FXML private Slider _volumeSlider;
     @FXML private ProgressBar _levelProgress, _micLevelProgress;
     @FXML private ProgressBar _playBar;
-    private Task _playing;
 
+    private Task _playing;
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
     private boolean _firstComparison;
@@ -112,18 +115,26 @@ public class PlaySceneController implements DataModelListener, Initializable{
         _micLevelProgress.progressProperty().bind(test.progressProperty());
     }
     /**
-     * Loads in the practise list model that stores the list of selected names from
-     * the main menu to be practised.
+     * Loads in the practise list model that stores the list of selected Practisable
+     * objects from the main menu to be practised.
      * @param practiseListModel
      */
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
         makeTransition();
-        _volumeSlider.setMin(0);
-        _volumeSlider.setMax(2.0);
-        _volumeSlider.setValue(1.0);
+        initialiseVolume();
         DataModel.getInstance().addListener(this);
+    }
+
+    /**
+     * Initialises the default max, min and initial volume for the volume bar when
+     * the user first enters the play scene.
+     */
+    private void initialiseVolume() {
+        _volumeSlider.setMin(MIN_VOLUME);
+        _volumeSlider.setMax(MAX_VOLUME);
+        _volumeSlider.setValue(INITIAL_VOLUME);
     }
 
     /**
