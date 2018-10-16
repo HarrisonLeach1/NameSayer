@@ -42,69 +42,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
     private boolean _firstComparison;
-
-    Task test = new Task() {
-        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-        TargetDataLine targetLine;
-        {
-            try {
-                targetLine = (TargetDataLine) AudioSystem.getLine(info);
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            }
-        }
-        @Override
-        protected Object call() {
-            try {
-                //Microphone
-                targetLine.open();
-                targetLine.start();
-
-                byte[] data = new byte[targetLine.getBufferSize() / 5];
-
-                while (true) {
-                    targetLine.read(data, 0, data.length);
-                    int level = calculateRMSLevel(data);
-                    updateProgress(level,100);
-                }
-            } catch (LineUnavailableException lue) {
-                lue.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void cancelled() {
-            targetLine.stop();
-            targetLine.close();
-            super.cancelled();
-        }
-
-
-        @Override
-        protected void updateProgress(double workDone, double max) {
-            super.updateProgress(workDone, max);
-        }
-    };
-    /**
-     * Calculates the microphone input and turns it into an integer
-     */
-    public static int calculateRMSLevel(byte[] audioData) {
-        long lSum = 0;
-        for (int i = 0; i < audioData.length; i++)
-            lSum = lSum + audioData[i];
-
-        double dAvg = lSum / audioData.length;
-        double sumMeanSquare = 0d;
-
-        for (int j = 0; j < audioData.length; j++)
-            sumMeanSquare += Math.pow(audioData[j] - dAvg, 2d);
-
-        double averageMeanSquare = sumMeanSquare / audioData.length;
-
-        return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
-    }
+    private Task test;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
