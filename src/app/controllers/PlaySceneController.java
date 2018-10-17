@@ -291,6 +291,8 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private void updateMissingNames() {
         if(!_currentName.getMissingNames().isEmpty()) {
             _missingNamesLabel.setText(MISSING_MSG + _currentName.getMissingNames());
+        } else {
+            _missingNamesLabel.setText("");
         }
     }
 
