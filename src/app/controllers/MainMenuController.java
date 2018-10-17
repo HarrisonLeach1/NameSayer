@@ -159,23 +159,16 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void playSearchPressed(ActionEvent event) throws IOException {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
-            return;
-        }
-        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
+        } else {
+            Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
 
-        loadWorker.setOnSucceeded(e -> {
-            String missingNames = DataModel.getInstance().compileMissingNames(loadWorker.getValue());
-            if(!missingNames.isEmpty()) { // if the name contains missing get user confirmation
-                loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
-                if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+            loadWorker.setOnSucceeded(e -> {
+                if (approveMissingNames(DataModel.getInstance().compileMissingNames(loadWorker.getValue()))) {
                     moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
                 }
-            } else { // otherwise, move on without asking
-                moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
-            }
-        });
-
-        new Thread(loadWorker).start();
+            });
+            new Thread(loadWorker).start();
+        }
     }
 
     /**
@@ -186,26 +179,18 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void addToPlaylistPressed(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
-            return;
-        }
+        } else {
+            Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
 
-        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
-
-        // when finished update the list view
-        loadWorker.setOnSucceeded(e -> {
-            String missingNames = DataModel.getInstance().compileMissingNames(loadWorker.getValue());
-            if(!missingNames.isEmpty()) {
-                loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
-                if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+            // when finished update the list view if the user chooses to
+            loadWorker.setOnSucceeded(e -> {
+                if (approveMissingNames(DataModel.getInstance().compileMissingNames(loadWorker.getValue()))) {
                     _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
                     _searchBox.clear();
                 }
-            } else {
-                _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
-                _searchBox.clear();
-            }
-        });
-        new Thread(loadWorker).start();
+            });
+            new Thread(loadWorker).start();
+        }
     }
 
     /**
@@ -242,19 +227,28 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void playFilePressed(ActionEvent event) throws IOException {
         if (_playList.getItems().size() == 0) { // check if list is empty
             loadErrorMessage("ERROR: List is empty");
-            return;
-        }
-
-        // check if there are any missing names. If so, ask the user if they want to continue.
-        String missingNames = DataModel.getInstance().compileMissingNames(_playList.getItems());
-        if (!missingNames.isEmpty()){
-            loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
-            if(_confirmationController.saidYes()) { // If their decision is yes, move to the play scene
-                moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
-            }
-        } else { // otherwise, allow user to practise.
+            // check if there are any missing names. If so, ask the user if they want to continue.
+        } else if(approveMissingNames(DataModel.getInstance().compileMissingNames(_playList.getItems()))) {
             moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
         }
+    }
+
+    /**
+     * Ask the users if they want to continue with their actions if the given names are
+     * missing from the database.
+     * @param missingNames
+     * @return whether or not the user wants to continue
+     */
+    private boolean approveMissingNames(String missingNames) {
+        if(!missingNames.isEmpty()) { // if the name contains missing get user confirmation
+            loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
+            if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+                return true;
+            }
+        } else { // otherwise, move on without asking
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -612,6 +606,5 @@ public class MainMenuController implements Initializable, DataModelListener {
         window.initModality(Modality.APPLICATION_MODAL);
         window.showAndWait();
     }
-
 }
 
