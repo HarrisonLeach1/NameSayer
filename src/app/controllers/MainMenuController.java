@@ -43,6 +43,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     private static final String TEST_SCENE = "/app/views/TestScene.fxml";
     private static final String SAVE_PLAYLIST_SCENE = "/app/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/app/views/LoadingScene.fxml";
+    private static final String PLAY_SCENE = "/app/views/PlayScene.fxml";
 
     @FXML private SplitPane _mainPane;
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
@@ -266,14 +267,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadFileWorker(selectedFile);
 
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(LOADING_SCENE));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(LOADING_SCENE);
 
         // pass the task to be loaded to the controller
         LoadingController controller = loader.getController();
@@ -285,7 +279,7 @@ public class MainMenuController implements Initializable, DataModelListener {
             controller.cancelLoading();
         });
 
-        openScene(playerParent);
+        loader.openScene();
     }
 
     /**
@@ -342,21 +336,13 @@ public class MainMenuController implements Initializable, DataModelListener {
             return;
         }
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(SAVE_PLAYLIST_SCENE));
-
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(SAVE_PLAYLIST_SCENE);
 
         // pass selected items to the next controller
         SavePlaylistController controller = loader.getController();
         controller.setPlayList(_playList.getItems());
 
-        openScene(playerParent);
+        loader.openScene();
     }
 
     /**
@@ -447,7 +433,7 @@ public class MainMenuController implements Initializable, DataModelListener {
             _searchPane.toFront();
 
         } else if(event.getSource() == _testMicBtn){
-            openScene(TEST_SCENE);
+            new SceneLoader(TEST_SCENE).openScene();
         }
     }
 
@@ -490,23 +476,13 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     private void moveToPlayScene(List<Practisable> list , ActionEvent event) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(PLAY_SCENE);
 
         // pass selected items to the next controller
         PlaySceneController controller = loader.getController();
         controller.initModel(new PractiseListModel(new ArrayList<>(list)));
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
+        loader.switchScene(event);
     }
 
     /**
@@ -516,21 +492,13 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     private void loadErrorMessage(String message) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(ERROR_SCENE));
-
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(ERROR_SCENE);
 
         // pass selected items to the next controller
         ErrorSceneController controller = loader.getController();
         controller.setMessage(message);
 
-        openScene(playerParent);
+       loader.openScene();
     }
 
     /**
@@ -540,21 +508,13 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     private void loadConfirmMessage(String message) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(CONFIRM_SCENE));
-
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(CONFIRM_SCENE);
 
         // pass selected items to the next controller
         _confirmationController = loader.getController();
         _confirmationController.setMessage(message);
 
-        openScene(playerParent);
+        loader.openScene();
     }
 
     /**
@@ -562,7 +522,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      * progress.
      */
     private void openStreakWindow() {
-        openScene(STREAK_SCENE);
+        new SceneLoader(STREAK_SCENE).openScene();
     }
 
     /**
@@ -572,39 +532,6 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     public void removeFromPlaylist(ActionEvent event) {
         _playList.getItems().removeAll(_playList.getSelectionModel().getSelectedItems());
-    }
-
-    /**
-     * Given a path to a scene file, this scene is displayed to the user in a new window
-     * @param scenePath
-     */
-    private void openScene(String scenePath) {
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource(scenePath));
-
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        openScene(playerParent);
-    }
-
-    /**
-     * Given a playerParent object, opens a new scene for this object in a new window.
-     * @param playerParent
-     */
-    private void openScene(Parent playerParent) {
-        // create new scene and window
-        Scene playerScene = new Scene(playerParent);
-        Stage window = new Stage();
-
-        // display to the user
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
     }
 }
 
