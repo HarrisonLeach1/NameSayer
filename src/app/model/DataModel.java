@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -22,15 +21,12 @@ public class DataModel implements IDataModel{
     private static DataModel _instance;
     private File _database = new File("./names/");
 	private HashMap<String, Name> _databaseTable;
-	private List<DataModelListener> _listeners;
-	private User _user;
 	private List<String> _nameStrings;
 
 	private DataModel() {
-		_user = new User();
     	_databaseTable = createNameTable(_database);
-		_listeners = new ArrayList<>();
 	}
+
 
 	/**
 	 * Returns the singleton instance of the DataModel, used for loading
@@ -38,12 +34,11 @@ public class DataModel implements IDataModel{
 	 * @return instance of DataModel
 	 */
 	public static DataModel getInstance() {
-    	if (_instance == null) {
+		if (_instance == null) {
 			_instance = new DataModel();
 		}
 		return _instance;
 	}
-
 	/**
      * Creates a TreeItem that contains all recordings in the database
      * as descendants. Uses the TreeViewFactory.
@@ -86,29 +81,6 @@ public class DataModel implements IDataModel{
 		Collections.sort(nameList, Comparator.comparing((Name o) -> o.toString()));
 
 		return nameList;
-	}
-
-	/**
-	 * Registers a listener with this data model object. The registered
-	 * listener is notified of any events in which the users progress is
-	 * changed.
-	 * @param listener
-	 */
-	public void addListener(DataModelListener listener) {
-		_listeners.add(listener);
-		listener.notifyProgress(_user.getUserXP());
-	}
-
-	/**
-	 * Updates the experience of the user object and notifies any registered
-	 * listeners.
-	 */
-	public void updateUserXP() {
-		_user.updateUserXP();
-		int experience = _user.getUserXP();
-			for(DataModelListener l : _listeners) {
-				l.notifyProgress(experience);
-			}
 	}
 
 	/**
@@ -302,10 +274,10 @@ public class DataModel implements IDataModel{
 		return _databaseTable.keySet().size();
 	}
 
-	public int getDailyStreak() {
-		return _user.getDailyStreak();
-	}
-
+	/**
+	 * Returns displayable strings of all the names in the currently selected database.
+	 * @return
+	 */
 	public List<String> getNameStrings() {
 		return _nameStrings;
 	}

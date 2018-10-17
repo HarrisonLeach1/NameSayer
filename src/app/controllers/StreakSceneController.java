@@ -1,7 +1,7 @@
 package app.controllers;
 
 import app.model.DataModel;
-import app.model.User;
+import app.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -29,7 +29,7 @@ public class StreakSceneController implements Initializable {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
+        _streakCounter.setText(String.valueOf(UserModel.getInstance().getDailyStreak()));
     }
 
     /**

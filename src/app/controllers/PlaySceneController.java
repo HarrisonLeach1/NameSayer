@@ -5,7 +5,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,8 +15,6 @@ import javafx.scene.control.Slider;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * A PlaySceneController holds the responsibility of receiving input events
@@ -27,7 +24,7 @@ import java.util.ResourceBundle;
  * The IPractiseListModel then passes information back to the PlaySceneController
  * to update the view.
  */
-public class PlaySceneController implements DataModelListener {
+public class PlaySceneController implements UserModelListener {
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn;
     @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter;
@@ -52,7 +49,7 @@ public class PlaySceneController implements DataModelListener {
         _volumeSlider.setMin(0);
         _volumeSlider.setMax(2.0);
         _volumeSlider.setValue(1.0);
-        DataModel.getInstance().addListener(this);
+        UserModel.getInstance().addListener(this);
     }
 
     /**

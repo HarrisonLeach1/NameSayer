@@ -28,8 +28,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static app.model.DataModel.USER_DATABASE;
-
 /**
  * A MainMenuController holds the responsibility of receiving input events
  * from the user at the main menu and then translating them into actions on the
@@ -38,7 +36,7 @@ import static app.model.DataModel.USER_DATABASE;
  * The DataModel then passes information back to the MainMenuController
  * to update the view.
  */
-public class MainMenuController implements Initializable, DataModelListener {
+public class MainMenuController implements Initializable, UserModelListener {
 
     @FXML private SplitPane _mainPane;
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
@@ -63,7 +61,7 @@ public class MainMenuController implements Initializable, DataModelListener {
         _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
-        _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
+        _streakCounter.setText(String.valueOf(UserModel.getInstance().getDailyStreak()));
 
         // change GUI labels
         _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
@@ -73,7 +71,7 @@ public class MainMenuController implements Initializable, DataModelListener {
 
         setupSearchBox();
 
-        DataModel.getInstance().addListener(this);
+        UserModel.getInstance().addListener(this);
     }
 
     /**

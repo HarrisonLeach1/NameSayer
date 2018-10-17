@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.model.DataModel;
+import app.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.stage.Stage;
@@ -14,12 +15,12 @@ public class LevelSceneController {
 
     /**
      * Confirms that the user has made a good pronunciation of the name.
-     * The DataModel is updated to increase the experience level of the user.
+     * The UserModel is updated to increase the experience level of the user.
      * The window is closed and the user is displayed the play scene again.
      * @param event
      */
     public void yesButtonPressed(ActionEvent event) {
-        DataModel.getInstance().updateUserXP();
+        UserModel.getInstance().updateUserXP();
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.close();
     }

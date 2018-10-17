@@ -6,10 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
- * A User object represents the NameSayer progress information of
+ * A UserModel object represents the NameSayer progress information of
  * the user.
  *
  * The information it stores currently are the users daily streak
@@ -17,26 +19,57 @@ import java.util.Scanner;
  * from a data file. When the object receives updates on the users
  * progress it updates it's information and writes it to the file.
  */
-public class User {
+public class UserModel {
     private static final File DATA_FILE = new File(".userData.txt");
     private static final int XP_GAIN = 20;
+    private static UserModel _instance;
+
+    private List<UserModelListener> _listeners;
     private int _streakCount = 1;
     private LocalDate _lastLogin = LocalDate.now();
     private int _userXP = 100;
 
-    public User() {
+    private UserModel() {
+        _listeners = new ArrayList<>();
+
         readUserData();
         updateStreak();
     }
 
     /**
+     * Returns the singleton instance of the UserModel, used for loading
+     * and saving user data.
+     * @return instance of DataModel
+     */
+    public static UserModel getInstance() {
+        if (_instance == null) {
+            _instance = new UserModel();
+        }
+        return _instance;
+    }
+
+    /**
+     * Registers a listener with this data model object. The registered
+     * listener is notified of any events in which the users progress is
+     * changed.
+     * @param listener
+     */
+    public void addListener(UserModelListener listener) {
+        _listeners.add(listener);
+        listener.notifyProgress(_userXP);
+    }
+
+    /**
      * Increases the amount of XP the user has and writes this
      * information to a file to be saved for the user upon their
-     * next start-up.
+     * next start-up. Notifies any registered listeners.
      */
     public void updateUserXP() {
         _userXP += XP_GAIN;
         writeUserData();
+        for(UserModelListener l : _listeners) {
+            l.notifyProgress(_userXP);
+        }
     }
 
     /**
@@ -113,9 +146,5 @@ public class User {
 
     public int getDailyStreak() {
         return _streakCount;
-    }
-
-    public int getUserXP() {
-        return _userXP;
     }
 }
