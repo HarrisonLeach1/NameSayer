@@ -27,7 +27,6 @@ public class DataModel implements IDataModel{
 	private List<DataModelListener> _listeners;
 	private User _user;
 	private List<String> _nameStrings;
-	private String _missingNames;
 
 	private DataModel() {
 		_user = new User();
@@ -234,21 +233,22 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Updates the _missingNames field to store the names of the given list which are
-	 * not contained within the database.
+	 * Returns a displayable string which contains all the names that are not
+	 * in this database in each of the given Concatenated Name objects.
 	 * @param list
 	 */
-	private void compileMissingNames(List<ConcatenatedName> list) {
-		_missingNames = "";
+	public String compileMissingNames(List<ConcatenatedName> list) {
+		String missingNames = "";
 		// loop through all names in the list
 		for(ConcatenatedName name : list) {
 			String missing = name.getMissingNames();
 
 			// if some names are missing, update the _missingNames field
 			if (!missing.isEmpty()) {
-				_missingNames += missing +"\n";
+				missingNames += missing +"\n";
 			}
 		}
+		return missingNames;
 	}
 
 	/**
@@ -331,9 +331,5 @@ public class DataModel implements IDataModel{
 
 	public List<String> getNameStrings() {
 		return _nameStrings;
-	}
-
-	public String getMissingNames() {
-		return _missingNames;
 	}
 }
