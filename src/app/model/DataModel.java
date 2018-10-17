@@ -184,7 +184,7 @@ public class DataModel implements IDataModel{
 			@Override
 			protected List<ConcatenatedName> call() throws Exception {
 				// load name through data model
-				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(createConcatenatedName(name)));
+				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(new ConcatenatedName(name, _databaseTable)));
 
 				// compile missing names into a string to display to the user if needed
 				compileMissingNames(list);
@@ -215,7 +215,7 @@ public class DataModel implements IDataModel{
 					// if the concatenation of a name is interrupted ask for the cause
 					ConcatenatedName concatenatedName = null;
 					try {
-						concatenatedName = createConcatenatedName(inputString);
+						concatenatedName = new ConcatenatedName(inputString, _databaseTable);
 					} catch (InterruptedException e) {
 						// if the exception was caused by the user cancelling, it is not an error
 						if(isCancelled()){
@@ -249,41 +249,6 @@ public class DataModel implements IDataModel{
 				_missingNames += missing +"\n";
 			}
 		}
-	}
-
-	/**
-	 * Given an input string, returns a Concatenated Name object from the string.
-	 * Different names should be separated by a space or hyphen in the input string.
-	 * @param inputString
-	 * @return a ConcatenatedName corresponding to the input string
-	 * @throws InterruptedException
-	 */
-	private ConcatenatedName createConcatenatedName(String inputString) throws InterruptedException {
-		List<Name> notConcatenatedNames = new ArrayList<>();
-
-		// replace all hyphens with spaces
-		String splitString = inputString.replaceAll("-", " ");
-
-		// parse strings into a list of strings
-		List<String> stringList = new ArrayList<>(Arrays.asList(splitString.split(" ")));
-
-		String missingNames = "";
-
-		for (String str : stringList) {
-			if (_databaseTable.containsKey(str.toLowerCase())) {
-				notConcatenatedNames.add(_databaseTable.get(str.toLowerCase()));
-			} else {
-				missingNames += str + " ";
-			}
-		}
-
-		ConcatenatedName concatenatedName = new ConcatenatedName(notConcatenatedNames, inputString);
-
-		if(!missingNames.isEmpty()) {
-			concatenatedName.setMissingNames(missingNames);
-		}
-
-		return concatenatedName;
 	}
 
 	/**
