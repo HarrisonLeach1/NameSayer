@@ -188,9 +188,14 @@ public class MainMenuController implements Initializable, DataModelListener {
         loadWorker.setOnSucceeded(e -> {
             String missingNames = DataModel.getInstance().compileMissingNames(loadWorker.getValue());
             if(!missingNames.isEmpty()) {
-                loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + missingNames);
+                loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
+                if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+                    _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
+                    _searchBox.clear();
+                }
             } else {
                 _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
+                _searchBox.clear();
             }
         });
         new Thread(loadWorker).start();
