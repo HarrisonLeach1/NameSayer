@@ -10,10 +10,14 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.*;
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -421,5 +425,42 @@ public class PlaySceneController implements DataModelListener, Initializable{
     }
 
     public void stopButtonPressed(ActionEvent actionEvent) {
+    }
+
+    public void helpButtonAction(ActionEvent actionEvent) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File myFile = new File("UserManual.pdf");
+                if (myFile.exists()) {
+                    Desktop.getDesktop().open(myFile);
+                }else{
+                    loadErrorMessage("ERROR: UserManual not found");
+                }
+            } catch (IOException ex) {
+                loadErrorMessage("ERROR: Can't find application for opening PDF");
+            }
+        }
+    }
+    private void loadErrorMessage(String message) {
+        // load in the new scene
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
+        Parent playerParent = null;
+        try {
+            playerParent = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // pass selected items to the next controller
+        ErrorSceneController controller = loader.getController();
+        controller.setMessage(message);
+
+        // switch scenes
+        Scene playerScene = new Scene(playerParent);
+        Stage window = new Stage();
+        window.setScene(playerScene);
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.showAndWait();
     }
 }

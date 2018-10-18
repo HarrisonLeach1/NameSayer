@@ -24,26 +24,54 @@
     -fx-background-color:
         radial-gradient(center 50% 50%, radius 100%, #789699, #BCF4F5);
 }
-.menu-test_mic{
+.menu-dark{
+    -fx-background-radius: 0;
     -fx-background-color: #3E3B3F;
     -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
-.menu-test_mic:hover {
+.menu-dark:hover {
     -fx-background-color:
         radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
 }
-.menu:pressed {
-
+.smallgreenbutton{
+    -fx-border-color:limegreen;
+    -fx-border-width:2;
 }
+.medgreenbutton{
+    -fx-border-color:limegreen;
+    -fx-border-width:3;
+}
+.biggreenbutton{
+    -fx-border-color:limegreen;
+    -fx-border-width:5;
+}
+.smallredbutton{
+    -fx-border-color:crimson;
+    -fx-border-width:2;
+}
+.bigredbutton{
+    -fx-border-color:crimson;
+    -fx-border-width:5;
+}
+.biggoldbutton{
+    -fx-border-color:gold;
+    -fx-border-width:5;
+}
+.bigbluebutton{
+    -fx-border-color:turquoise;
+    -fx-border-width:5;
+}
+.smallpurplebutton{
+    -fx-border-color:Fuchsia;
+    -fx-border-width:2;
+}
+
 .menu:hover{
     -fx-border-color: white;
 }
-.l:hover{
-     -fx-background-color: red;
+.menu-dark:pressed{
+    -fx-background-color:radial-gradient(center 50% 50%, radius 60%, #3E3B3F, #6E6970);
 }
- .l:pressed{
-     -fx-background-color: blue;
- }
 .menu Text {
     -fx-fill: white;
     -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );
@@ -106,4 +134,8 @@
 
 .record:pressed{
     -fx-border-color: white;
+}
+.progress-bar > .bar {
+    -fx-background-insets: 1 1 2 1;
+    -fx-padding: 0.20em;
 }

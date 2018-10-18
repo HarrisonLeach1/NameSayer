@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.StreakSceneController">
+<AnchorPane prefHeight="176.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.StreakSceneController">
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -26,7 +26,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Label alignment="CENTER" layoutX="43.0" layoutY="62.0" prefHeight="27.0" prefWidth="265.0" text="Keep it up!" textFill="#fcfcfc">
+            <Label alignment="CENTER" layoutX="43.0" layoutY="65.0" prefHeight="27.0" prefWidth="265.0" text="Keep it up!" textFill="#fcfcfc">
                <font>
                   <Font size="15.0" />
                </font>
@@ -42,7 +42,7 @@
                   <Image url="@images/flame.png" />
                </image>
             </ImageView>
-            <Label fx:id="_streakCounter" alignment="CENTER" layoutX="43.0" layoutY="19.0" prefHeight="43.0" prefWidth="265.0" text="1" textFill="#fcfcfc">
+            <Label fx:id="_streakCounter" alignment="CENTER" layoutX="43.0" layoutY="22.0" prefHeight="43.0" prefWidth="265.0" text="1" textFill="#fcfcfc">
                <font>
                   <Font size="35.0" />
                </font>

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LevelSceneController">
+<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LevelSceneController">
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -20,8 +19,16 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Button layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#noButtonPressed" prefHeight="27.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="No" textFill="WHITE" />
-            <Button layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#yesButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Yes" textFill="WHITE" />
+            <Button layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#noButtonPressed" prefHeight="27.0" prefWidth="80.0" text="No" textFill="WHITE">
+               <styleClass>
+                  <String fx:value="menu-dark" />
+                  <String fx:value="smallredbutton" />
+               </styleClass></Button>
+            <Button layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#yesButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Yes" textFill="WHITE">
+               <styleClass>
+                  <String fx:value="menu-dark" />
+                  <String fx:value="smallgreenbutton" />
+               </styleClass></Button>
          </children>
       </AnchorPane>
    </children>

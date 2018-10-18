@@ -12,7 +12,7 @@
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Recording" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Testing" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="15.0" />
                </font>
@@ -30,7 +30,7 @@
             </Button>
             <Button fx:id="cancel_btn" defaultButton="true" layoutX="211.0" layoutY="70.0" mnemonicParsing="false" onAction="#handleReturnAction" prefWidth="70.0" text="OK" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="70.0">
                <styleClass>
-                  <String fx:value="menu-test_mic" />
+                  <String fx:value="menu-dark" />
                   <String fx:value="menu" />
                </styleClass>
                <effect>

@@ -11,6 +11,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -19,6 +22,7 @@ import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.textfield.TextFields;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,18 +44,19 @@ public class MainMenuController implements Initializable, DataModelListener {
 
     @FXML private SplitPane _mainPane;
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
-    @FXML private Button _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
+    @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Practisable> _selectedList;
     @FXML private ListView<ConcatenatedName> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
-    @FXML private ProgressBar _levelProgress;
+    @FXML private ProgressBar _playingProgress,_levelProgress;
     private File _selectedFile;
     private ConfirmSceneController _confirmationController;
     private String _missingNames = "";
     private static boolean start = true;
+    private Task _player;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -112,7 +117,9 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     public void handleStartUpAction(){
         _startPane.toBack();
-        openStreakWindow();
+        if (start) {
+            openStreakWindow();
+        }
     }
 
     /**
@@ -409,9 +416,12 @@ public class MainMenuController implements Initializable, DataModelListener {
      * Executes a on a new thread to avoid GUI unresponsiveness.
      */
     public void playUserRecordingPressed() {
+
         if (_recList.getSelectionModel().getSelectedItem() != null) {
-            Task player = playWorker();
-            new Thread(player).start();
+            _player = playWorker();
+            _player.setOnSucceeded( e -> stopProgress());
+            _playingProgress.progressProperty().bind(_player.progressProperty());
+            new Thread(_player).start();
         }
     }
 
@@ -474,6 +484,9 @@ public class MainMenuController implements Initializable, DataModelListener {
             window.setScene(playerScene);
             window.initModality(Modality.APPLICATION_MODAL);
             window.showAndWait();
+        } else if(event.getSource() == _returnBtn){
+            start = false;
+            _startPane.toFront();
         }
     }
 
@@ -610,6 +623,22 @@ public class MainMenuController implements Initializable, DataModelListener {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void helpButtonAction(ActionEvent actionEvent) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File myFile = new File("UserManual.pdf");
+                Desktop.getDesktop().open(myFile);
+            } catch (IOException ex) {
+                // no application registered for PDFs
+            }
+        }
+    }
+    private void stopProgress(){
+        _playingProgress.progressProperty().unbind();
+        _playingProgress.setProgress(0);
+        _player.cancel();
     }
 }
 
