@@ -1,22 +1,20 @@
 package app.controllers;
 
 import app.model.*;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -75,33 +73,11 @@ public class MainMenuController implements Initializable, DataModelListener {
         _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
         _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
 
-        setupPlaylist();
+        new SearchField(_searchBox);
 
-        setupSearchBox();
+        new HighlightedList(_playList);
 
         DataModel.getInstance().addListener(this);
-    }
-
-    /**
-     * Initialises the search box to allow for autocompletion when the user
-     * begins typing a name. Initially the autocomplete contains all database names,
-     * then changes based on the users search. When the user enters a space or hyphen
-     * the autocomplete return to all database names.
-     */
-    private void setupSearchBox() {
-        TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
-
-        _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            // if the user types a hyphen or space, reset the autocomplete to all names
-            if (newValue.endsWith(" ") || newValue.endsWith("-")) {
-                List<String> autoCompleteList = new ArrayList<>();
-                for(String name : DataModel.getInstance().getNameStrings()) {
-                    autoCompleteList.add(newValue + name);
-                }
-                TextFields.bindAutoCompletion(_searchBox, autoCompleteList);
-            }
-        });
     }
 
 
@@ -177,7 +153,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      * the playlist.
      * @param event
      */
-    public void addToPlaylistPressed(ActionEvent event) {
+    public void addToPlaylist(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
         } else {
@@ -435,37 +411,6 @@ public class MainMenuController implements Initializable, DataModelListener {
         } else if(event.getSource() == _testMicBtn){
             new SceneLoader(TEST_SCENE).openScene();
         }
-    }
-
-    /**
-     * Setup the playlist such that it displays when a ConcatenatedName object,
-     * contains missing names.
-     */
-    private void setupPlaylist() {
-        _playList.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
-            @Override
-            protected void updateItem(ConcatenatedName c, boolean empty) {
-                super.updateItem(c, empty);
-                // if empty, ignore
-                if (empty) {
-                    setText(null);
-                    setStyle("");
-
-                } else {
-                    setText(c.toString());
-
-                    // If the ConcatenatedName object contains missing names, update
-                    // the cell accordingly.
-                    if (!c.getMissingNames().equals("")) {
-                        setStyle("-fx-background-color: rgba(255,0,0,0.5)");
-                        setTooltip( new Tooltip("Missing Name(s): " + c.getMissingNames()));
-                    } else {
-                        setStyle("");
-                        setTooltip( new Tooltip("All Names Found!"));
-                    }
-                }
-            }
-        });
     }
 
     /**
