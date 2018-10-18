@@ -51,6 +51,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     private File _selectedFile;
     private ConfirmSceneController _confirmationController;
     private String _missingNames = "";
+    private static boolean start = true;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -58,7 +59,11 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        _startPane.toFront();
+        if(start) {
+            _startPane.toFront();
+        }else{
+            _startPane.toBack();
+        }
         _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
@@ -75,6 +80,9 @@ public class MainMenuController implements Initializable, DataModelListener {
         DataModel.getInstance().addListener(this);
     }
 
+    public static void setStart(boolean b){
+        start=b;
+    }
     /**
      * Initialises the search box to allow for autocompletion when the user
      * begins typing a name. Initially the autocomplete contains all database names,
@@ -510,21 +518,21 @@ public class MainMenuController implements Initializable, DataModelListener {
         // load in the new scene
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        Parent playerParent = null;
         try {
-            playerParent = loader.load();
+            Parent playerParent = loader.load();
+            // pass selected items to the next controller
+            PlaySceneController controller = loader.getController();
+            controller.initModel(new PractiseListModel(new ArrayList<>(list)));
+
+            // switch scenes
+            Scene playerScene = new Scene(playerParent);
+            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
+            window.setScene(playerScene);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        // pass selected items to the next controller
-        PlaySceneController controller = loader.getController();
-        controller.initModel(new PractiseListModel(new ArrayList<>(list)));
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window.setScene(playerScene);
     }
 
     /**

@@ -9,10 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -37,6 +34,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
     @FXML private Slider _volumeSlider;
     @FXML private ProgressBar _levelProgress, _micLevelProgress;
     @FXML private ProgressBar _playBar;
+    @FXML private Spinner _loopSpinner;
     private Task _playing;
 
     private IPractiseListModel _practiseListModel;
@@ -108,6 +106,9 @@ public class PlaySceneController implements DataModelListener, Initializable{
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        SpinnerValueFactory<Integer> loopValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,10,3);
+        this._loopSpinner.setValueFactory(loopValueFactory);
+        _loopSpinner.setEditable(true);
         new Thread(test).start();
         _micLevelProgress.progressProperty().bind(test.progressProperty());
     }
@@ -226,6 +227,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
         test.cancel();
+        MainMenuController.setStart(false);
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
@@ -241,18 +243,41 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * Allows the user to judge their pronunciation.
      */
     public void compareButtonPressed() throws IOException {
-        _playing = compareWorker();
-        _playBar.progressProperty().bind(_playing.progressProperty());
+        try {
+            int loops = (int) _loopSpinner.getValue();
+            _playing = compareWorker(loops);
+            _playBar.progressProperty().bind(_playing.progressProperty());
 
-        _playing.setOnSucceeded( e -> {
-            if (_firstComparison) {
-                openLevelScene();
-                _firstComparison = false;
+            _playing.setOnSucceeded( e -> {
+                if (_firstComparison) {
+                    openLevelScene();
+                    _firstComparison = false;
+                }
+                stopProgress();
+            });
+            new Thread(_playing).start();
+        }catch(ClassCastException cce){
+            // load in the new scene
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
+            Parent playerParent = null;
+            try {
+                playerParent = loader.load();
+            } catch (IOException ioe) {
+                ioe.printStackTrace();
             }
-            stopProgress();
-        });
 
-        new Thread(_playing).start();
+            // pass selected items to the next controller
+            ErrorSceneController controller = loader.getController();
+            controller.setMessage("Please enter an integer");
+
+            // switch scenes
+            Scene playerScene = new Scene(playerParent);
+            Stage window = new Stage();
+            window.setScene(playerScene);
+            window.initModality(Modality.APPLICATION_MODAL);
+            window.showAndWait();
+        }
 
     }
 
@@ -260,14 +285,16 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * Creates a new Task which allows the comparison funcitonality to be
      * executed on a new thread.
      */
-    private Task compareWorker() {
+    private Task compareWorker(int loops) {
+
         return new Task() {
 
             @Override
             protected Object call() throws Exception {
                 // play user recording
-                _practiseListModel.compareUserRecording(_volumeSlider.getValue());
-
+                for(int i=0 ;i<loops;i++) {
+                    _practiseListModel.compareUserRecording(_volumeSlider.getValue());
+                }
                 return true;
             }
         };
@@ -393,4 +420,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
         _playBtn.toFront();
     }
 
+    public void stopButtonPressed(ActionEvent actionEvent) {
+    }
 }
