@@ -5,16 +5,12 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
 import org.controlsfx.control.textfield.TextFields;
@@ -173,20 +169,11 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
-     * When the user hits enter when typing in the search box, the searched name
-     * is added to the playlist.
-     * @param event
-     */
-    public void onEnter(ActionEvent event){
-        addToPlaylistPressed(event);
-    }
-
-    /**
      * Adds the string that is currently typed in the search box to be added to
      * the playlist.
      * @param event
      */
-    public void addToPlaylistPressed(ActionEvent event) {
+    public void addToPlaylist(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
         } else {
