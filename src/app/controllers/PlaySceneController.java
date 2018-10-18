@@ -210,15 +210,13 @@ public class PlaySceneController implements UserModelListener {
      * Updates the _levelCounter to display the users current level.
      * Updates the _levelProgress to display the user experience progress towards
      * the next level.
-     * @param experience
+     * @param currentUserLevel
+     * @param currentLevelProgress
      */
     @Override
-    public void notifyProgress(int experience) {
-        int currentLevelProgress = experience % 100;
-        int currentLevel = experience / 100;
-        _levelProgress.setProgress(currentLevelProgress / 100.0);
-        _levelCounter.setText(String.valueOf(currentLevel));
-
+    public void notifyProgress(int currentUserLevel, double currentLevelProgress) {
+        _levelProgress.setProgress(currentLevelProgress);
+        _levelCounter.setText(String.valueOf(currentUserLevel));
     }
 
 

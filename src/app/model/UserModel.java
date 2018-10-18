@@ -22,18 +22,22 @@ import java.util.Scanner;
 public class UserModel {
     private static final File DATA_FILE = new File(".userData.txt");
     private static final int XP_GAIN = 20;
+    private static final int XP_PER_LEVEL = 100;
     private static UserModel _instance;
 
     private List<UserModelListener> _listeners;
     private int _streakCount = 1;
     private LocalDate _lastLogin = LocalDate.now();
     private int _userXP = 100;
+    private int _currentLevel;
+    private double _currentLevelProgress;
 
     private UserModel() {
         _listeners = new ArrayList<>();
 
         readUserData();
         updateStreak();
+        calculateLevelProgress();
     }
 
     /**
@@ -56,7 +60,7 @@ public class UserModel {
      */
     public void addListener(UserModelListener listener) {
         _listeners.add(listener);
-        listener.notifyProgress(_userXP);
+        listener.notifyProgress(_currentLevel,_currentLevelProgress);
     }
 
     /**
@@ -67,9 +71,16 @@ public class UserModel {
     public void updateUserXP() {
         _userXP += XP_GAIN;
         writeUserData();
+        calculateLevelProgress();
+
         for(UserModelListener l : _listeners) {
-            l.notifyProgress(_userXP);
+            l.notifyProgress(_currentLevel, _currentLevelProgress);
         }
+    }
+
+    private void calculateLevelProgress() {
+        _currentLevel = _userXP / XP_PER_LEVEL;
+        _currentLevelProgress = (_userXP % XP_PER_LEVEL) / (double) XP_PER_LEVEL;
     }
 
     /**

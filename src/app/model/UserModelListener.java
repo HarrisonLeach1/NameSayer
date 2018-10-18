@@ -7,9 +7,10 @@ package app.model;
 public interface UserModelListener {
 
     /**
-     * Notifies the UserModelListener of the current experience level of
-     * the user.
-     * @param experience
+     * Notifies the UserModelListener of the current level of the user
+     * and the progress they have towards the next level.
+     * @param currentUserLevel
+     * @param currentLevelProgress
      */
-    void notifyProgress(int experience);
+    void notifyProgress(int currentUserLevel, double currentLevelProgress);
 }
