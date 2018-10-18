@@ -75,6 +75,8 @@ public class MainMenuController implements Initializable, DataModelListener {
 
         new SearchField(_searchBox);
 
+        new HighlightedList(_playList);
+
         DataModel.getInstance().addListener(this);
     }
 
@@ -409,37 +411,6 @@ public class MainMenuController implements Initializable, DataModelListener {
         } else if(event.getSource() == _testMicBtn){
             new SceneLoader(TEST_SCENE).openScene();
         }
-    }
-
-    /**
-     * Setup the playlist such that it displays when a ConcatenatedName object,
-     * contains missing names.
-     */
-    private void setupPlaylist() {
-        _playList.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
-            @Override
-            protected void updateItem(ConcatenatedName c, boolean empty) {
-                super.updateItem(c, empty);
-                // if empty, ignore
-                if (empty) {
-                    setText(null);
-                    setStyle("");
-
-                } else {
-                    setText(c.toString());
-
-                    // If the ConcatenatedName object contains missing names, update
-                    // the cell accordingly.
-                    if (!c.getMissingNames().equals("")) {
-                        setStyle("-fx-background-color: rgba(255,0,0,0.5)");
-                        setTooltip( new Tooltip("Missing Name(s): " + c.getMissingNames()));
-                    } else {
-                        setStyle("");
-                        setTooltip( new Tooltip("All Names Found!"));
-                    }
-                }
-            }
-        });
     }
 
     /**
