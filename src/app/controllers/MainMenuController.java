@@ -1,6 +1,7 @@
 package app.controllers;
 
 import app.model.*;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -13,6 +14,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.File;
@@ -53,6 +55,7 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
     private ConfirmSceneController _confirmationController;
+    private AutoCompletionBinding<String> _searchBinding;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -85,17 +88,27 @@ public class MainMenuController implements Initializable, DataModelListener {
      * the autocomplete return to all database names.
      */
     private void setupSearchBox() {
-        TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
+        SuggestionProvider<String> suggestionProvider = SuggestionProvider.create(DataModel.getInstance().getNameStrings());
+        TextFields.bindAutoCompletion(_searchBox, suggestionProvider).setPrefWidth(_searchBox.getPrefWidth());
 
         _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
 
             // if the user types a hyphen or space, reset the autocomplete to all names
-            if (newValue.endsWith(" ") || newValue.endsWith("-")) {
+            if ((newValue.length()) > oldValue.length() && (newValue.endsWith(" ") || newValue.endsWith("-"))
+            || newValue.length() < oldValue.length() && (oldValue.endsWith(" ") || oldValue.endsWith("-"))) {
+
                 List<String> autoCompleteList = new ArrayList<>();
+                int spaceIndex = newValue.lastIndexOf(" ");
+                int hyphenIndex = newValue.lastIndexOf("-");
+
+                int index = spaceIndex > hyphenIndex ? spaceIndex : hyphenIndex;
+
                 for(String name : DataModel.getInstance().getNameStrings()) {
-                    autoCompleteList.add(newValue + name);
+                    autoCompleteList.add(newValue.substring(0,index + 1) + name);
                 }
-                TextFields.bindAutoCompletion(_searchBox, autoCompleteList);
+
+                suggestionProvider.clearSuggestions();
+                suggestionProvider.addPossibleSuggestions(autoCompleteList);
             }
         });
     }
