@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.model.DataModel;
 import app.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

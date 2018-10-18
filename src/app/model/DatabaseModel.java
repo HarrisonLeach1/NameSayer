@@ -10,32 +10,32 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * The DataModel singleton object represents the database in which practise and user recordings
+ * The DatabaseModel singleton object represents the database in which practise and user recordings
  * are loaded in from and saved to.
  *
  * The displayable databases are returned in Tree View form and List View form, which allows
  * them to be easily presented to the user.
  */
-public class DataModel implements IDataModel{
+public class DatabaseModel implements IDatabaseModel {
     public static final File USER_DATABASE = new File("./userRecordings/");
-    private static DataModel _instance;
+    private static DatabaseModel _instance;
     private File _database = new File("./names/");
 	private HashMap<String, Name> _databaseTable;
 	private List<String> _nameStrings;
 
-	private DataModel() {
+	private DatabaseModel() {
     	_databaseTable = createNameTable(_database);
 	}
 
 
 	/**
-	 * Returns the singleton instance of the DataModel, used for loading
+	 * Returns the singleton instance of the DatabaseModel, used for loading
 	 * in the recording databases.
-	 * @return instance of DataModel
+	 * @return instance of DatabaseModel
 	 */
-	public static DataModel getInstance() {
+	public static DatabaseModel getInstance() {
 		if (_instance == null) {
-			_instance = new DataModel();
+			_instance = new DatabaseModel();
 		}
 		return _instance;
 	}
@@ -204,7 +204,7 @@ public class DataModel implements IDataModel{
 	 * Deletes the temporary directory for storing modified audio files if
 	 * it exists.
 	 */
-	public void deleteTempDirectory() {
+	public void deleteTempRecordings() {
 		try {
 			String cmd = "rm -rf " + ConcatenatedName.TEMP_FOLDER;
 

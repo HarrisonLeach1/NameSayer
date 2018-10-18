@@ -31,9 +31,9 @@ import java.util.ResourceBundle;
 /**
  * A MainMenuController holds the responsibility of receiving input events
  * from the user at the main menu and then translating them into actions on the
- * DataModel.
+ * DatabaseModel.
  *
- * The DataModel then passes information back to the MainMenuController
+ * The DatabaseModel then passes information back to the MainMenuController
  * to update the view.
  */
 public class MainMenuController implements Initializable, UserModelListener {
@@ -48,8 +48,11 @@ public class MainMenuController implements Initializable, UserModelListener {
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
     @FXML private ProgressBar _levelProgress;
+
     private File _selectedFile;
     private String _missingNames;
+    private IDatabaseModel _databaseModel;
+    private IUserModel _userModel;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -58,21 +61,34 @@ public class MainMenuController implements Initializable, UserModelListener {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         _startPane.toFront();
-        _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
         _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         _searchPane.toFront();
-        _streakCounter.setText(String.valueOf(UserModel.getInstance().getDailyStreak()));
+
+    }
+
+    /**
+     * Initialises the abstracted DatabaseModel with which this Controller will communicate
+     * with when making queries.
+     */
+    public void setModel(IDatabaseModel databaseModel, IUserModel userModel) {
+        _databaseModel = databaseModel;
+        _userModel = userModel;
+
+        _dataList.getItems().addAll(_databaseModel.loadDatabaseList());
 
         // change GUI labels
-        _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
-        _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+        _databaseLabel.setText(_databaseModel.getDatabaseName());
+        _nameCountLabel.setText(String.valueOf(_databaseModel.getDatabaseNameCount()));
+
+        _streakCounter.setText(String.valueOf(_userModel.getDailyStreak()));
+
+        _userModel.addListener(this);
 
         setupPlaylist();
 
         setupSearchBox();
-
-        UserModel.getInstance().addListener(this);
     }
+
 
     /**
      * Initialises the search box to allow for autocompletion when the user
@@ -81,14 +97,14 @@ public class MainMenuController implements Initializable, UserModelListener {
      * the autocomplete return to all database names.
      */
     private void setupSearchBox() {
-        TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
+        TextFields.bindAutoCompletion(_searchBox, _databaseModel.getNameStrings());
 
         _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
 
             // if the user types a hyphen or space, reset the autocomplete to all names
             if (newValue.endsWith(" ") || newValue.endsWith("-")) {
                 List<String> autoCompleteList = new ArrayList<>();
-                for(String name : DataModel.getInstance().getNameStrings()) {
+                for(String name : _databaseModel.getNameStrings()) {
                     autoCompleteList.add(newValue + name);
                 }
                 TextFields.bindAutoCompletion(_searchBox, autoCompleteList);
@@ -131,14 +147,14 @@ public class MainMenuController implements Initializable, UserModelListener {
 
         if (selectedDirectory != null) {
             // change database
-            DataModel.getInstance().setDatabase(selectedDirectory);
+            _databaseModel.setDatabase(selectedDirectory);
 
             // change GUI labels
-            _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
-            _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
+            _databaseLabel.setText(_databaseModel.getDatabaseName());
+            _nameCountLabel.setText(String.valueOf(_databaseModel.getDatabaseNameCount()));
 
             _dataList.getItems().clear();
-            _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
+            _dataList.getItems().addAll(_databaseModel.loadDatabaseList());
         }
     }
 
@@ -201,7 +217,7 @@ public class MainMenuController implements Initializable, UserModelListener {
             @Override
             protected List<ConcatenatedName> call() throws Exception {
                 // load name through data model
-                List<ConcatenatedName> list = DataModel.getInstance().loadSingleNameToList(_searchBox.getText());
+                List<ConcatenatedName> list = _databaseModel.loadSingleNameToList(_searchBox.getText());
 
                 // compile missing names into a string to display to the user if needed
                 compileMissingNames(list);
@@ -285,7 +301,7 @@ public class MainMenuController implements Initializable, UserModelListener {
             @Override
             protected List<ConcatenatedName> call() throws Exception {
                 // load file through data model
-                List<ConcatenatedName> list = DataModel.getInstance().loadFileToList(_selectedFile);
+                List<ConcatenatedName> list = _databaseModel.loadFileToList(_selectedFile);
                 compileMissingNames(list);
                 return list;
             }
@@ -454,7 +470,7 @@ public class MainMenuController implements Initializable, UserModelListener {
             _dataPane.toFront();
 
         } else if(event.getSource() == _viewRecBtn){
-            _recList.setRoot(DataModel.getInstance().loadUserDatabaseTree());
+            _recList.setRoot(_databaseModel.loadUserDatabaseTree());
             _recList.setShowRoot(false);
             _recPane.toFront();
 
@@ -524,7 +540,7 @@ public class MainMenuController implements Initializable, UserModelListener {
 
         // pass selected items to the next controller
         PlaySceneController controller = loader.getController();
-        controller.initModel(new PractiseListModel(new ArrayList<>(list)));
+        controller.setModel(new PractiseListModel(new ArrayList<>(list)), _userModel);
 
         // switch scenes
         Scene playerScene = new Scene(playerParent);

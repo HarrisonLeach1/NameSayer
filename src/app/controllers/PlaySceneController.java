@@ -34,6 +34,7 @@ public class PlaySceneController implements UserModelListener {
     private Task _playing;
 
     private IPractiseListModel _practiseListModel;
+    private IUserModel _userModel;
     private Practisable _currentName;
     private boolean _firstComparison;
 
@@ -42,14 +43,16 @@ public class PlaySceneController implements UserModelListener {
      * the main menu to be practised.
      * @param practiseListModel
      */
-    public void initModel(IPractiseListModel practiseListModel) {
+    public void setModel(IPractiseListModel practiseListModel, IUserModel userModel) {
         _practiseListModel = practiseListModel;
+        _userModel = userModel;
+
         _currentName = _practiseListModel.nextName();
         makeTransition();
         _volumeSlider.setMin(0);
         _volumeSlider.setMax(2.0);
         _volumeSlider.setValue(1.0);
-        UserModel.getInstance().addListener(this);
+        _userModel.addListener(this);
     }
 
     /**
@@ -98,7 +101,7 @@ public class PlaySceneController implements UserModelListener {
 
         // pass the model to the recording scene controller
         RecordingSceneController controller = loader.getController();
-        controller.initModel(_practiseListModel);
+        controller.setModel(_practiseListModel);
 
         Scene playerScene = new Scene(playerParent);
 
@@ -153,7 +156,7 @@ public class PlaySceneController implements UserModelListener {
         Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
         Scene playerScene = new Scene(playerParent);
 
-        DataModel.getInstance().deleteTempDirectory();
+        DatabaseModel.getInstance().deleteTempRecordings();
 
         // switch scenes
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();

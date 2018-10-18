@@ -25,7 +25,7 @@ public class RecordingSceneController {
      * Initialises the controller with the practise list model to be used.
      * @param model
      */
-    public void initModel(IPractiseListModel model) {
+    public void setModel(IPractiseListModel model) {
         _practiseListModel = model;
         _cancelBtn.setDisable(true);
         _finishBtn.setDisable(true);

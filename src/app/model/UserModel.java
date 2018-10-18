@@ -42,7 +42,7 @@ public class UserModel implements IUserModel {
     /**
      * Returns the singleton instance of the UserModel, used for loading
      * and saving user data.
-     * @return instance of DataModel
+     * @return instance of DatabaseModel
      */
     public static UserModel getInstance() {
         if (_instance == null) {

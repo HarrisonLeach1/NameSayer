@@ -22,6 +22,14 @@ public class LevelSceneController {
     private static final String GAIN_XP_MSG = "You have gained ";
     @FXML private Button _goodBtn, _avgBtn, _badBtn;
     @FXML private Label _messageLabel;
+    private IUserModel _userModel;
+
+    /**
+     * Sets the IUserModel that this level scene communicates with.
+     */
+    public void setModel(IUserModel userModel) {
+        _userModel = userModel;
+    }
 
     /**
      * Confirms that the user has made a good or average pronunciation of the name.
@@ -78,7 +86,7 @@ public class LevelSceneController {
     }
 
     /**
-     * Waits for the specified amount of time then closes the window.
+     * Waits for the specified amount of time to close the window.
      */
     private void waitAndClose(int waitTime) {
         Stage window = (Stage) _messageLabel.getScene().getWindow();
