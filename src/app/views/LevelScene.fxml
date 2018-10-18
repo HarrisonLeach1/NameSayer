@@ -11,7 +11,7 @@
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Was your pronunciation good?" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Rate your pronunciation" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="15.0" />
                </font>
@@ -20,8 +20,8 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Button layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#noButtonPressed" prefHeight="27.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="No" textFill="WHITE" />
-            <Button layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#yesButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Yes" textFill="WHITE" />
+            <Button layoutX="213.0" layoutY="64.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Bad" textFill="WHITE" />
+            <Button layoutX="60.0" layoutY="64.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Good" textFill="WHITE" />
          </children>
       </AnchorPane>
    </children>

@@ -19,7 +19,7 @@ import java.util.Scanner;
  * from a data file. When the object receives updates on the users
  * progress it updates it's information and writes it to the file.
  */
-public class UserModel {
+public class UserModel implements IUserModel {
     private static final File DATA_FILE = new File(".userData.txt");
     private static final int XP_GAIN = 20;
     private static final int XP_PER_LEVEL = 100;
@@ -53,9 +53,9 @@ public class UserModel {
     }
 
     /**
-     * Registers a listener with this data model object. The registered
-     * listener is notified of any events in which the users progress is
-     * changed.
+     * Registers a listener with this UserModel object. The registered
+     * listener is notified of any events in which the users level
+     * progress is changed.
      * @param listener
      */
     public void addListener(UserModelListener listener) {
@@ -64,12 +64,12 @@ public class UserModel {
     }
 
     /**
-     * Increases the amount of XP the user has and writes this
-     * information to a file to be saved for the user upon their
-     * next start-up. Notifies any registered listeners.
+     * Updates the amount of XP the user has by the given ComparisonRating
+     * and writes this information to a file to be saved for the user upon
+     * their next start-up. Notifies any registered listeners.
      */
-    public void updateUserXP() {
-        _userXP += XP_GAIN;
+    public void updateUserXP(ComparisonRating rating) {
+        _userXP += rating.getExperience();
         writeUserData();
         calculateLevelProgress();
 
