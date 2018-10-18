@@ -1,6 +1,7 @@
 package app.model;
 
 import java.io.*;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ public class ConcatenatedName implements Practisable {
     public static final String TEMP_FOLDER = "temp/";
     public static final double VOLUME_LEVEL = -20.0;
 
+    // indicates the levels of silence which are cut from the start and the end
+    private static final int START_THRESHOLD = -35;
+    private static final int END_THRESHOLD = -50;
+
     private final String _displayName;
     private List<Name> _names;
     private String _stringOfPaths;
@@ -26,8 +31,8 @@ public class ConcatenatedName implements Practisable {
 
         makeTempDirectory();
         cutSilence();
-        concatenateFileNames();
         normaliseAudio();
+        concatenateFileNames();
         concatenateAudio();
     }
 
@@ -57,8 +62,10 @@ public class ConcatenatedName implements Practisable {
      * of similar volume.
      */
     private void normaliseAudio() {
-        try {
-            for(Name name : _names) {
+        try { // use iterator to allow for deletion while iterating
+            for(Iterator<Name> it = _names.iterator(); it.hasNext();) {
+                Name name = it.next();
+
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
                         "-f null /dev/null |& grep 'mean_volume:' ";
@@ -74,6 +81,13 @@ public class ConcatenatedName implements Practisable {
                 InputStream stdout = process.getInputStream();
                 BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
                 String lineOut = stdoutBuffered.readLine();
+                System.out.println(lineOut);
+
+                // if the audio cannot be detected, remove it from the name from the recording list
+                if(lineOut == null) {
+                    it.remove();
+                    continue;
+                }
 
                 // Parse the mean volume number from the output, the volume is 2-7 indices from the right of the colon
                 int colonIndex = lineOut.lastIndexOf(':');
@@ -107,9 +121,9 @@ public class ConcatenatedName implements Practisable {
         for(Name name : _names) {
             try {
                 // 1:0 -50dB indicates that anything below -50dB is cut off from the start
-                // 1:% -50dB indicates that anything below -70dB is cut off from the end
+                // 1:5 -50dB indicates that anything below -70dB is cut off from the end
                 String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFileName() +
-                        " -af silenceremove=1:0:-50dB:1:5:-70dB " + TEMP_FOLDER + name.toString() + EXTENSION;
+                        " -af silenceremove=1:0:"+ START_THRESHOLD +"dB:1:5:"+ END_THRESHOLD +"dB " + TEMP_FOLDER + name.toString() + EXTENSION;
                 System.out.println(cmd);
 
 
@@ -165,7 +179,7 @@ public class ConcatenatedName implements Practisable {
     }
 
     /**
-     * Creates a temporary directory for storing modified audio files.
+     * Creates the temporary directory for storing modified audio files.
      */
     private void makeTempDirectory() {
         try {
