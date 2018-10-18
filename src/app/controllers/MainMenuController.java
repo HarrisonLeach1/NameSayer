@@ -55,7 +55,6 @@ public class MainMenuController implements Initializable, DataModelListener {
     @FXML private ProgressBar _levelProgress;
     private File _selectedFile;
     private ConfirmSceneController _confirmationController;
-    private AutoCompletionBinding<String> _searchBinding;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -74,43 +73,9 @@ public class MainMenuController implements Initializable, DataModelListener {
         _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
         _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
 
-        setupPlaylist();
-
-        setupSearchBox();
+        new SearchField(_searchBox);
 
         DataModel.getInstance().addListener(this);
-    }
-
-    /**
-     * Initialises the search box to allow for autocompletion when the user
-     * begins typing a name. Initially the autocomplete contains all database names,
-     * then changes based on the users search. When the user enters a space or hyphen
-     * the autocomplete return to all database names.
-     */
-    private void setupSearchBox() {
-        SuggestionProvider<String> suggestionProvider = SuggestionProvider.create(DataModel.getInstance().getNameStrings());
-        TextFields.bindAutoCompletion(_searchBox, suggestionProvider).setPrefWidth(_searchBox.getPrefWidth());
-
-        _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            // if the user types a hyphen or space, reset the autocomplete to all names
-            if ((newValue.length()) > oldValue.length() && (newValue.endsWith(" ") || newValue.endsWith("-"))
-            || newValue.length() < oldValue.length() && (oldValue.endsWith(" ") || oldValue.endsWith("-"))) {
-
-                List<String> autoCompleteList = new ArrayList<>();
-                int spaceIndex = newValue.lastIndexOf(" ");
-                int hyphenIndex = newValue.lastIndexOf("-");
-
-                int index = spaceIndex > hyphenIndex ? spaceIndex : hyphenIndex;
-
-                for(String name : DataModel.getInstance().getNameStrings()) {
-                    autoCompleteList.add(newValue.substring(0,index + 1) + name);
-                }
-
-                suggestionProvider.clearSuggestions();
-                suggestionProvider.addPossibleSuggestions(autoCompleteList);
-            }
-        });
     }
 
 
