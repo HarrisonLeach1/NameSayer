@@ -21,8 +21,7 @@ import java.util.Scanner;
  */
 public class UserModel implements IUserModel {
     private static final File DATA_FILE = new File(".userData.txt");
-    private static final int XP_GAIN = 20;
-    private static final int XP_PER_LEVEL = 100;
+    private static final int XP_PER_LEVEL = 150;
     private static UserModel _instance;
 
     private List<UserModelListener> _listeners;
@@ -157,5 +156,9 @@ public class UserModel implements IUserModel {
 
     public int getDailyStreak() {
         return _streakCount;
+    }
+
+    public int getUserLevel() {
+        return _currentLevel;
     }
 }

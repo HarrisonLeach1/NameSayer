@@ -99,3 +99,7 @@
 .record:pressed{
     -fx-border-color: white;
 }
+
+.average{
+    -fx-background-color:#6E6970;
+}

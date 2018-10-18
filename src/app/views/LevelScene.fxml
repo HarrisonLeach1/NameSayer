@@ -20,8 +20,14 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Button layoutX="213.0" layoutY="64.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Bad" textFill="WHITE" />
-            <Button layoutX="60.0" layoutY="64.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Good" textFill="WHITE" />
+            <Button fx:id="_badBtn" layoutX="239.0" layoutY="78.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="bad" text="Bad" textFill="WHITE" />
+            <Button fx:id="_goodBtn" layoutX="32.0" layoutY="78.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="play" stylesheets="@style.css" text="Good" textFill="WHITE" />
+            <Button fx:id="_avgBtn" layoutX="135.0" layoutY="78.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="average" stylesheets="@style.css" text="Average" textFill="WHITE" />
+            <Label fx:id="_messageLabel" alignment="CENTER" layoutY="29.0" prefHeight="24.0" prefWidth="350.0" textFill="WHITE">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
          </children>
       </AnchorPane>
    </children>

@@ -18,7 +18,9 @@ public interface IUserModel {
 
     void updateUserXP(ComparisonRating rating);
 
+    void addListener(UserModelListener listener);
+
     int getDailyStreak();
 
-    void addListener(UserModelListener listener);
+    int getUserLevel();
 }
