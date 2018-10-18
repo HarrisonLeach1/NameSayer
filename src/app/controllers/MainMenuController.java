@@ -173,6 +173,15 @@ public class MainMenuController implements Initializable, DataModelListener {
     }
 
     /**
+     * When the user hits enter when typing in the search box, the searched name
+     * is added to the playlist.
+     * @param event
+     */
+    public void onEnter(ActionEvent event){
+        addToPlaylistPressed(event);
+    }
+
+    /**
      * Adds the string that is currently typed in the search box to be added to
      * the playlist.
      * @param event
