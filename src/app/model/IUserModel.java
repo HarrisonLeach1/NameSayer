@@ -6,8 +6,8 @@ package app.model;
  *
  * Having the IDataModel interface allows for dependency injection, such that
  * the users are dependent on an abstraction rather than a concrete
- * implementation. This allows for increased flexibility if the database
- * implementation is changed.
+ * implementation. This allows for increased flexibility if the implementation
+ * is changed.
  */
 public interface IUserModel {
 

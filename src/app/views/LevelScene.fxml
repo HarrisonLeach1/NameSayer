@@ -29,8 +29,8 @@
                   <String fx:value="menu-dark" />
                   <String fx:value="smallgreenbutton" />
                </styleClass></Button>
-             <Button fx:id="_avgBtn" layoutX="135.0" layoutY="78.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="average" stylesheets="@style.css" text="Average" textFill="WHITE" />]
-             <Label fx:id="_messageLabel" alignment="CENTER" layoutY="29.0" prefHeight="24.0" prefWidth="350.0" textFill="WHITE">
+             <Button fx:id="_avgBtn" layoutX="135.0" layoutY="78.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="average" stylesheets="@style.css" text="Average" textFill="WHITE" />
+             <Label fx:id="_messageLabel" alignment="CENTER" layoutY="29.0" prefHeight="24.0" prefWidth="350.0" textFill="WHITE"/>
          </children>
       </AnchorPane>
    </children>

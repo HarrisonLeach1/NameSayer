@@ -48,6 +48,11 @@ public class SearchField {
     private void initialiseAutoCompletion() {
         _textField.textProperty().addListener((observable, oldValue, newValue) -> {
 
+            // initially autocomplete contains all names
+            if(oldValue.isEmpty()) {
+                _suggestionProvider.addPossibleSuggestions(_databaseModel.getNameStrings());
+            }
+
             // if the user adds a space or a hyphen
             if ((newValue.length()) > oldValue.length() && (newValue.endsWith(" ") || newValue.endsWith("-"))
                     // or if the user deletes a space or a hyphen
