@@ -10,6 +10,9 @@ import static app.model.DatabaseModel.USER_DATABASE;
 
 /**
  * A Recording object represents a production of a name created by a user.
+ *
+ * When created it is stored in a file and converted into a NameVersion object
+ * that is playable by the user and can also be deleted.
  */
 public class Recording {
 

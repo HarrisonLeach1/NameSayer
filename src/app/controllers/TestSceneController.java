@@ -1,17 +1,11 @@
 package app.controllers;
 
 import app.model.MicTestTask;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-
-import javax.sound.sampled.*;
-import java.net.URL;
-import java.util.ResourceBundle;
 
 /**
  * A TestSceneController holds the responsibility of receiving input events

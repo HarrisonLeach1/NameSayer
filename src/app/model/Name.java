@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Name object represents a unique name that may have
+ * A Name object represents a unique name that may have multiple versions
+ * and is practisable by the user.
  */
 public class Name implements Practisable{
     private final String _name;

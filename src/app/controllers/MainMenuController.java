@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.model.*;
-import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -17,8 +16,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
 import java.io.File;
@@ -59,10 +56,10 @@ public class MainMenuController implements Initializable, UserModelListener {
     @FXML private ProgressBar _playingProgress,_levelProgress;
 
     private ConfirmSceneController _confirmationController;
-    private static boolean start = true;
     private Task _player;
     private IDatabaseModel _databaseModel;
     private IUserModel _userModel;
+    private static boolean start = true;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -159,7 +156,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameWorker(_searchBox.getText());
+            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             loadWorker.setOnSucceeded(e -> {
                 if (approveMissingNames(_databaseModel.compileMissingNames(loadWorker.getValue()))) {
@@ -179,7 +176,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameWorker(_searchBox.getText());
+            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             // when finished update the list view if the user chooses to
             loadWorker.setOnSucceeded(e -> {
@@ -261,7 +258,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         _fileNameLabel.setText("  " + selectedFile.getName());
 
         // create a load worker for loading in the names in the file
-        Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadFileWorker(selectedFile);
+        Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadFileTask(selectedFile);
 
         // load in the new scene
         SceneLoader loader = new SceneLoader(LOADING_SCENE);
