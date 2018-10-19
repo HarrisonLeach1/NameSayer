@@ -1,11 +1,12 @@
 package app.model;
 
 import java.io.*;
-import java.util.List;
+import java.util.*;
+import java.util.Iterator;
 
 /**
- * Represents a Name that is composed of multiple name recordings that can
- * be played.
+ * A ConcatenatedName object represents a Name that is composed of multiple name
+ * recordings that is practisable by the user.
  *
  * Within the Concatenated Name class Name objects are normalised with silence cut
  * and concatenated.
@@ -15,27 +16,32 @@ public class ConcatenatedName implements Practisable {
     public static final String TEMP_FOLDER = "temp/";
     public static final double VOLUME_LEVEL = -20.0;
 
+    // indicates the levels of silence which are cut from the start and the end
+    private static final int START_THRESHOLD = -35;
+    private static final int END_THRESHOLD = -50;
+
     private final String _displayName;
-    private List<Name> _names;
+    private List<Name> _nameList;
     private String _stringOfPaths;
     private String _missingNames = "";
+    private Process _playingProcess;
 
-    public ConcatenatedName(List<Name> names, String displayName) throws InterruptedException {
-        _displayName = displayName;
-        _names= names;
+    public ConcatenatedName(String name, HashMap<String, Name> databaseTable) throws InterruptedException {
+        _displayName = name;
 
-        makeTempDirectory();
-        cutSilence();
-        concatenateFileNames();
-        normaliseAudio();
-        concatenateAudio();
+        parseNameList(name, databaseTable);
+        createAudio();
     }
 
     /**
-     * Plays the recording via ffmpeg at the specified volume
-     * @param volume
+     * Creates a new bash process which plays the audio file associated with this ConcatenatedName object
+     * at the given volume. Note that this method is a blocking call and as such should be executed on a
+     * new thread.
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
+     *               audio is amplified by double, etc.
+     * @throws InterruptedException
      */
-    public void playRecording(double volume) {
+    public void playRecording(double volume) throws InterruptedException {
         // replace all spaces with underscores
         String file = TEMP_FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
         try {
@@ -43,12 +49,78 @@ public class ConcatenatedName implements Practisable {
             System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            Process process  = builder.start();
+            _playingProcess  = builder.start();
 
-            process.waitFor();
+            _playingProcess.waitFor();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Ends the bash process which is playing the audio file of this ConcatenatedName object.
+     * This will cause an InterruptedException to be thrown by the playRecording method
+     * during execution.
+     */
+    public void stopRecording() {
+        if(_playingProcess != null) {
+            _playingProcess.destroy();
+        }
+    }
+
+    /**
+     * Creates the audio file that is associated with this ConcatenatedName object.
+     * The audio file is built from the List of Names of this ConcatenatedName object.
+     * The resulting audio file is all the Name recordings concatenated with silence
+     * cut and audio normalised between the recordings.
+     * @throws InterruptedException
+     */
+    private void createAudio() throws InterruptedException {
+        makeTempDirectory();
+        cutSilence();
+        normaliseAudio();
+        concatenateFileNames();
+        concatenateAudio();
+    }
+
+    /**
+     * Creates a temporary directory for storing modified audio files.
+     */
+    private void makeTempDirectory() {
+        try {
+            String cmd = "mkdir -p " + TEMP_FOLDER;
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            builder.start();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Modifies the audio files of the associated names such that they do
+     * not contain any unnecessary silence.
+     */
+    private void cutSilence() {
+        for(Name name : _nameList) {
+            try {
+                // 1:0 -50dB indicates that anything below -50dB is cut off from the start
+                // 1:5 -50dB indicates that anything below -70dB is cut off from the end
+                String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFilePath() +
+                        " -af silenceremove=1:0:"+ START_THRESHOLD +"dB:1:5:"+ END_THRESHOLD +"dB " + TEMP_FOLDER + name.toString() + EXTENSION;
+                System.out.println(cmd);
+
+
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+                Process process = builder.start();
+
+                process.waitFor();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -57,8 +129,10 @@ public class ConcatenatedName implements Practisable {
      * of similar volume.
      */
     private void normaliseAudio() throws InterruptedException {
-        try {
-            for(Name name : _names) {
+        try { // use iterator to allow for deletion while iterating
+            for(Iterator<Name> it = _nameList.iterator(); it.hasNext();) {
+                Name name = it.next();
+
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
                         "-f null /dev/null |& grep 'mean_volume:' ";
@@ -74,6 +148,13 @@ public class ConcatenatedName implements Practisable {
                 InputStream stdout = process.getInputStream();
                 BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
                 String lineOut = stdoutBuffered.readLine();
+                System.out.println(lineOut);
+
+                // if the audio cannot be detected, remove it from the name from the recording list
+                if(lineOut == null) {
+                    it.remove();
+                    continue;
+                }
 
                 // Parse the mean volume number from the output, the volume is 2-7 indices from the right of the colon
                 int colonIndex = lineOut.lastIndexOf(':');
@@ -99,30 +180,6 @@ public class ConcatenatedName implements Practisable {
         }
     }
 
-    /**
-     * Modifies the audio files of the associated names such that they do
-     * not contain any unnecessary silence.
-     */
-    private void cutSilence() throws InterruptedException {
-        for(Name name : _names) {
-            try {
-                // 1:0 -50dB indicates that anything below -50dB is cut off from the start
-                // 1:% -50dB indicates that anything below -70dB is cut off from the end
-                String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFileName() +
-                        " -af silenceremove=1:0:-50dB:1:5:-70dB " + TEMP_FOLDER + name.toString() + EXTENSION;
-                System.out.println(cmd);
-
-
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-                Process process = builder.start();
-
-                process.waitFor();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 
     /**
      * All file names of the good quality versions of each given name are
@@ -131,7 +188,7 @@ public class ConcatenatedName implements Practisable {
      */
     private void concatenateFileNames() {
         _stringOfPaths = "";
-        for (Name name : _names) {
+        for (Name name : _nameList) {
             _stringOfPaths += " -i " + TEMP_FOLDER + name.toString() + EXTENSION;
         }
     }
@@ -144,10 +201,10 @@ public class ConcatenatedName implements Practisable {
         //  determines the bash process option: -filter_complex '[0:0]...[<N>-1:0]concat=n=<N>:v=0:a=1[out]'
         //  where <N> is the number of recordings to be concatenated
         String bashFilter = "";
-        for(int i = 0; i < _names.size(); i++) {
+        for(int i = 0; i < _nameList.size(); i++) {
             bashFilter += "[" + i + ":0]";
         }
-        bashFilter += "concat=n=" + _names.size() + ":v=0:a=1[out]";
+        bashFilter += "concat=n=" + _nameList.size() + ":v=0:a=1[out]";
 
         // execute the bash process
         try {
@@ -165,17 +222,56 @@ public class ConcatenatedName implements Practisable {
     }
 
     /**
-     * Creates a temporary directory for storing modified audio files.
+     * Given an input string, creates a List of Names from the string that are present
+     * in the given database table of Names.
+     * Different names should be separated by a space or hyphen in the input string.
+     * @param inputString
+     * @return a ConcatenatedName corresponding to the input string
+     * @throws InterruptedException
      */
-    private void makeTempDirectory() {
-        try {
-            String cmd = "mkdir -p " + TEMP_FOLDER;
+    private void parseNameList(String inputString, HashMap<String, Name> databaseTable) throws InterruptedException {
+        _nameList = new ArrayList<>();
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            builder.start();
+        List<String> stringList = formatStringList(inputString);
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        // If the name is empty, then the entire name is invalid
+        if(stringList.size() < 1) {
+            _missingNames = inputString;
+        }
+
+        stringListToNameList(stringList, databaseTable);
+    }
+
+    /**
+     * Given an input string, formats each name in the string into its own string in the
+     * output List. Different names should be separated by a space or hyphen in the input string.
+     * @param inputString
+     * @return
+     */
+    private List<String> formatStringList(String inputString) {
+        // remove leading and trailing spaces
+        inputString = inputString.trim();
+
+        // replace all hyphens with spaces
+        String splitString = inputString.replaceAll("-", " ");
+
+        // parse strings into a list of strings
+        return new ArrayList<>(Arrays.asList(splitString.split(" ")));
+    }
+
+    /**
+     * Given a List of strings, creates a List of Names from the strings taht are present
+     * in the given database table of Names.
+     * @param stringList
+     * @param databaseTable
+     */
+    private void stringListToNameList(List<String> stringList, HashMap<String, Name> databaseTable) {
+        for (String str : stringList) {
+            if (databaseTable.containsKey(str.toLowerCase())) {
+                _nameList.add(databaseTable.get(str.toLowerCase()));
+            } else {
+                _missingNames += str + " ";
+            }
         }
     }
 
@@ -191,16 +287,13 @@ public class ConcatenatedName implements Practisable {
 
     @Override
     public void setBadQuality() {
-        // A concatenated Name cannot yet be rated
+        // A ConcatenatedName cannot yet be rated
     }
 
     @Override
     public String getDateTimeCreated() {
+        // A ConcatenatedName does not have a single date of creation
         return "";
-    }
-
-    public void setMissingNames(String missingNames) {
-        _missingNames = missingNames;
     }
 
     public String getMissingNames() {

@@ -1,7 +1,7 @@
 package app.controllers;
 
-import app.model.DataModel;
-import app.model.User;
+import app.model.IUserModel;
+import app.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,18 +18,17 @@ import java.util.ResourceBundle;
  * into actions on the views.
  */
 
-public class StreakSceneController implements Initializable {
+public class StreakSceneController {
 
     @FXML private Label _streakCounter;
 
     /**
-     * Retrieves the users daily streak information from the data model.
-     * @param location
-     * @param resources
+     * Initialises the IUserModel object that the streaks information is
+     * retrieved from.
+     * @param userModel
      */
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
+    public void setModel(IUserModel userModel) {
+        _streakCounter.setText(String.valueOf(userModel.getDailyStreak()));
     }
 
     /**

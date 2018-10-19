@@ -139,3 +139,7 @@
     -fx-background-insets: 1 1 2 1;
     -fx-padding: 0.20em;
 }
+
+.average{
+    -fx-background-color:#6E6970;
+}

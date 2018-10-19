@@ -6,10 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
- * A User object represents the NameSayer progress information of
+ * A UserModel object represents the NameSayer progress information of
  * the user.
  *
  * The information it stores currently are the users daily streak
@@ -17,26 +19,67 @@ import java.util.Scanner;
  * from a data file. When the object receives updates on the users
  * progress it updates it's information and writes it to the file.
  */
-public class User {
+public class UserModel implements IUserModel {
     private static final File DATA_FILE = new File(".userData.txt");
-    private static final int XP_GAIN = 20;
+    private static final int XP_PER_LEVEL = 150;
+    private static UserModel _instance;
+
+    private List<UserModelListener> _listeners;
     private int _streakCount = 1;
     private LocalDate _lastLogin = LocalDate.now();
     private int _userXP = 100;
+    private int _currentLevel;
+    private double _currentLevelProgress;
 
-    public User() {
+    private UserModel() {
+        _listeners = new ArrayList<>();
+
         readUserData();
         updateStreak();
+        calculateLevelProgress();
     }
 
     /**
-     * Increases the amount of XP the user has and writes this
-     * information to a file to be saved for the user upon their
-     * next start-up.
+     * Returns the singleton instance of the UserModel, used for loading
+     * and saving user data.
+     * @return instance of DatabaseModel
      */
-    public void updateUserXP() {
-        _userXP += XP_GAIN;
+    public static UserModel getInstance() {
+        if (_instance == null) {
+            _instance = new UserModel();
+        }
+        return _instance;
+    }
+
+    /**
+     * Registers a listener with this UserModel object. The registered
+     * listener is notified of any events in which the users level
+     * progress is changed.
+     * @param listener
+     */
+    public void addListener(UserModelListener listener) {
+        _listeners.add(listener);
+        listener.notifyProgress(_currentLevel,_currentLevelProgress);
+    }
+
+    /**
+     * Updates the amount of XP the user has by the given ComparisonRating
+     * and writes this information to a file to be saved for the user upon
+     * their next start-up. Notifies any registered listeners.
+     */
+    public void updateUserXP(ComparisonRating rating) {
+        _userXP += rating.getExperience();
         writeUserData();
+        calculateLevelProgress();
+
+        for(UserModelListener l : _listeners) {
+            l.notifyProgress(_currentLevel, _currentLevelProgress);
+        }
+    }
+
+    private void calculateLevelProgress() {
+        _currentLevel = _userXP / XP_PER_LEVEL;
+        _currentLevelProgress = (_userXP % XP_PER_LEVEL) / (double) XP_PER_LEVEL;
     }
 
     /**
@@ -115,7 +158,7 @@ public class User {
         return _streakCount;
     }
 
-    public int getUserXP() {
-        return _userXP;
+    public int getUserLevel() {
+        return _currentLevel;
     }
 }

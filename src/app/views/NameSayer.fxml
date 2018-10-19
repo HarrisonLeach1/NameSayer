@@ -259,8 +259,8 @@
                               <Font size="20.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="_searchBox" layoutX="584.0" layoutY="123.0" prefHeight="33.0" prefWidth="380.0" promptText="Enter name here" AnchorPane.leftAnchor="584.0" AnchorPane.topAnchor="125.0" />
-                        <Label layoutX="199.0" layoutY="87.0" text="Text file input selection" textFill="WHITE" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="85.0">
+                        <TextField fx:id="_searchBox" layoutX="584.0" layoutY="123.0" onAction="#addToPlaylist" prefHeight="33.0" prefWidth="380.0" promptText="Enter name here" AnchorPane.leftAnchor="584.0" AnchorPane.topAnchor="125.0" />
+                        <Label layoutX="199.0" layoutY="87.0" text="Upload File to Playlist" textFill="WHITE" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="85.0">
                            <font>
                               <Font size="20.0" />
                            </font>
@@ -307,7 +307,7 @@
                               <String fx:value="menu-dark" />
                            </styleClass>
                         </Button>
-                        <Button layoutX="755.0" layoutY="167.0" mnemonicParsing="false" onAction="#addToPlaylistPressed" prefHeight="30.0" style="-fx-border-color: white;" text="Add to Playlist">
+                        <Button layoutX="755.0" layoutY="167.0" mnemonicParsing="false" onAction="#addToPlaylist" prefHeight="30.0" style="-fx-border-color: white;" text="Add to Playlist">
                            <styleClass>
                               <String fx:value="play" />
                               <String fx:value="menu" />
@@ -336,6 +336,7 @@
                               <String fx:value="menu" />
                            </styleClass>
                         </Button>
+                        <Button id="remove" layoutX="255.0" layoutY="653.0" mnemonicParsing="false" onAction="#removeFromPlaylist" prefHeight="27.0" prefWidth="160.0" style="-fx-border-color: white;" styleClass="bad" text="Remove Selected " textFill="WHITE" />
                      </children>
                      <opaqueInsets>
                         <Insets />

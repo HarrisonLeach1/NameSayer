@@ -7,14 +7,23 @@ import java.util.Collection;
  * A Practisable object represents an object that can be used in
  * a PractiseListModel.
  *
- * As such it can be played, and give date and rating information.
+ * As such, it can be played, stopped, and give date, rating and
+ * missing audio information.
  */
 public interface Practisable {
     /**
      * Plays the recording of a practisable object which allows the user
      * to hear a name, which they can record and compare themselves to.
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
+     *               audio is amplified by double, etc.
+     * @throws InterruptedException
      */
-    void playRecording(double volume);
+    void playRecording(double volume) throws InterruptedException;
+
+    /**
+     * Ends the playing of the audio recording prematurely.
+     */
+    void stopRecording();
 
     /**
      * Returns true if the user can rate this object as being of bad quality,

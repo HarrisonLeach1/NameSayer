@@ -1,7 +1,7 @@
 package app.controllers;
 
 import app.model.ConcatenatedName;
-import app.model.DataModel;
+import app.model.IDatabaseModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -20,6 +20,11 @@ public class SavePlaylistController {
 
     @FXML private TextField _playListName;
     private List<ConcatenatedName> _playlist;
+    private IDatabaseModel _databaseModel;
+
+    public void setModel(IDatabaseModel databaseModel) {
+        _databaseModel = databaseModel;
+    }
 
     /**
      * The user is confirming to save the playlist so the text from the text field
@@ -28,11 +33,11 @@ public class SavePlaylistController {
      * @param event
      */
     public void handleConfirmAction(ActionEvent event) {
-        // TODO if input is empty, load error message
         // tell the data model to save the playlist somewhere
-        DataModel.getInstance().savePlaylist(_playlist, _playListName.getText());
+        _databaseModel.savePlaylist(_playlist, _playListName.getText());
 
         // close window
+        _databaseModel.savePlaylist(_playlist, _playListName.getText());
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
         window.close();
     }

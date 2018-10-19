@@ -2,10 +2,11 @@ package app.model;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static app.model.DataModel.USER_DATABASE;
+import static app.model.DatabaseModel.USER_DATABASE;
 
 /**
  * A Recording object represents a production of a name created by a user.
@@ -60,7 +61,15 @@ public class Recording {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new NameVersion(_fileName);
+
+        // since we have specified the naming format correctly, the exception will not be thrown
+        NameVersion name = null;
+        try {
+            name = new NameVersion(_fileName);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return name;
     }
 
     /**
