@@ -50,6 +50,7 @@ public class SearchField {
 
             // initially autocomplete contains all names
             if(oldValue.isEmpty()) {
+                _suggestionProvider.clearSuggestions();
                 _suggestionProvider.addPossibleSuggestions(_databaseModel.getNameStrings());
             }
 

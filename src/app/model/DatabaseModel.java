@@ -128,9 +128,6 @@ public class DatabaseModel implements IDatabaseModel {
 					continue;
 				}
 
-				// update the list of all names
-				_nameStrings.add(nameVersion.getShortName());
-
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
 					Name currentName = nameTable.get(nameVersion.getShortName().toLowerCase());
@@ -139,6 +136,9 @@ public class DatabaseModel implements IDatabaseModel {
 					Name name = new Name(nameVersion.getShortName());
 					name.add(nameVersion);
 					nameTable.put(nameVersion.getShortName().toLowerCase(), name);
+
+					// update the list of all names
+					_nameStrings.add(nameVersion.getShortName());
 
 					// initialises the good version to be used as the recording for this name
 					name.selectGoodVersion();
