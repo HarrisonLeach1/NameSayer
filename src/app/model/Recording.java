@@ -6,7 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static app.model.DataModel.USER_DATABASE;
+import static app.model.DatabaseModel.USER_DATABASE;
 
 /**
  * A Recording object represents a production of a name created by a user.

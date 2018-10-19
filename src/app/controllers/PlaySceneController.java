@@ -30,7 +30,7 @@ import java.util.ResourceBundle;
  * The IPractiseListModel then passes information back to the PlaySceneController
  * to update the view.
  */
-public class PlaySceneController implements DataModelListener, Initializable{
+public class PlaySceneController implements UserModelListener, Initializable {
     private static final double MIN_VOLUME = 0;
     private static final double MAX_VOLUME = 2.0;
     private static final double INITIAL_VOLUME = 1.0;
@@ -47,6 +47,9 @@ public class PlaySceneController implements DataModelListener, Initializable{
 
     private Task _playing;
     private IPractiseListModel _practiseListModel;
+    private IUserModel _userModel;
+    private IDatabaseModel _databaseModel;
+
     private Practisable _currentName;
     private boolean _firstComparison;
     private MicTestTask _micTest;
@@ -66,12 +69,15 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * objects from the main menu to be practised.
      * @param practiseListModel
      */
-    public void initModel(IPractiseListModel practiseListModel) {
+    public void setModel(IPractiseListModel practiseListModel, IUserModel userModel, IDatabaseModel databaseModel) {
         _practiseListModel = practiseListModel;
+        _userModel = userModel;
+        _databaseModel = databaseModel;
+
         _currentName = _practiseListModel.nextName();
         makeTransition();
         initialiseVolume();
-        DataModel.getInstance().addListener(this);
+        _userModel.addListener(this);
     }
 
     /**
@@ -118,7 +124,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
 
         // pass the model to the recording scene controller
         RecordingSceneController controller = loader.getController();
-        controller.initModel(_practiseListModel);
+        controller.setModel(_practiseListModel);
 
         loader.openScene();
 
@@ -160,7 +166,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
 
         new SceneLoader("/app/views/NameSayer.fxml").switchScene(event);
 
-        DataModel.getInstance().deleteTempDirectory();
+        _databaseModel.deleteTempRecordings();
     }
 
     /**
@@ -200,16 +206,14 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * Updates the _levelCounter to display the users current level.
      * Updates the _levelProgress to display the user experience progress towards
      * the next level.
-     * @param experience
+     * @param currentUserLevel
+     * @param currentLevelProgress
      */
     // TODO move calculations to user model
     @Override
-    public void notifyProgress(int experience) {
-        int currentLevelProgress = experience % 100;
-        int currentLevel = experience / 100;
-        _levelProgress.setProgress(currentLevelProgress / 100.0);
-        _levelCounter.setText(String.valueOf(currentLevel));
-
+    public void notifyProgress(int currentUserLevel, double currentLevelProgress) {
+        _levelProgress.setProgress(currentLevelProgress);
+        _levelCounter.setText(String.valueOf(currentUserLevel));
     }
 
 
@@ -221,6 +225,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
         SceneLoader loader = new SceneLoader("/app/views/LevelScene.fxml");
 
         LevelSceneController controller = loader.getController();
+        controller.setModel(_userModel);
 
         loader.openScene();
     }

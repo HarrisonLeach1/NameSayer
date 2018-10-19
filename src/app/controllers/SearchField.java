@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.model.DataModel;
+import app.model.IDatabaseModel;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.scene.control.TextField;
 import org.controlsfx.control.textfield.TextFields;
@@ -12,20 +12,23 @@ import java.util.List;
  * allows TextFields to have auto-suggestions of database names when the user is
  * typing.
  *
+ * The suggestions given are dependent on the database provided upon construction.
  * Note that this is not an FXML component itself, this is not necessary as only
  * simple functionality is introduced an the extra coupling is uneccessary.
  */
 public class SearchField {
 
+    private final IDatabaseModel _databaseModel;
     private TextField _textField;
     private final SuggestionProvider<String> _suggestionProvider;
 
 
-    public SearchField(TextField textField) {
+    public SearchField(TextField textField, IDatabaseModel databaseModel) {
         _textField = textField;
+        _databaseModel = databaseModel;
 
         // initially suggestions only consist of all the database names
-        _suggestionProvider = SuggestionProvider.create(DataModel.getInstance().getNameStrings());
+        _suggestionProvider = SuggestionProvider.create(_databaseModel.getNameStrings());
 
         // bind autocompletion and set width
         TextFields.bindAutoCompletion(_textField, _suggestionProvider).setPrefWidth(_textField.getPrefWidth());
@@ -55,7 +58,7 @@ public class SearchField {
                int index = getLastIndex(newValue);
 
                 // append all database names as suggestions to the new name
-                for(String name : DataModel.getInstance().getNameStrings()) {
+                for(String name : _databaseModel.getNameStrings()) {
                     autoCompleteList.add(newValue.substring(0, index + 1) + name);
                 }
 

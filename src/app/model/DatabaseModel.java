@@ -13,39 +13,35 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * The DataModel singleton object represents the database in which practise and user recordings
+ * The DatabaseModel singleton object represents the database in which practise and user recordings
  * are loaded in from and saved to.
  *
  * The displayable databases are returned in Tree View form and List View form, which allows
  * them to be easily presented to the user.
  */
-public class DataModel implements IDataModel{
+public class DatabaseModel implements IDatabaseModel {
     public static final File USER_DATABASE = new File("./userRecordings/");
-    private static DataModel _instance;
+    private static DatabaseModel _instance;
     private File _database = new File("./names/");
 	private HashMap<String, Name> _databaseTable;
-	private List<DataModelListener> _listeners;
-	private User _user;
 	private List<String> _nameStrings;
 
-	private DataModel() {
-		_user = new User();
+	private DatabaseModel() {
     	_databaseTable = createNameTable(_database);
-		_listeners = new ArrayList<>();
 	}
 
+
 	/**
-	 * Returns the singleton instance of the DataModel, used for loading
+	 * Returns the singleton instance of the DatabaseModel, used for loading
 	 * in the recording databases.
-	 * @return instance of DataModel
+	 * @return instance of DatabaseModel
 	 */
-	public static DataModel getInstance() {
-    	if (_instance == null) {
-			_instance = new DataModel();
+	public static DatabaseModel getInstance() {
+		if (_instance == null) {
+			_instance = new DatabaseModel();
 		}
 		return _instance;
 	}
-
 	/**
      * Creates a TreeItem that contains all recordings in the database
      * as descendants. Uses the TreeViewFactory.
@@ -88,29 +84,6 @@ public class DataModel implements IDataModel{
 		Collections.sort(nameList, Comparator.comparing((Name o) -> o.toString()));
 
 		return nameList;
-	}
-
-	/**
-	 * Registers a listener with this data model object. The registered
-	 * listener is notified of any events in which the users progress is
-	 * changed.
-	 * @param listener
-	 */
-	public void addListener(DataModelListener listener) {
-		_listeners.add(listener);
-		listener.notifyProgress(_user.getUserXP());
-	}
-
-	/**
-	 * Updates the experience of the user object and notifies any registered
-	 * listeners.
-	 */
-	public void updateUserXP() {
-		_user.updateUserXP();
-		int experience = _user.getUserXP();
-			for(DataModelListener l : _listeners) {
-				l.notifyProgress(experience);
-			}
 	}
 
 	/**
@@ -255,7 +228,7 @@ public class DataModel implements IDataModel{
 	 * Deletes the temporary directory for storing modified audio files if
 	 * it exists.
 	 */
-	public void deleteTempDirectory() {
+	public void deleteTempRecordings() {
 		try {
 			String cmd = "rm -rf " + ConcatenatedName.TEMP_FOLDER;
 
@@ -325,10 +298,10 @@ public class DataModel implements IDataModel{
 		return _databaseTable.keySet().size();
 	}
 
-	public int getDailyStreak() {
-		return _user.getDailyStreak();
-	}
-
+	/**
+	 * Returns displayable strings of all the names in the currently selected database.
+	 * @return
+	 */
 	public List<String> getNameStrings() {
 		return _nameStrings;
 	}

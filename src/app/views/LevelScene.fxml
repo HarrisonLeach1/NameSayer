@@ -10,7 +10,7 @@
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Was your pronunciation good?" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Rate your pronunciation" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <font>
                   <Font size="15.0" />
                </font>
@@ -19,16 +19,18 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Button layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#noButtonPressed" prefHeight="27.0" prefWidth="80.0" text="No" textFill="WHITE">
+            <Button fx:id="_badBtn" layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="27.0" prefWidth="80.0" text="No" textFill="WHITE">
                <styleClass>
                   <String fx:value="menu-dark" />
                   <String fx:value="smallredbutton" />
                </styleClass></Button>
-            <Button layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#yesButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Yes" textFill="WHITE">
+            <Button fx:id="_goodBtn" layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Yes" textFill="WHITE">
                <styleClass>
                   <String fx:value="menu-dark" />
                   <String fx:value="smallgreenbutton" />
                </styleClass></Button>
+             <Button fx:id="_avgBtn" layoutX="135.0" layoutY="78.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" style="-fx-border-color: white;" styleClass="average" stylesheets="@style.css" text="Average" textFill="WHITE" />]
+             <Label fx:id="_messageLabel" alignment="CENTER" layoutY="29.0" prefHeight="24.0" prefWidth="350.0" textFill="WHITE">
          </children>
       </AnchorPane>
    </children>

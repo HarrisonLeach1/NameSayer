@@ -1,10 +1,8 @@
 package app.model;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.Iterator;
 
 /**
  * A ConcatenatedName object represents a Name that is composed of multiple name
@@ -17,6 +15,10 @@ public class ConcatenatedName implements Practisable {
     public static final String EXTENSION = "_temp.wav";
     public static final String TEMP_FOLDER = "temp/";
     public static final double VOLUME_LEVEL = -20.0;
+
+    // indicates the levels of silence which are cut from the start and the end
+    private static final int START_THRESHOLD = -35;
+    private static final int END_THRESHOLD = -50;
 
     private final String _displayName;
     private List<Name> _nameList;
@@ -77,8 +79,8 @@ public class ConcatenatedName implements Practisable {
     private void createAudio() throws InterruptedException {
         makeTempDirectory();
         cutSilence();
-        concatenateFileNames();
         normaliseAudio();
+        concatenateFileNames();
         concatenateAudio();
     }
 
@@ -101,13 +103,13 @@ public class ConcatenatedName implements Practisable {
      * Modifies the audio files of the associated names such that they do
      * not contain any unnecessary silence.
      */
-    private void cutSilence() throws InterruptedException {
+    private void cutSilence() {
         for(Name name : _nameList) {
             try {
                 // 1:0 -50dB indicates that anything below -50dB is cut off from the start
-                // 1:% -50dB indicates that anything below -70dB is cut off from the end
+                // 1:5 -50dB indicates that anything below -70dB is cut off from the end
                 String cmd = "ffmpeg -y -hide_banner -i " + name.selectGoodVersion().getFilePath() +
-                        " -af silenceremove=1:0:-50dB:1:5:-70dB " + TEMP_FOLDER + name.toString() + EXTENSION;
+                        " -af silenceremove=1:0:"+ START_THRESHOLD +"dB:1:5:"+ END_THRESHOLD +"dB " + TEMP_FOLDER + name.toString() + EXTENSION;
                 System.out.println(cmd);
 
 
@@ -116,21 +118,9 @@ public class ConcatenatedName implements Practisable {
 
                 process.waitFor();
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-    }
-
-    /**
-     * All file names of the good quality versions of each given name are
-     * concatenated into a single string which contains input flags for
-     * an ffmpeg bash process
-     */
-    private void concatenateFileNames() {
-        _stringOfPaths = "";
-        for (Name name : _nameList) {
-            _stringOfPaths += " -i " + TEMP_FOLDER + name.toString() + EXTENSION;
         }
     }
 
@@ -139,8 +129,10 @@ public class ConcatenatedName implements Practisable {
      * of similar volume.
      */
     private void normaliseAudio() throws InterruptedException {
-        try {
-            for(Name name : _nameList) {
+        try { // use iterator to allow for deletion while iterating
+            for(Iterator<Name> it = _nameList.iterator(); it.hasNext();) {
+                Name name = it.next();
+
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
                         "-f null /dev/null |& grep 'mean_volume:' ";
@@ -156,6 +148,13 @@ public class ConcatenatedName implements Practisable {
                 InputStream stdout = process.getInputStream();
                 BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
                 String lineOut = stdoutBuffered.readLine();
+                System.out.println(lineOut);
+
+                // if the audio cannot be detected, remove it from the name from the recording list
+                if(lineOut == null) {
+                    it.remove();
+                    continue;
+                }
 
                 // Parse the mean volume number from the output, the volume is 2-7 indices from the right of the colon
                 int colonIndex = lineOut.lastIndexOf(':');
@@ -178,6 +177,19 @@ public class ConcatenatedName implements Practisable {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * All file names of the good quality versions of each given name are
+     * concatenated into a single string which contains input flags for
+     * an ffmpeg bash process
+     */
+    private void concatenateFileNames() {
+        _stringOfPaths = "";
+        for (Name name : _nameList) {
+            _stringOfPaths += " -i " + TEMP_FOLDER + name.toString() + EXTENSION;
         }
     }
 
