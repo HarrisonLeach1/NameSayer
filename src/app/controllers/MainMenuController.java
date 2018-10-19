@@ -80,7 +80,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         new HighlightedList(_playList);
     }
 
-    public void setModel(DatabaseModel databaseModel, UserModel userModel) {
+    public void setModel(IDatabaseModel databaseModel, IUserModel userModel) {
         _databaseModel = databaseModel;
         _userModel = userModel;
 
