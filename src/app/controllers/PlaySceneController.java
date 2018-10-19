@@ -165,7 +165,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
         _micTest.cancel();
-        MainMenuController.setStart(false);
+        MainMenuController.setStartFalse();
 
         new SceneLoader("/app/views/NameSayer.fxml").switchScene(event);
 

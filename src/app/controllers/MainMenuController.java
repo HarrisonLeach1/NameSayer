@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.model.*;
-import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -17,8 +16,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
-import org.controlsfx.control.textfield.AutoCompletionBinding;
-import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
 import java.io.File;
@@ -46,8 +43,10 @@ public class MainMenuController implements Initializable, UserModelListener {
     private static final String SAVE_PLAYLIST_SCENE = "/app/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/app/views/LoadingScene.fxml";
     private static final String PLAY_SCENE = "/app/views/PlayScene.fxml";
+    private static final int ERROR_SCENE_VALUE = 1;
+    private static final int CONFIRM_SCENE_VALUE = 2;
+    private static final int STREAK_SCENE_VALUE = 3;
 
-    @FXML private SplitPane _mainPane;
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
@@ -96,9 +95,12 @@ public class MainMenuController implements Initializable, UserModelListener {
         _userModel.addListener(this);
     }
 
-
-    public static void setStart(boolean b){
-        start=b;
+    /**
+     * Sets start value to false so that the it doesn't show the
+     * start screen and streaks when returning to the start screen
+     */
+    public static void setStartFalse(){
+        start=false;
     }
 
     /**
@@ -108,7 +110,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     public void handleStartUpAction(){
         _startPane.toBack();
         if (start) {
-            openStreakWindow();
+            loadMessageScene(STREAK_SCENE,STREAK_SCENE_VALUE,null);
         }
     }
 
@@ -157,7 +159,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void playSearchPressed(ActionEvent event) throws IOException {
         if (_searchBox.getText().trim().isEmpty()) {
-            loadErrorMessage("ERROR: Search is empty");
+            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
         } else {
             Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameWorker(_searchBox.getText());
 
@@ -177,7 +179,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void addToPlaylist(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
-            loadErrorMessage("ERROR: Search is empty");
+            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
         } else {
             Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameWorker(_searchBox.getText());
 
@@ -225,7 +227,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void playFilePressed(ActionEvent event) throws IOException {
         if (_playList.getItems().size() == 0) { // check if list is empty
-            loadErrorMessage("ERROR: List is empty");
+            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: List is empty");
             // check if there are any missing names. If so, ask the user if they want to continue.
         } else if(approveMissingNames(_databaseModel.compileMissingNames(_playList.getItems()))) {
             moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
@@ -240,7 +242,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     private boolean approveMissingNames(String missingNames) {
         if(!missingNames.isEmpty()) { // if the name contains missing get user confirmation
-            loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
+            loadMessageScene(CONFIRM_SCENE,CONFIRM_SCENE_VALUE,"Could not find the following name(s): \n\n" + missingNames);
             if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
                 return true;
             }
@@ -329,7 +331,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void savePlayListPressed(ActionEvent event) {
         if (_playList.getItems().size() == 0) { // check if list is empty
-            loadErrorMessage("ERROR: List is empty");
+            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: List is empty");
             return;
         }
         // load in the new scene
@@ -371,7 +373,7 @@ public class MainMenuController implements Initializable, UserModelListener {
 
     /**
      * Plays the currently selected user recording in the list of user recordings.
-     * Executes a on a new thread to avoid GUI unresponsiveness.
+     * Executes a on a new thread to avoid unresponsiveness.
      */
     public void playUserRecordingPressed() {
 
@@ -462,44 +464,22 @@ public class MainMenuController implements Initializable, UserModelListener {
      * message to user indicating what they have done wrong.
      * @param message
      */
-    private void loadErrorMessage(String message) {
+    private void loadMessageScene(String scene, int controllerValue, String message) {
         // load in the new scene
-        SceneLoader loader = new SceneLoader(ERROR_SCENE);
+        SceneLoader loader = new SceneLoader(scene);
 
         // pass selected items to the next controller
-        ErrorSceneController controller = loader.getController();
-        controller.setMessage(message);
-
+        if (controllerValue == 1) {
+            ErrorSceneController controller = loader.getController();
+            controller.setMessage(message);
+        } else if (controllerValue == 2){
+            _confirmationController = loader.getController();
+            _confirmationController.setMessage(message);
+        } else if (controllerValue == 3){
+            StreakSceneController controller = loader.getController();
+            controller.setModel(_userModel);
+        }
        loader.openScene();
-    }
-
-    /**
-     * Given a message, displays an confirm action pop-up to the user displaying the
-     * message to the user and asking if they want to continue with their actions.
-     * @param message
-     */
-    private void loadConfirmMessage(String message) {
-        // load in the new scene
-        SceneLoader loader = new SceneLoader(CONFIRM_SCENE);
-
-        // pass selected items to the next controller
-        _confirmationController = loader.getController();
-        _confirmationController.setMessage(message);
-
-        loader.openScene();
-    }
-
-    /**
-     * Displays the streak window to the user to notify them of their daily streak
-     * progress.
-     */
-    private void openStreakWindow() {
-        SceneLoader loader = new SceneLoader(STREAK_SCENE);
-
-        StreakSceneController controller = loader.getController();
-        controller.setModel(_userModel);
-
-        loader.openScene();
     }
 
     /**
@@ -522,17 +502,20 @@ public class MainMenuController implements Initializable, UserModelListener {
                 if (myFile.exists()) {
                     Desktop.getDesktop().open(myFile);
                 }else{
-                    loadErrorMessage("ERROR: UserManual not found");
+                    loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: UserManual not found");
                 }
             } catch (IOException ex) {
-                loadErrorMessage("ERROR: Can't find application for opening PDF");
+                loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Can't find application for opening PDF");
             }
         }
     }
+
+    /**
+     * Safely resets progress bar when playing has finished
+     */
     private void stopProgress(){
         _playingProgress.progressProperty().unbind();
         _playingProgress.setProgress(0);
         _player.cancel();
     }
 }
-
