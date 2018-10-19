@@ -11,6 +11,11 @@
 
 <AnchorPane prefHeight="180.0" prefWidth="300.0" style="-fx-background-color: #474448;" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.ErrorSceneController">
    <children>
+      <ImageView fitHeight="39.0" fitWidth="41.0" layoutX="130.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/warning.png" />
+         </image>
+      </ImageView>
       <HBox alignment="CENTER" layoutY="65.0" prefWidth="200.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
          <children>
             <VBox alignment="CENTER" prefWidth="354.0" spacing="10.0">
@@ -30,11 +35,6 @@
             <Insets bottom="10.0" top="10.0" />
          </padding>
       </HBox>
-      <ImageView fitHeight="39.0" fitWidth="41.0" layoutX="130.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@images/warning.png" />
-         </image>
-      </ImageView>
       <Button layoutX="122.0" layoutY="121.0" mnemonicParsing="false" onAction="#okButtonAction" prefHeight="31.0" prefWidth="57.0" style="-fx-border-color: grey;" styleClass="menu-dark" text="OK" textFill="WHITE" AnchorPane.bottomAnchor="14.0" />
    </children>
 </AnchorPane>

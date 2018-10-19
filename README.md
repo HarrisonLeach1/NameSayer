@@ -4,6 +4,8 @@
 
 1. Place names database in a folder called names in the same directory as the jar file.
 
+2. Make sure the User Manual is in the same directory as the jar file and source code.
+
 2. Give necessary permissions or run using java command in terminal.
 
 3. Go to directory containing jar file.

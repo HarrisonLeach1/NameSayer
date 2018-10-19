@@ -37,6 +37,10 @@ public class PlaySceneController implements UserModelListener, Initializable {
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
     private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
     private static final String RECORDING_SCENE = "/app/views/RecordingScene.fxml";
+    private static final int MIN_LOOPS = 1;
+    private static final int MAX_LOOPS = 10;
+    private static final int DEFAULT_LOOPS = 3;
+
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
     @FXML private Label _displayName, _badLabel, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
@@ -60,9 +64,8 @@ public class PlaySceneController implements UserModelListener, Initializable {
         new Thread(_micTest).start();
 
         _micLevelProgress.progressProperty().bind(_micTest.progressProperty());
-        SpinnerValueFactory<Integer> loopValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,10,3);
+        SpinnerValueFactory<Integer> loopValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_LOOPS,MAX_LOOPS,DEFAULT_LOOPS);
         this._loopSpinner.setValueFactory(loopValueFactory);
-        _loopSpinner.setEditable(true);
     }
     /**
      * Loads in the practise list model that stores the list of selected Practisable
@@ -162,7 +165,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
         _micTest.cancel();
-        MainMenuController.setStart(false);
+        MainMenuController.setStartFalse();
 
         new SceneLoader("/app/views/NameSayer.fxml").switchScene(event);
 
@@ -173,25 +176,19 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * Plays the user's recording then the original recording.
      * Allows the user to judge their pronunciation.
      */
-    public void compareButtonPressed() throws IOException {
-        try {
-            int loops = (int) _loopSpinner.getValue();
-            _playing = _practiseListModel.compareUserRecordingTask(_volumeSlider.getValue(), loops);
-            _playBar.progressProperty().bind(_playing.progressProperty());
+    public void compareButtonPressed() {
+        int loops = (int) _loopSpinner.getValue();
+        _playing = _practiseListModel.compareUserRecordingTask(_volumeSlider.getValue(), loops);
+        _playBar.progressProperty().bind(_playing.progressProperty());
 
-            _playing.setOnSucceeded(e -> {
-                if (_firstComparison) {
-                    openLevelScene();
-                    _firstComparison = false;
-                }
-                endAudio();
-            });
-
-            new Thread(_playing).start();
-
-        } catch (ClassCastException e) {
-            loadErrorMessage("Please enter an integer");
-        }
+        _playing.setOnSucceeded(e -> {
+            if (_firstComparison) {
+                openLevelScene();
+                _firstComparison = false;
+            }
+            endAudio();
+        });
+        new Thread(_playing).start();
     }
 
     /**
@@ -331,7 +328,10 @@ public class PlaySceneController implements UserModelListener, Initializable {
         }
     }
 
-
+    /**
+     * Help button opens the user manual pdf from the current working directory.
+     * @param actionEvent
+     */
     public void helpButtonAction(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {

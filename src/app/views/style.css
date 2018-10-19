@@ -46,11 +46,11 @@
     -fx-border-width:5;
 }
 .smallredbutton{
-    -fx-border-color:crimson;
+    -fx-border-color:tomato;
     -fx-border-width:2;
 }
 .bigredbutton{
-    -fx-border-color:crimson;
+    -fx-border-color:tomato;
     -fx-border-width:5;
 }
 .biggoldbutton{

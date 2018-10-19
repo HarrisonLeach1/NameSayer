@@ -58,6 +58,7 @@ public class RecordingSceneController {
         });
 
         new Thread(recordWorker).start();
+        _finishBtn.toFront();
     }
 
     public void finishButtonPressed() {
