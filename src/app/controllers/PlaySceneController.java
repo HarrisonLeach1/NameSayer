@@ -328,7 +328,10 @@ public class PlaySceneController implements UserModelListener, Initializable {
         }
     }
 
-
+    /**
+     * Help button opens the user manual pdf from the current working directory.
+     * @param actionEvent
+     */
     public void helpButtonAction(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {

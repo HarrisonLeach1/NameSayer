@@ -511,6 +511,10 @@ public class MainMenuController implements Initializable, UserModelListener {
         _playList.getItems().removeAll(_playList.getSelectionModel().getSelectedItems());
     }
 
+    /**
+     * Help button opens the user manual pdf from the current working directory.
+     * @param actionEvent
+     */
     public void helpButtonAction(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
             try {
