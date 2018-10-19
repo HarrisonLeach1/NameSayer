@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.model.ConcatenatedName;
-import app.model.DataModel;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;

@@ -29,7 +29,7 @@
                   <Label layoutX="849.0" layoutY="41.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="40.0" />
                   <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="40.0" />
                   <ProgressBar fx:id="_levelProgress" layoutX="939.0" layoutY="38.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="40.0" />
-                  <ProgressBar fx:id="_micLevelProgress" layoutX="65.0" layoutY="41.0" prefWidth="200.0" progress="0.0" AnchorPane.leftAnchor="65.0" />
+                  <ProgressBar fx:id="_micLevelProgress" layoutX="65.0" layoutY="41.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="42.0" />
                   <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="24.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="24.0" AnchorPane.topAnchor="29.0">
                      <image>
                         <Image url="@images/mic.png" />
@@ -158,7 +158,7 @@
                                     <String fx:value="menu" />
                                  </styleClass>
                               </Button>
-                              <Spinner fx:id="_loopSpinner" prefHeight="25.0" prefWidth="51.0">
+                              <Spinner fx:id="_loopSpinner" prefHeight="25.0" prefWidth="50.0" style="-fx-border-color: grey;">
                                  <HBox.margin>
                                     <Insets left="-30.0" />
                                  </HBox.margin></Spinner>

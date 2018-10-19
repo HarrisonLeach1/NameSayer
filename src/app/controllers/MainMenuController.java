@@ -515,9 +515,13 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (Desktop.isDesktopSupported()) {
             try {
                 File myFile = new File("UserManual.pdf");
-                Desktop.getDesktop().open(myFile);
+                if (myFile.exists()) {
+                    Desktop.getDesktop().open(myFile);
+                }else{
+                    loadErrorMessage("ERROR: UserManual not found");
+                }
             } catch (IOException ex) {
-                // no application registered for PDFs
+                loadErrorMessage("ERROR: Can't find application for opening PDF");
             }
         }
     }
