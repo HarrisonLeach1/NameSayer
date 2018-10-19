@@ -9,22 +9,31 @@ import java.util.Scanner;
 
 /**
  * A NameVersion object represents a name in a database that can be interacted with
- * by the user. A NameVersion object is usually created by providing a file name
- * in the appropirate format:
+ * by the user. A NameVersion object is usually created by providing a path to file
+ * with the following naming format:
  *
  * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * e.g. se206_2-5-2018_15-23-50_Mason.wav
  *
- *  e.g. se206_2-5-2018_15-23-50_Mason.wav
- *
- *  This NameVersion points to this file and stores information of the file such that
- *  it can be efficiently played, rated and displayed to the user.
+ * This NameVersion points to this file and stores information of the file such that
+ * it can be efficiently played, rated and displayed to the user.
  */
 public class NameVersion {
-    private String _shortName, _displayName, _fileName, _dateCreated, _timeCreated;
+    private String _shortName, _displayName, _filePath, _dateCreated, _timeCreated;
     private boolean _isBadQuality;
+    private Process _playingProcess;
 
-    public NameVersion(String fileName) {
-        _fileName = fileName;
+    /**
+     * Given the path to a valid recording file, a NameVersion object is created as playable
+     * and displayable reference to this file.
+     * If the file name is not in the valid format an IndexOutOfBoundsException or ParseException
+     * is thrown and the NameVerison object cannot be created.
+     * @param filePath
+     * @throws IndexOutOfBoundsException
+     * @throws ParseException
+     */
+    public NameVersion(String filePath) throws IndexOutOfBoundsException, ParseException {
+        _filePath = filePath;
         parseShortName();
         parseVersionName();
         _isBadQuality = findQuality();
@@ -35,58 +44,79 @@ public class NameVersion {
 
     /**
      * Parses the file name, turning the date and time format into a more presentable
-     * format to the user. The name must be in the appropriate format.
+     * format to the user. Throws an IndexOutOfBoundsException or ParseException if the
+     * file name is not in the valid format.
+     * @throws IndexOutOfBoundsException
+     * @throws ParseException
      */
-    private void parseVersionName() {
-        try {
-            String[] parts = _fileName.split("_");
+    private void parseVersionName() throws IndexOutOfBoundsException, ParseException{
+            // get file name without the database folder
+            String fileName = _filePath.substring(_filePath.indexOf("/"));
+
+            // get original date and time and parse into date object
+            String[] parts = fileName.split("_");
             String originalDate = parts[1] + "_" + parts[2];
-
             DateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
-
             Date date = originalFormat.parse(originalDate);
 
+            // get date and time in more displayable format
             DateFormat newDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
             DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a");
-
             _dateCreated = newDateFormat.format(date);
             _timeCreated = newTimeFormat.format(date);
 
             _displayName = _shortName + " " + _dateCreated + " " + _timeCreated;
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
      * Retrieves just the name of the recording excluding the creation date, time and file extension.
+     * @throws IndexOutOfBoundsException
      */
-    private void parseShortName() {
-        // find the index of the third underscore (the start of the name)
-        int startIndex = _fileName.indexOf("_", _fileName.indexOf("_", _fileName.indexOf("_") + 1) + 1);
+    private void parseShortName() throws IndexOutOfBoundsException{
+        String fileName = _filePath.substring(_filePath.indexOf("/"));
 
-        // find the index of the dot extension (the end of the name)
-        int lastIndex = _fileName.lastIndexOf(".");
+        // find the index of the third underscore (the start of the name)
+        int startIndex = fileName.indexOf("_", fileName.indexOf("_", fileName.indexOf("_") + 1) + 1);
+
+        // find the index of the .wav extension (the end of the name)
+        int lastIndex = fileName.lastIndexOf(".wav");
 
         // parse the name and replace underscores with spaces
-        String nameString = _fileName.substring(startIndex + 1, lastIndex).replaceAll("_", " ");
+        String nameString = fileName.substring(startIndex + 1, lastIndex).replaceAll("_", " ");
 
         // capitalise the name
         _shortName = capitalise(nameString);
     }
 
-    public void playRecording(double volume) {
+    /**
+     * Creates a new bash process which plays the audio file associated with this NameVersion object
+     * at the given volume. Note that this method is a blocking call and as such should be executed on a
+     * new thread.
+     * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
+     *               audio is amplified by double, etc.
+     * @throws InterruptedException
+     */
+    public void playRecording(double volume) throws InterruptedException {
         try {
-            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _fileName + " -autoexit -nodisp";
+            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _filePath + " -autoexit -nodisp";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
-            Process process = builder.start();
+            _playingProcess = builder.start();
 
-            process.waitFor();
+            _playingProcess.waitFor();
 
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Ends the bash process which is playing the audio file of this NameVersion object. This will
+     * cause an InterruptedException to be thrown by the playRecording method during execution.
+     */
+    public void stopRecording() {
+        if(_playingProcess != null) {
+            _playingProcess.destroy();
         }
     }
 
@@ -99,7 +129,7 @@ public class NameVersion {
         FileWriter fw = new FileWriter("bad.txt", true); //the true will append the new data
 
         if (!_isBadQuality) { // if it is not already bad quality, mark as bad quality
-            fw.write(_fileName + "\r\n");
+            fw.write(_filePath + "\r\n");
             _isBadQuality = true;
         }
         fw.close();
@@ -125,7 +155,7 @@ public class NameVersion {
         // loop through all lines of the file until the version is found, otherwise it is not bad
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if(line.equals(_fileName)) {
+            if(line.equals(_filePath)) {
                 return true;
             }
         }
@@ -150,8 +180,8 @@ public class NameVersion {
         return _shortName;
     }
 
-    public String getFileName() {
-        return _fileName;
+    public String getFilePath() {
+        return _filePath;
     }
 
     public String getDateCreated() {

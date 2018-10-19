@@ -31,104 +31,57 @@ import java.util.ResourceBundle;
  * to update the view.
  */
 public class PlaySceneController implements DataModelListener, Initializable{
-
+    private static final double MIN_VOLUME = 0;
+    private static final double MAX_VOLUME = 2.0;
+    private static final double INITIAL_VOLUME = 1.0;
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
+    private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
+    private static final String RECORDING_SCENE = "/app/views/RecordingScene.fxml";
+
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
-    @FXML private Label _displayName, _bad_Label, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
+    @FXML private Label _displayName, _badLabel, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
     @FXML private Slider _volumeSlider;
     @FXML private ProgressBar _levelProgress, _micLevelProgress;
     @FXML private ProgressBar _playBar;
     @FXML private Spinner _loopSpinner;
-    private Task _playing;
 
+    private Task _playing;
     private IPractiseListModel _practiseListModel;
     private Practisable _currentName;
     private boolean _firstComparison;
-
-    Task test = new Task() {
-        AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-        DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-        TargetDataLine targetLine;
-        {
-            try {
-                targetLine = (TargetDataLine) AudioSystem.getLine(info);
-            } catch (LineUnavailableException e) {
-                e.printStackTrace();
-            }
-        }
-        @Override
-        protected Object call() {
-            try {
-                //Microphone
-                targetLine.open();
-                targetLine.start();
-
-                byte[] data = new byte[targetLine.getBufferSize() / 5];
-
-                while (true) {
-                    targetLine.read(data, 0, data.length);
-                    int level = calculateRMSLevel(data);
-                    updateProgress(level,100);
-                }
-            } catch (LineUnavailableException lue) {
-                lue.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void cancelled() {
-            targetLine.stop();
-            targetLine.close();
-            super.cancelled();
-        }
-
-
-        @Override
-        protected void updateProgress(double workDone, double max) {
-            super.updateProgress(workDone, max);
-        }
-    };
-    /**
-     * Calculates the microphone input and turns it into an integer
-     */
-    public static int calculateRMSLevel(byte[] audioData) {
-        long lSum = 0;
-        for (int i = 0; i < audioData.length; i++)
-            lSum = lSum + audioData[i];
-
-        double dAvg = lSum / audioData.length;
-        double sumMeanSquare = 0d;
-
-        for (int j = 0; j < audioData.length; j++)
-            sumMeanSquare += Math.pow(audioData[j] - dAvg, 2d);
-
-        double averageMeanSquare = sumMeanSquare / audioData.length;
-
-        return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
-    }
+    private MicTestTask _micTest;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        _micTest = new MicTestTask();
+        new Thread(_micTest).start();
+
+        _micLevelProgress.progressProperty().bind(_micTest.progressProperty());
         SpinnerValueFactory<Integer> loopValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,10,3);
         this._loopSpinner.setValueFactory(loopValueFactory);
         _loopSpinner.setEditable(true);
-        new Thread(test).start();
-        _micLevelProgress.progressProperty().bind(test.progressProperty());
     }
     /**
-     * Loads in the practise list model that stores the list of selected names from
-     * the main menu to be practised.
+     * Loads in the practise list model that stores the list of selected Practisable
+     * objects from the main menu to be practised.
      * @param practiseListModel
      */
     public void initModel(IPractiseListModel practiseListModel) {
         _practiseListModel = practiseListModel;
         _currentName = _practiseListModel.nextName();
         makeTransition();
-        _volumeSlider.setMin(0);
-        _volumeSlider.setMax(2.0);
-        _volumeSlider.setValue(1.0);
+        initialiseVolume();
         DataModel.getInstance().addListener(this);
+    }
+
+    /**
+     * Initialises the default max, min and initial volume for the volume bar when
+     * the user first enters the play scene.
+     */
+    private void initialiseVolume() {
+        _volumeSlider.setMin(MIN_VOLUME);
+        _volumeSlider.setMax(MAX_VOLUME);
+        _volumeSlider.setValue(INITIAL_VOLUME);
     }
 
     /**
@@ -138,7 +91,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void nextButtonPressed() {
         _currentName = _practiseListModel.nextName();
         makeTransition();
-        stopProgress();
     }
 
     /**
@@ -148,7 +100,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void previousButtonPressed() {
         _currentName = _practiseListModel.previousName();
         makeTransition();
-        stopProgress();
     }
 
     /**
@@ -163,66 +114,40 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * When the recording button is pressed the recording scene is displayed to the user
      */
     public void recordButtonPressed() {
-        Parent playerParent = null;
-        FXMLLoader loader = new FXMLLoader();
-
-        // load in the recording scene
-        try {
-            loader.setLocation(getClass().getResource("/app/views/RecordingScene.fxml"));
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        SceneLoader loader = new SceneLoader(RECORDING_SCENE);
 
         // pass the model to the recording scene controller
         RecordingSceneController controller = loader.getController();
         controller.initModel(_practiseListModel);
 
-        Scene playerScene = new Scene(playerParent);
+        loader.openScene();
 
-        // switch scenes
-        Stage window = new Stage();
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
-
-        // enable buttons
-        _keepBtn.setDisable(false);
-        _compareBtn.setDisable(false);
-
+        updateUserComparisonButtons();
     }
 
     /**
      * Plays the currently displayed name when the user presses the play button.
+     * Executes the playing of the audio on a new thread to avoid GUI unresponsiveness.
      */
     public void playButtonPressed() {
-        _playing = playWorker();
+        _playing = _practiseListModel.playTask(_volumeSlider.getValue());
         _playBar.progressProperty().bind(_playing.progressProperty());
         _stopBtn.toFront();
 
         _playing.setOnSucceeded(e -> {
-            stopProgress();
+            endAudio();
         });
         new Thread(_playing).start();
 
     }
 
     /**
-     * Creates a new Task which allows the play funcitonality to be
-     * executed on a new thread.
+     * Stops the currently playing name from playing when the user presses the
+     * stop button.
      */
-    private Task playWorker() {
-        return new Task() {
-
-            @Override
-            protected Object call() throws Exception {
-                // play user recording
-                _currentName.playRecording(_volumeSlider.getValue());
-                return true;
-            }
-        };
-
+    public void stopButtonPressed() {
+        _practiseListModel.stopPlayTask();
+        endAudio();
     }
 
     /**
@@ -230,16 +155,12 @@ public class PlaySceneController implements DataModelListener, Initializable{
      */
     public void handleReturnAction(ActionEvent event) throws IOException {
         // load in the main menu scene
-        test.cancel();
+        _micTest.cancel();
         MainMenuController.setStart(false);
-        Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/NameSayer.fxml"));
-        Scene playerScene = new Scene(playerParent);
+
+        new SceneLoader("/app/views/NameSayer.fxml").switchScene(event);
 
         DataModel.getInstance().deleteTempDirectory();
-
-        // switch scenes
-        Stage window2 = (Stage)((Node)event.getSource()).getScene().getWindow();
-        window2.setScene(playerScene);
     }
 
     /**
@@ -249,60 +170,22 @@ public class PlaySceneController implements DataModelListener, Initializable{
     public void compareButtonPressed() throws IOException {
         try {
             int loops = (int) _loopSpinner.getValue();
-            _playing = compareWorker(loops);
+            _playing = _practiseListModel.compareUserRecordingTask(_volumeSlider.getValue(), loops);
             _playBar.progressProperty().bind(_playing.progressProperty());
 
-            _playing.setOnSucceeded( e -> {
+            _playing.setOnSucceeded(e -> {
                 if (_firstComparison) {
                     openLevelScene();
                     _firstComparison = false;
                 }
-                stopProgress();
+                endAudio();
             });
+
             new Thread(_playing).start();
-        }catch(ClassCastException cce){
-            // load in the new scene
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
-            Parent playerParent = null;
-            try {
-                playerParent = loader.load();
-            } catch (IOException ioe) {
-                ioe.printStackTrace();
-            }
 
-            // pass selected items to the next controller
-            ErrorSceneController controller = loader.getController();
-            controller.setMessage("Please enter an integer");
-
-            // switch scenes
-            Scene playerScene = new Scene(playerParent);
-            Stage window = new Stage();
-            window.setScene(playerScene);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.showAndWait();
+        } catch (ClassCastException e) {
+            loadErrorMessage("Please enter an integer");
         }
-
-    }
-
-    /**
-     * Creates a new Task which allows the comparison funcitonality to be
-     * executed on a new thread.
-     */
-    private Task compareWorker(int loops) {
-
-        return new Task() {
-
-            @Override
-            protected Object call() throws Exception {
-                // play user recording
-                for(int i=0 ;i<loops;i++) {
-                    _practiseListModel.compareUserRecording(_volumeSlider.getValue());
-                }
-                return true;
-            }
-        };
-
     }
 
     /**
@@ -310,7 +193,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      */
     public void badButtonPressed() throws IOException {
         _currentName.setBadQuality();
-        _bad_Label.setVisible(true);
+        _badLabel.setVisible(true);
     }
 
     /**
@@ -319,6 +202,7 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * the next level.
      * @param experience
      */
+    // TODO move calculations to user model
     @Override
     public void notifyProgress(int experience) {
         int currentLevelProgress = experience % 100;
@@ -334,48 +218,53 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * they have pronounced the name well.
      */
     private void openLevelScene() {
-        Parent playerParent = null;
-        try {
-            // load in scene
-            playerParent = FXMLLoader.load(getClass().getResource("/app/views/LevelScene.fxml"));
-            Scene playerScene = new Scene(playerParent);
-            Stage window = new Stage();
+        SceneLoader loader = new SceneLoader("/app/views/LevelScene.fxml");
 
-            // open scene
-            window.setScene(playerScene);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        LevelSceneController controller = loader.getController();
+
+        loader.openScene();
     }
 
     /**
      * Whenever the user moves to a new name the scene is reinitialised.
-     *
      */
     private void makeTransition() {
-        _savedLabel.setVisible(false);
-        _bad_Label.setVisible(false);
-        _playBtn.toFront();
-
+        updateUserComparisonButtons();
+        endAudio();
         updateMissingNames();
+        updateLabels();
+        updateRatingButton();
+        checkBounds();
 
-        // change displayed name
+        _practiseListModel.stopPlayTask();
+        // is set to true so that the user has the ability to gain experience again
+        _firstComparison = true;
+    }
+
+    /**
+     * Updates the Label to display which Name is currently being practised and updates
+     * its date/time information. Also removes the save and rating labels.
+     */
+    private void updateLabels() {
+        // change displayed name and its time of creation
         _displayName.setText("Name: " + _currentName.toString());
+        _dateTimeLabel.setText(_currentName.getDateTimeCreated());
 
+        _savedLabel.setVisible(false);
+        _badLabel.setVisible(false);
+    }
+
+    /**
+     * Updates the rating button depending on whether or not the current name being
+     * practised can be rated or not.
+     */
+    private void updateRatingButton() {
         // decides whether or not to give users the ability to rate the recording
         if (_currentName.isRateable()) {
             _badBtn.setDisable(false);
         } else {
             _badBtn.setDisable(true);
         }
-        _dateTimeLabel.setText(_currentName.getDateTimeCreated());
-
-        // is set to true so that the user has the ability to gain experience again
-        _firstComparison = true;
-
-        checkBounds();
     }
 
     /**
@@ -386,6 +275,8 @@ public class PlaySceneController implements DataModelListener, Initializable{
     private void updateMissingNames() {
         if(!_currentName.getMissingNames().isEmpty()) {
             _missingNamesLabel.setText(MISSING_MSG + _currentName.getMissingNames());
+        } else {
+            _missingNamesLabel.setText("");
         }
     }
 
@@ -395,7 +286,6 @@ public class PlaySceneController implements DataModelListener, Initializable{
      * the previous and/or next button.
      */
     private void checkBounds() {
-
         // if the user has reached the end of the list disable the next button, otherwise don't
         if (!_practiseListModel.hasNext()) {
             _nextBtn.setDisable(true);
@@ -409,23 +299,33 @@ public class PlaySceneController implements DataModelListener, Initializable{
         } else {
             _prevBtn.setDisable(false);
         }
-
-        _keepBtn.setDisable(true);
-        _compareBtn.setDisable(true);
     }
 
     /**
-     * The progress bar is disabled to indicate that no audio is playing.
+     * This method should be called when the playing of the name audio to the
+     * user has ended. Stops the progress bar, and brings the displays the play
+     * button again.
      */
-    private void stopProgress(){
+    private void endAudio(){
         _playBar.progressProperty().unbind();
         _playBar.setProgress(0);
-        _playing.cancel();
         _playBtn.toFront();
     }
 
-    public void stopButtonPressed(ActionEvent actionEvent) {
+    /**
+     * Updates the compare and keep buttons depending on whether the user has
+     * made a recording that they can compare or keep.
+     */
+    private void updateUserComparisonButtons() {
+        if(_practiseListModel.userHasRecorded()) {
+            _compareBtn.setDisable(false);
+            _keepBtn.setDisable(false);
+        } else {
+            _compareBtn.setDisable(true);
+            _keepBtn.setDisable(true);
+        }
     }
+
 
     public void helpButtonAction(ActionEvent actionEvent) {
         if (Desktop.isDesktopSupported()) {
@@ -441,26 +341,20 @@ public class PlaySceneController implements DataModelListener, Initializable{
             }
         }
     }
+
+    /**
+     * Given a message, displays an error pop-up to the user displaying the
+     * message to user indicating what they have done wrong.
+     * @param message
+     */
     private void loadErrorMessage(String message) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(ERROR_SCENE);
 
         // pass selected items to the next controller
         ErrorSceneController controller = loader.getController();
         controller.setMessage(message);
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = new Stage();
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
+        loader.openScene();
     }
 }

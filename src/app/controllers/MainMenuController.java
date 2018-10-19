@@ -1,15 +1,13 @@
 package app.controllers;
 
 import app.model.*;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,9 +15,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.awt.*;
@@ -41,6 +39,13 @@ import java.util.ResourceBundle;
  * to update the view.
  */
 public class MainMenuController implements Initializable, DataModelListener {
+    private static final String STREAK_SCENE = "/app/views/StreakScene.fxml";
+    private static final String CONFIRM_SCENE = "/app/views/ConfirmScene.fxml";
+    private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
+    private static final String TEST_SCENE = "/app/views/TestScene.fxml";
+    private static final String SAVE_PLAYLIST_SCENE = "/app/views/SavePlaylistScene.fxml";
+    private static final String LOADING_SCENE = "/app/views/LoadingScene.fxml";
+    private static final String PLAY_SCENE = "/app/views/PlayScene.fxml";
 
     @FXML private SplitPane _mainPane;
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
@@ -70,17 +75,18 @@ public class MainMenuController implements Initializable, DataModelListener {
             _startPane.toBack();
         }
         _dataList.getItems().addAll(DataModel.getInstance().loadDatabaseList());
-        _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        _searchPane.toFront();
+
         _streakCounter.setText(String.valueOf(DataModel.getInstance().getDailyStreak()));
 
-        // change GUI labels
+        _selectedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        _playList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         _databaseLabel.setText(DataModel.getInstance().getDatabaseName());
         _nameCountLabel.setText(String.valueOf(DataModel.getInstance().getDatabaseNameCount()));
 
-        setupPlaylist();
+        new SearchField(_searchBox);
 
-        setupSearchBox();
+        new HighlightedList(_playList);
 
         DataModel.getInstance().addListener(this);
     }
@@ -88,28 +94,6 @@ public class MainMenuController implements Initializable, DataModelListener {
     public static void setStart(boolean b){
         start=b;
     }
-    /**
-     * Initialises the search box to allow for autocompletion when the user
-     * begins typing a name. Initially the autocomplete contains all database names,
-     * then changes based on the users search. When the user enters a space or hyphen
-     * the autocomplete return to all database names.
-     */
-    private void setupSearchBox() {
-        TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
-
-        _searchBox.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            // if the user types a hyphen or space, reset the autocomplete to all names
-            if (newValue.endsWith(" ") || newValue.endsWith("-")) {
-                List<String> autoCompleteList = new ArrayList<>();
-                for(String name : DataModel.getInstance().getNameStrings()) {
-                    autoCompleteList.add(newValue + name);
-                }
-                TextFields.bindAutoCompletion(_searchBox, DataModel.getInstance().getNameStrings());
-            }
-        });
-    }
-
 
     /**
      * When the start button is pressed, the user is displayed the search pane.
@@ -168,23 +152,16 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void playSearchPressed(ActionEvent event) throws IOException {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
-            return;
-        }
-        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
+        } else {
+            Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
 
-        loadWorker.setOnSucceeded(e -> {
-            if(!_missingNames.isEmpty()) { // if the name contains missing get user confirmation
-                _missingNames = DataModel.getInstance().getMissingNames();
-                loadConfirmMessage("Could not find the following name(s): \n\n" + _missingNames);
-                if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+            loadWorker.setOnSucceeded(e -> {
+                if (approveMissingNames(DataModel.getInstance().compileMissingNames(loadWorker.getValue()))) {
                     moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
                 }
-            } else { // otherwise, move on without asking
-                moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
-            }
-        });
-
-        new Thread(loadWorker).start();
+            });
+            new Thread(loadWorker).start();
+        }
     }
 
     /**
@@ -192,24 +169,21 @@ public class MainMenuController implements Initializable, DataModelListener {
      * the playlist.
      * @param event
      */
-    public void addToPlaylistPressed(ActionEvent event) {
+    public void addToPlaylist(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
             loadErrorMessage("ERROR: Search is empty");
-            return;
+        } else {
+            Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
+
+            // when finished update the list view if the user chooses to
+            loadWorker.setOnSucceeded(e -> {
+                if (approveMissingNames(DataModel.getInstance().compileMissingNames(loadWorker.getValue()))) {
+                    _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
+                    _searchBox.clear();
+                }
+            });
+            new Thread(loadWorker).start();
         }
-
-        Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadSingleNameWorker(_searchBox.getText());
-
-        // when finished update the list view
-        loadWorker.setOnSucceeded(e -> {
-            _missingNames = DataModel.getInstance().getMissingNames();
-            if(!_missingNames.isEmpty()) {
-                loadErrorMessage("ERROR: Could not find the following name(s): \n\n" + _missingNames);
-            } else {
-                _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
-            }
-        });
-        new Thread(loadWorker).start();
     }
 
     /**
@@ -218,7 +192,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      * @param event
      * @throws IOException
      */
-    public void chooseFilePressed(ActionEvent event) {
+    public void chooseFilePressed(ActionEvent event) throws IOException {
         // initialise file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select PlayList");
@@ -246,18 +220,28 @@ public class MainMenuController implements Initializable, DataModelListener {
     public void playFilePressed(ActionEvent event) throws IOException {
         if (_playList.getItems().size() == 0) { // check if list is empty
             loadErrorMessage("ERROR: List is empty");
-            return;
-        }
-
-        // check if there are any missing names. If so, ask the user if they want to continue.
-        if (!_missingNames.isEmpty()){
-            loadConfirmMessage("Could not find the following name(s): \n\n" + _missingNames);
-            if(_confirmationController.saidYes()) { // If their decision is yes, move to the play scene
-                moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
-            }
-        } else { // otherwise, allow user to practise.
+            // check if there are any missing names. If so, ask the user if they want to continue.
+        } else if(approveMissingNames(DataModel.getInstance().compileMissingNames(_playList.getItems()))) {
             moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
         }
+    }
+
+    /**
+     * Ask the users if they want to continue with their actions if the given names are
+     * missing from the database.
+     * @param missingNames
+     * @return whether or not the user wants to continue
+     */
+    private boolean approveMissingNames(String missingNames) {
+        if(!missingNames.isEmpty()) { // if the name contains missing get user confirmation
+            loadConfirmMessage("Could not find the following name(s): \n\n" + missingNames);
+            if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
+                return true;
+            }
+        } else { // otherwise, move on without asking
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -267,7 +251,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      * @param selectedFile
      * @throws FileNotFoundException
      */
-    private void loadFile(File selectedFile) {
+    private void loadFile(File selectedFile) throws IOException {
         _fileNameLabel.setText("  " + selectedFile.getName());
         _selectedFile = selectedFile;
 
@@ -275,34 +259,19 @@ public class MainMenuController implements Initializable, DataModelListener {
         Task<List<ConcatenatedName>> loadWorker = DataModel.getInstance().loadFileWorker(selectedFile);
 
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/LoadingScene.fxml"));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(LOADING_SCENE);
 
         // pass the task to be loaded to the controller
         LoadingController controller = loader.getController();
         controller.showTaskLoading(loadWorker);
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = new Stage();
-
         // when finished update the list view and close the loader
         loadWorker.setOnSucceeded(e -> {
             _playList.getItems().addAll(loadWorker.getValue());
-            _missingNames = DataModel.getInstance().getMissingNames();
-            window.close();
+            controller.cancelLoading();
         });
 
-        // open save scene
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
+        loader.openScene();
     }
 
     /**
@@ -347,7 +316,7 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     public void clearPlayListButtonPressed() {
         _playList.getItems().clear();
-        _fileNameLabel.setText("   No file selected");
+        _fileNameLabel.setText("  No file selected");
     }
 
     /**
@@ -358,29 +327,14 @@ public class MainMenuController implements Initializable, DataModelListener {
             loadErrorMessage("ERROR: List is empty");
             return;
         }
-
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/SavePlaylistScene.fxml"));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(SAVE_PLAYLIST_SCENE);
 
         // pass selected items to the next controller
         SavePlaylistController controller = loader.getController();
         controller.setPlayList(_playList.getItems());
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = new Stage();
-
-        // open save scene
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
+        loader.openScene();
     }
 
     /**
@@ -404,10 +358,9 @@ public class MainMenuController implements Initializable, DataModelListener {
      * @param event
      * @throws IOException
      */
-    public void handleStartAction(ActionEvent event) throws IOException {
+    public void handleStartAction(ActionEvent event) {
         // if no items are selected, do not switch scenes.
         if(_selectedList.getItems().size() == 0){ return; }
-
         moveToPlayScene(new ArrayList<>(_selectedList.getItems()), event);
     }
 
@@ -475,50 +428,12 @@ public class MainMenuController implements Initializable, DataModelListener {
             _searchPane.toFront();
 
         } else if(event.getSource() == _testMicBtn){
-            // load test scene
-            Parent playerParent = FXMLLoader.load(getClass().getResource("/app/views/TestScene.fxml"));
-            Scene playerScene = new Scene(playerParent);
-            Stage window = new Stage();
+            new SceneLoader(TEST_SCENE).openScene();
 
-            // open test scene
-            window.setScene(playerScene);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.showAndWait();
         } else if(event.getSource() == _returnBtn){
             start = false;
             _startPane.toFront();
         }
-    }
-
-    /**
-     * Setup the playlist such that it displays when a ConcatenatedName object,
-     * contains missing names.
-     */
-    private void setupPlaylist() {
-        _playList.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
-            @Override
-            protected void updateItem(ConcatenatedName c, boolean empty) {
-                super.updateItem(c, empty);
-                // if empty, ignore
-                if (empty) {
-                    setText(null);
-                    setStyle("");
-
-                } else {
-                    setText(c.toString());
-
-                    // If the ConcatenatedName object contains missing names, update
-                    // the cell accordingly.
-                    if (!c.getMissingNames().equals("")) {
-                        setStyle("-fx-background-color: rgba(255,0,0,0.5)");
-                        setTooltip( new Tooltip("Missing Name(s): " + c.getMissingNames()));
-                    } else {
-                        setStyle("");
-                        setTooltip( new Tooltip("All Names Found!"));
-                    }
-                }
-            }
-        });
     }
 
     /**
@@ -529,23 +444,13 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     private void moveToPlayScene(List<Practisable> list , ActionEvent event) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/PlayScene.fxml"));
-        try {
-            Parent playerParent = loader.load();
-            // pass selected items to the next controller
-            PlaySceneController controller = loader.getController();
-            controller.initModel(new PractiseListModel(new ArrayList<>(list)));
+        SceneLoader loader = new SceneLoader(PLAY_SCENE);
 
-            // switch scenes
-            Scene playerScene = new Scene(playerParent);
-            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-            window.setScene(playerScene);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        // pass selected items to the next controller
+        PlaySceneController controller = loader.getController();
+        controller.initModel(new PractiseListModel(new ArrayList<>(list)));
 
-
+        loader.switchScene(event);
     }
 
     /**
@@ -555,25 +460,13 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     private void loadErrorMessage(String message) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/ErrorScene.fxml"));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(ERROR_SCENE);
 
         // pass selected items to the next controller
         ErrorSceneController controller = loader.getController();
         controller.setMessage(message);
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = new Stage();
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
+       loader.openScene();
     }
 
     /**
@@ -583,25 +476,13 @@ public class MainMenuController implements Initializable, DataModelListener {
      */
     private void loadConfirmMessage(String message) {
         // load in the new scene
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/app/views/ConfirmScene.fxml"));
-        Parent playerParent = null;
-        try {
-            playerParent = loader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SceneLoader loader = new SceneLoader(CONFIRM_SCENE);
 
         // pass selected items to the next controller
         _confirmationController = loader.getController();
         _confirmationController.setMessage(message);
 
-        // switch scenes
-        Scene playerScene = new Scene(playerParent);
-        Stage window = new Stage();
-        window.setScene(playerScene);
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.showAndWait();
+        loader.openScene();
     }
 
     /**
@@ -609,20 +490,16 @@ public class MainMenuController implements Initializable, DataModelListener {
      * progress.
      */
     private void openStreakWindow() {
-        Parent playerParent = null;
-        try {
-            // load in scene
-            playerParent = FXMLLoader.load(getClass().getResource("/app/views/StreakScene.fxml"));
-            Scene playerScene = new Scene(playerParent);
-            Stage window = new Stage();
+        new SceneLoader(STREAK_SCENE).openScene();
+    }
 
-            // display to the user
-            window.setScene(playerScene);
-            window.initModality(Modality.APPLICATION_MODAL);
-            window.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * Removes all currently selected names from the playlist. This can be a single name
+     * or multiple names.
+     * @param event
+     */
+    public void removeFromPlaylist(ActionEvent event) {
+        _playList.getItems().removeAll(_playList.getSelectionModel().getSelectedItems());
     }
 
     public void helpButtonAction(ActionEvent actionEvent) {

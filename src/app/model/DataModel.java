@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -26,7 +27,6 @@ public class DataModel implements IDataModel{
 	private List<DataModelListener> _listeners;
 	private User _user;
 	private List<String> _nameStrings;
-	private String _missingNames;
 
 	private DataModel() {
 		_user = new User();
@@ -140,8 +140,15 @@ public class DataModel implements IDataModel{
 				// if the folder has spaces they must be replaced "\ " to be interpreted by a bash process
 				String fileName = databaseFolder.getName().replaceAll(" ","\\\\ ") + "/" + file.getName();
 
-				// create a name version object for the recording file
-				NameVersion nameVersion = new NameVersion(fileName);
+				// try create a name version object for the file, if the following exceptions are thrown
+				// then the file is not a valid practise recording file. i.e. incorrect file name format
+				NameVersion nameVersion = null;
+				try {
+					nameVersion = new NameVersion(fileName);
+				} catch (ParseException | IndexOutOfBoundsException e) {
+					// if an exception has been thrown then the file is invalid, do not create a NameVersion for it
+					continue;
+				}
 
 				// update the list of all names
 				_nameStrings.add(nameVersion.getShortName());
@@ -176,7 +183,7 @@ public class DataModel implements IDataModel{
 			@Override
 			protected List<ConcatenatedName> call() throws Exception {
 				// load name through data model
-				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(createConcatenatedName(name)));
+				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(new ConcatenatedName(name, _databaseTable)));
 
 				// compile missing names into a string to display to the user if needed
 				compileMissingNames(list);
@@ -207,7 +214,7 @@ public class DataModel implements IDataModel{
 					// if the concatenation of a name is interrupted ask for the cause
 					ConcatenatedName concatenatedName = null;
 					try {
-						concatenatedName = createConcatenatedName(inputString);
+						concatenatedName = new ConcatenatedName(inputString, _databaseTable);
 					} catch (InterruptedException e) {
 						// if the exception was caused by the user cancelling, it is not an error
 						if(isCancelled()){
@@ -226,56 +233,22 @@ public class DataModel implements IDataModel{
 	}
 
 	/**
-	 * Updates the _missingNames field to store the names of the given list which are
-	 * not contained within the database.
+	 * Returns a displayable string which contains all the names that are not
+	 * in this database in each of the given Concatenated Name objects.
 	 * @param list
 	 */
-	private void compileMissingNames(List<ConcatenatedName> list) {
-		_missingNames = "";
+	public String compileMissingNames(List<ConcatenatedName> list) {
+		String missingNames = "";
 		// loop through all names in the list
 		for(ConcatenatedName name : list) {
 			String missing = name.getMissingNames();
 
 			// if some names are missing, update the _missingNames field
 			if (!missing.isEmpty()) {
-				_missingNames += missing +"\n";
+				missingNames += missing +"\n";
 			}
 		}
-	}
-
-	/**
-	 * Given an input string, returns a Concatenated Name object from the string.
-	 * Different names should be separated by a space or hyphen in the input string.
-	 * @param inputString
-	 * @return a ConcatenatedName corresponding to the input string
-	 * @throws InterruptedException
-	 */
-	private ConcatenatedName createConcatenatedName(String inputString) throws InterruptedException {
-		List<Name> notConcatenatedNames = new ArrayList<>();
-
-		// replace all hyphens with spaces
-		String splitString = inputString.replaceAll("-", " ");
-
-		// parse strings into a list of strings
-		List<String> stringList = new ArrayList<>(Arrays.asList(splitString.split(" ")));
-
-		String missingNames = "";
-
-		for (String str : stringList) {
-			if (_databaseTable.containsKey(str.toLowerCase())) {
-				notConcatenatedNames.add(_databaseTable.get(str.toLowerCase()));
-			} else {
-				missingNames += str + " ";
-			}
-		}
-
-		ConcatenatedName concatenatedName = new ConcatenatedName(notConcatenatedNames, inputString);
-
-		if(!missingNames.isEmpty()) {
-			concatenatedName.setMissingNames(missingNames);
-		}
-
-		return concatenatedName;
+		return missingNames;
 	}
 
 	/**
@@ -358,9 +331,5 @@ public class DataModel implements IDataModel{
 
 	public List<String> getNameStrings() {
 		return _nameStrings;
-	}
-
-	public String getMissingNames() {
-		return _missingNames;
 	}
 }
