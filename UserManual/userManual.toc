@@ -1,0 +1,22 @@
+\contentsline {section}{\numberline {1}First Time Launch}{4}
+\contentsline {section}{\numberline {2}Start Menu}{5}
+\contentsline {subsection}{\numberline {2.1}Test Mic}{6}
+\contentsline {subsection}{\numberline {2.2}Select Database}{7}
+\contentsline {subsection}{\numberline {2.3}How should my database files be named?}{8}
+\contentsline {section}{\numberline {3}Main Pane}{9}
+\contentsline {subsection}{\numberline {3.1}Daily Streak}{10}
+\contentsline {subsection}{\numberline {3.2}Levelling System}{10}
+\contentsline {section}{\numberline {4}Search Pane}{11}
+\contentsline {subsection}{\numberline {4.1}Fusing/Searching recordings of first and family names together}{11}
+\contentsline {subsection}{\numberline {4.2}Uploading Text File with List of Names}{12}
+\contentsline {subsection}{\numberline {4.3}Using a Playlist}{13}
+\contentsline {subsection}{\numberline {4.4}Saving a Playlist}{14}
+\contentsline {section}{\numberline {5}View Database}{15}
+\contentsline {section}{\numberline {6}View Attempts/Recordings}{16}
+\contentsline {section}{\numberline {7}Play Scene}{17}
+\contentsline {subsection}{\numberline {7.1}Listening to Recordings}{18}
+\contentsline {subsection}{\numberline {7.2}Cycling through the Playlist}{19}
+\contentsline {subsection}{\numberline {7.3}Rating the Quality of the Recording}{20}
+\contentsline {subsection}{\numberline {7.4}Creating your own Recording}{21}
+\contentsline {subsection}{\numberline {7.5}Comparing your recording with the database}{22}
+\contentsline {section}{\numberline {8}Missing Names}{23}
