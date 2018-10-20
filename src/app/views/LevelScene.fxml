@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LevelSceneController">
+<AnchorPane prefHeight="170.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.LevelSceneController">
    <children>
       <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -19,12 +23,12 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Button fx:id="_badBtn" layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="27.0" prefWidth="80.0" text="No" textFill="WHITE">
+            <Button fx:id="_badBtn" layoutX="240.0" layoutY="65.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="27.0" prefWidth="80.0" text="Bad" textFill="WHITE">
                <styleClass>
                   <String fx:value="menu-dark" />
                   <String fx:value="smallredbutton" />
                </styleClass></Button>
-            <Button fx:id="_goodBtn" layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Yes" textFill="WHITE">
+            <Button fx:id="_goodBtn" layoutX="30.0" layoutY="65.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Good" textFill="WHITE">
                <styleClass>
                   <String fx:value="menu-dark" />
                   <String fx:value="smallgreenbutton" />
@@ -34,7 +38,7 @@
                   <String fx:value="menu-dark" />
                   <String fx:value="smallbluebutton" />
                </styleClass></Button>
-             <Label fx:id="_messageLabel" alignment="CENTER" layoutY="29.0" prefHeight="24.0" prefWidth="350.0" textFill="WHITE" />
+             <Label fx:id="_messageLabel" alignment="CENTER" layoutY="22.0" prefHeight="24.0" prefWidth="350.0" textFill="WHITE" />
          </children>
       </AnchorPane>
    </children>
