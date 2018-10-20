@@ -4,6 +4,7 @@ import app.model.*;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -11,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -78,6 +80,18 @@ public class MainMenuController implements Initializable, UserModelListener {
         _playList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         new HighlightedList(_playList);
+
+        _dataList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        _selectedList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 
     public void setModel(IDatabaseModel databaseModel, IUserModel userModel) {
