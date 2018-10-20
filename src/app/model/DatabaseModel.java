@@ -13,11 +13,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * The DatabaseModel singleton object represents the database in which practise and user recordings
- * are loaded in from and saved to.
+ * The DatabaseModel singleton object represents the database in which practise and user
+ * recordings are loaded in from and saved to.
  *
- * The displayable databases are returned in Tree View form and List View form, which allows
+ * The displayable databases are returned in Tree View form and List form, which allows
  * them to be easily presented to the user.
+ * For a recording file to be recognised as a valid name recording in this database, it
+ * must have the following file name format:
+ *
+ * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * e.g. se206_2-5-2018_15-23-50_Mason.wav
  */
 public class DatabaseModel implements IDatabaseModel {
     public static final File USER_DATABASE = new File("./userRecordings/");
@@ -123,9 +128,6 @@ public class DatabaseModel implements IDatabaseModel {
 					continue;
 				}
 
-				// update the list of all names
-				_nameStrings.add(nameVersion.getShortName());
-
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
 					Name currentName = nameTable.get(nameVersion.getShortName().toLowerCase());
@@ -134,6 +136,9 @@ public class DatabaseModel implements IDatabaseModel {
 					Name name = new Name(nameVersion.getShortName());
 					name.add(nameVersion);
 					nameTable.put(nameVersion.getShortName().toLowerCase(), name);
+
+					// update the list of all names
+					_nameStrings.add(nameVersion.getShortName());
 
 					// initialises the good version to be used as the recording for this name
 					name.selectGoodVersion();
@@ -146,12 +151,12 @@ public class DatabaseModel implements IDatabaseModel {
 
 	/**
 	 * Given a single name string, returns a task which returns a list of concatenated names
-	 * containing this name. The loadSingleNameWorker executes the loading of the name on
+	 * containing this name. The loadSingleNameTask executes the loading of the name on
 	 * a background thread to avoid GUI unresponsiveness.
 	 * @param name
 	 * @return
 	 */
-	public Task loadSingleNameWorker(String name) {
+	public Task loadSingleNameTask(String name) {
 		return new Task() {
 			@Override
 			protected List<ConcatenatedName> call() throws Exception {
@@ -168,12 +173,12 @@ public class DatabaseModel implements IDatabaseModel {
 	/**
 	 * Given a file, returns a task which returns a list of ConcatenatedName objects where
 	 * each line of the file is converted to a ConcatenatedName object in the list.
-	 * The loadFileWorker executes the parsing of the playlist file on a background thread
+	 * The loadFileTask executes the parsing of the playlist file on a background thread
 	 * to avoid GUI unresponsiveness.
 	 * @param playlistFile
 	 * @return
 	 */
-	public Task loadFileWorker(File playlistFile) {
+	public Task loadFileTask(File playlistFile) {
 		return new Task() {
 			@Override
 			protected List<ConcatenatedName> call() throws FileNotFoundException {

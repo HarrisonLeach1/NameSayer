@@ -40,6 +40,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     private static final int MIN_LOOPS = 1;
     private static final int MAX_LOOPS = 10;
     private static final int DEFAULT_LOOPS = 3;
+    private static final String MAIN_MENU_SCENE = "/app/views/NameSayer.fxml";
 
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
@@ -167,9 +168,14 @@ public class PlaySceneController implements UserModelListener, Initializable {
         _micTest.cancel();
         MainMenuController.setStartFalse();
 
-        new SceneLoader("/app/views/NameSayer.fxml").switchScene(event);
+        SceneLoader loader = new SceneLoader(MAIN_MENU_SCENE);
+
+        MainMenuController controller = loader.getController();
+        controller.setModel(_databaseModel, _userModel);
 
         _databaseModel.deleteTempRecordings();
+
+        loader.switchScene(event);
     }
 
     /**

@@ -1,14 +1,9 @@
 package app.controllers;
 
 import app.model.ConcatenatedName;
-import impl.org.controlsfx.autocompletion.SuggestionProvider;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
-import org.controlsfx.control.textfield.TextFields;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A HighlightedList represents a functionality wrapper for a ListView class which

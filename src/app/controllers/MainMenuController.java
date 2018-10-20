@@ -58,10 +58,10 @@ public class MainMenuController implements Initializable, UserModelListener {
     @FXML private ProgressBar _playingProgress,_levelProgress;
 
     private ConfirmSceneController _confirmationController;
-    private static boolean start = true;
     private Task _player;
     private IDatabaseModel _databaseModel;
     private IUserModel _userModel;
+    private static boolean start = true;
 
     /**
      * Initially the database of recordings is loaded in from the model,
@@ -80,7 +80,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         new HighlightedList(_playList);
     }
 
-    public void setModel(DatabaseModel databaseModel, UserModel userModel) {
+    public void setModel(IDatabaseModel databaseModel, IUserModel userModel) {
         _databaseModel = databaseModel;
         _userModel = userModel;
 
@@ -161,7 +161,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (_searchBox.getText().trim().isEmpty()) {
             loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameWorker(_searchBox.getText());
+            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             loadWorker.setOnSucceeded(e -> {
                 if (approveMissingNames(_databaseModel.compileMissingNames(loadWorker.getValue()))) {
@@ -181,7 +181,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (_searchBox.getText().trim().isEmpty()) {
             loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameWorker(_searchBox.getText());
+            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             // when finished update the list view if the user chooses to
             loadWorker.setOnSucceeded(e -> {
@@ -263,7 +263,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         _fileNameLabel.setText("  " + selectedFile.getName());
 
         // create a load worker for loading in the names in the file
-        Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadFileWorker(selectedFile);
+        Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadFileTask(selectedFile);
 
         // load in the new scene
         SceneLoader loader = new SceneLoader(LOADING_SCENE);
