@@ -81,19 +81,6 @@
                               </Button>
                               <AnchorPane prefHeight="71.0" prefWidth="34.0">
                                  <children>
-                                    <Button fx:id="_stopBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" onAction="#stopButtonPressed" prefHeight="50.0" prefWidth="60.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <styleClass>
-                                          <String fx:value="circle" />
-                                          <String fx:value="play" />
-                                       </styleClass>
-                                       <graphic>
-                                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@images/stop.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                    </Button>
                                     <Button fx:id="_playBtn" alignment="CENTER" contentDisplay="CENTER" layoutY="6.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="50.0" prefWidth="50.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <styleClass>
                                           <String fx:value="circle" />
@@ -103,6 +90,19 @@
                                           <ImageView fitHeight="55.0" fitWidth="60.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@images/play.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                    </Button>
+                                    <Button fx:id="_stopBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="5.0" layoutY="8.0" mnemonicParsing="false" onAction="#stopButtonPressed" prefHeight="50.0" prefWidth="60.0" stylesheets="@style.css" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <styleClass>
+                                          <String fx:value="circle" />
+                                          <String fx:value="bad" />
+                                       </styleClass>
+                                       <graphic>
+                                          <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@images/stop.png" />
                                              </image>
                                           </ImageView>
                                        </graphic>

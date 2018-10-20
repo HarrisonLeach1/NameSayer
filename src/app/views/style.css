@@ -37,6 +37,10 @@
     -fx-border-color:limegreen;
     -fx-border-width:2;
 }
+.smallbluebutton{
+    -fx-border-color:turquoise;
+    -fx-border-width:2;
+}
 .medgreenbutton{
     -fx-border-color:limegreen;
     -fx-border-width:3;
@@ -140,6 +144,39 @@
     -fx-padding: 0.20em;
 }
 
-.average{
-    -fx-background-color:#6E6970;
+.finish{
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-background-insets: 1 1 1 1;
+    -fx-background-color: forestgreen;
+    -fx-border-color: #3E3B3F;
+    -fx-border-width: 3;
+}
+.start{
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-background-insets: 1 1 1 1;
+    -fx-background-color: #3E3B3F;
+    -fx-border-color: limegreen;
+    -fx-border-width: 3;
+}
+.start:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
+}
+.finish:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, forestgreen, limegreen);
+}
+.finish:pressed {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 60%, forestgreen, limegreen);
+    -fx-border-color:green;
+    -fx-border-width: 3;
+}
+.start:pressed {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 60%, #3E3B3F, #6E6970);
+    -fx-border-color:grey;
+    -fx-border-width: 3;
 }

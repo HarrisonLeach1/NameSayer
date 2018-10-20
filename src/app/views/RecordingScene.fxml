@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.String?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
@@ -31,17 +32,11 @@
                   <DropShadow color="#ffffff00" />
                </effect>
             </Button>
-            <Button fx:id="_finishBtn" layoutX="84.0" layoutY="60.0" mnemonicParsing="false" onAction="#finishButtonPressed" prefHeight="25.0" prefWidth="132.0" text="Finish Recording" textFill="WHITE">
-               <styleClass>
-                  <String fx:value="play" />
-                  <String fx:value="menu" />
-               </styleClass>
-            </Button>
-            <Button fx:id="_startBtn" layoutX="84.0" layoutY="60.0" mnemonicParsing="false" onAction="#recordButtonPressed" prefHeight="25.0" prefWidth="132.0" text="Start Recording" textFill="WHITE">
-               <styleClass>
-                  <String fx:value="play" />
-                  <String fx:value="menu" />
-               </styleClass>
+            <Button fx:id="_finishBtn" layoutX="84.0" layoutY="54.0" mnemonicParsing="false" onAction="#finishButtonPressed" prefHeight="31.0" prefWidth="132.0" styleClass="finish" text="Finish Recording" textFill="WHITE" />
+            <Button fx:id="_startBtn" alignment="CENTER" graphicTextGap="0.0" layoutX="84.0" layoutY="54.0" mnemonicParsing="false" onAction="#recordButtonPressed" prefHeight="31.0" prefWidth="132.0" styleClass="start" text="Start Recording" textFill="WHITE">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
             </Button>
          </children>
       </AnchorPane>
