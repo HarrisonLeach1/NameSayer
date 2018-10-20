@@ -37,11 +37,11 @@ public class PlaySceneController implements UserModelListener, Initializable {
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
     private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
     private static final String RECORDING_SCENE = "/app/views/RecordingScene.fxml";
+    private static final String MAIN_MENU_SCENE = "/app/views/NameSayer.fxml";
+
     private static final int MIN_LOOPS = 1;
     private static final int MAX_LOOPS = 10;
     private static final int DEFAULT_LOOPS = 3;
-    private static final String MAIN_MENU_SCENE = "/app/views/NameSayer.fxml";
-
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
     @FXML private Label _displayName, _badLabel, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
@@ -170,8 +170,10 @@ public class PlaySceneController implements UserModelListener, Initializable {
 
         SceneLoader loader = new SceneLoader(MAIN_MENU_SCENE);
 
+        // give model references back to the main controller, and give the playlist back
         MainMenuController controller = loader.getController();
         controller.setModel(_databaseModel, _userModel);
+        controller.setPlaylist(_practiseListModel.getPractiseList());
 
         _databaseModel.deleteTempRecordings();
 
@@ -212,7 +214,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * @param currentUserLevel
      * @param currentLevelProgress
      */
-    // TODO move calculations to user model
     @Override
     public void notifyProgress(int currentUserLevel, double currentLevelProgress) {
         _levelProgress.setProgress(currentLevelProgress);

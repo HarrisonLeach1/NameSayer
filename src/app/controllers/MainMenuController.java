@@ -30,9 +30,9 @@ import java.util.ResourceBundle;
 /**
  * A MainMenuController holds the responsibility of receiving input events
  * from the user at the main menu and then translating them into actions on the
- * DatabaseModel.
+ * IDatabaseModel.
  *
- * The DatabaseModel then passes information back to the MainMenuController
+ * The IDatabaseModel then passes information back to the MainMenuController
  * to update the view.
  */
 public class MainMenuController implements Initializable, UserModelListener {
@@ -51,7 +51,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Practisable> _selectedList;
-    @FXML private ListView<ConcatenatedName> _playList;
+    @FXML private ListView<Practisable> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
@@ -80,6 +80,12 @@ public class MainMenuController implements Initializable, UserModelListener {
         new HighlightedList(_playList);
     }
 
+    /**
+     * Initialises the IDatabaseModel and IUserModel to which this MainMenuController
+     * communicates. This determines the information displayed and data saved.
+     * @param databaseModel
+     * @param userModel
+     */
     public void setModel(IDatabaseModel databaseModel, IUserModel userModel) {
         _databaseModel = databaseModel;
         _userModel = userModel;
@@ -96,11 +102,12 @@ public class MainMenuController implements Initializable, UserModelListener {
     }
 
     /**
-     * Sets start value to false so that the it doesn't show the
-     * start screen and streaks when returning to the start screen
+     * Sets the playlist in the search pane with a list of Practisable
+     * objects to be modified by the user.
+     * @param list
      */
-    public static void setStartFalse(){
-        start=false;
+    public void setPlaylist(List<Practisable> list) {
+        _playList.getItems().addAll(list);
     }
 
     /**
@@ -161,7 +168,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (_searchBox.getText().trim().isEmpty()) {
             loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
+            Task<List<Practisable>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             loadWorker.setOnSucceeded(e -> {
                 if (approveMissingNames(_databaseModel.compileMissingNames(loadWorker.getValue()))) {
@@ -181,7 +188,7 @@ public class MainMenuController implements Initializable, UserModelListener {
         if (_searchBox.getText().trim().isEmpty()) {
             loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
+            Task<List<Practisable>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             // when finished update the list view if the user chooses to
             loadWorker.setOnSucceeded(e -> {
@@ -489,6 +496,14 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void removeFromPlaylist(ActionEvent event) {
         _playList.getItems().removeAll(_playList.getSelectionModel().getSelectedItems());
+    }
+
+    /**
+     * Sets start value to false so that the it doesn't show the
+     * start screen and streaks when returning to the start screen
+     */
+    public static void setStartFalse(){
+        start=false;
     }
 
     /**

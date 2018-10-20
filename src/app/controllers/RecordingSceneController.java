@@ -39,11 +39,7 @@ public class RecordingSceneController {
     public void recordButtonPressed() {
         // tell model to create recording
         _practiseListModel.createUserRecording();
-
-        _startBtn.setDisable(true);
-        _progressBar.setProgress(0);
-        _cancelBtn.setDisable(false);
-        _finishBtn.setDisable(false);
+        updateButtons();
 
         recordWorker = recordWorker();
 
@@ -61,6 +57,10 @@ public class RecordingSceneController {
         _finishBtn.toFront();
     }
 
+    /**
+     * When the finish button is pressed, the model is told to finish the
+     * recording, the progress bar is stopped, and the window is closed
+     */
     public void finishButtonPressed() {
         recordWorker.cancel(true);
         _practiseListModel.finishUserRecording();
@@ -81,6 +81,16 @@ public class RecordingSceneController {
 
         Stage window = (Stage)_cancelBtn.getScene().getWindow();
         window.close();
+    }
+
+    /**
+     * Updates the buttons to disable starting again and allow finishing.
+     */
+    private void updateButtons() {
+        _startBtn.setDisable(true);
+        _progressBar.setProgress(0);
+        _cancelBtn.setDisable(false);
+        _finishBtn.setDisable(false);
     }
 
     /**

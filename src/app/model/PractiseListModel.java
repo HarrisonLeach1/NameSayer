@@ -3,6 +3,7 @@ package app.model;
 import javafx.concurrent.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PractiseListModel implements IPractiseListModel{
 
@@ -196,4 +197,12 @@ public class PractiseListModel implements IPractiseListModel{
         return _currentUserRecording != null;
     }
 
+    /**
+     * Returns the list of Practisable names that are being practised in this
+     * PractiseListModel object.
+     * @return a list of Practisable objects
+     */
+    public List<Practisable> getPractiseList() {
+        return _practiseList;
+    }
 }

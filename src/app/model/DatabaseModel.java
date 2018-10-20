@@ -159,9 +159,9 @@ public class DatabaseModel implements IDatabaseModel {
 	public Task loadSingleNameTask(String name) {
 		return new Task() {
 			@Override
-			protected List<ConcatenatedName> call() throws Exception {
+			protected List<Practisable> call() throws Exception {
 				// load name through data model
-				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(new ConcatenatedName(name, _databaseTable)));
+				List<Practisable> list = new ArrayList<>(Arrays.asList(new ConcatenatedName(name, _databaseTable)));
 
 				// compile missing names into a string to display to the user if needed
 				compileMissingNames(list);
@@ -181,9 +181,9 @@ public class DatabaseModel implements IDatabaseModel {
 	public Task loadFileTask(File playlistFile) {
 		return new Task() {
 			@Override
-			protected List<ConcatenatedName> call() throws FileNotFoundException {
+			protected List<Practisable> call() throws FileNotFoundException {
 				Scanner input = new Scanner(playlistFile);
-				List<ConcatenatedName> nameList = new ArrayList<>();
+				List<Practisable> nameList = new ArrayList<>();
 
 				// load in each line of the text file, and use each string to create a new Name object
 				while (input.hasNextLine()) {
@@ -215,10 +215,10 @@ public class DatabaseModel implements IDatabaseModel {
 	 * in this database in each of the given Concatenated Name objects.
 	 * @param list
 	 */
-	public String compileMissingNames(List<ConcatenatedName> list) {
+	public String compileMissingNames(List<Practisable> list) {
 		String missingNames = "";
 		// loop through all names in the list
-		for(ConcatenatedName name : list) {
+		for(Practisable name : list) {
 			String missing = name.getMissingNames();
 
 			// if some names are missing, update the _missingNames field
@@ -251,7 +251,7 @@ public class DatabaseModel implements IDatabaseModel {
 	 * @param list
 	 * @param fileName
 	 */
-	public void savePlaylist(List<ConcatenatedName> list, String fileName) {
+	public void savePlaylist(List<Practisable> list, String fileName) {
 		// replace all spaces with underscores
 		fileName = fileName.replaceAll(" ","_") +".txt";
 		File file = new File(fileName);
@@ -262,7 +262,7 @@ public class DatabaseModel implements IDatabaseModel {
 			FileWriter fw = new FileWriter(file);
 
 			// for each name write it on a new line of the file
-			for(ConcatenatedName name : list) {
+			for(Practisable name : list) {
 				fw.write(name.toString() + "\r\n");
 			}
 
@@ -305,7 +305,7 @@ public class DatabaseModel implements IDatabaseModel {
 
 	/**
 	 * Returns displayable strings of all the names in the currently selected database.
-	 * @return
+	 * @return strings of all database names in a list
 	 */
 	public List<String> getNameStrings() {
 		return _nameStrings;

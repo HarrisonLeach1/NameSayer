@@ -2,6 +2,8 @@ package app.model;
 
 import javafx.concurrent.Task;
 
+import java.util.List;
+
 /**
  * An IPractiseListModel object represents the list of recordings that the
  * user has selected to practise from the database.
@@ -89,4 +91,11 @@ public interface IPractiseListModel {
      * @return
      */
     boolean userHasRecorded();
+
+    /**
+     * Returns a list of Practisable objects that are being practised in this
+     * IPractiseListModel.
+     * @return a list of Practisable objects
+     */
+    List<Practisable> getPractiseList();
 }
