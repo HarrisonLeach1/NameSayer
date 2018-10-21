@@ -4,6 +4,7 @@ import app.model.*;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -11,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -30,15 +32,12 @@ import java.util.ResourceBundle;
 /**
  * A MainMenuController holds the responsibility of receiving input events
  * from the user at the main menu and then translating them into actions on the
- * DatabaseModel.
+ * IDatabaseModel.
  *
- * The DatabaseModel then passes information back to the MainMenuController
+ * The IDatabaseModel then passes information back to the MainMenuController
  * to update the view.
  */
 public class MainMenuController implements Initializable, UserModelListener {
-    private static final String STREAK_SCENE = "/views/StreakScene.fxml";
-    private static final String CONFIRM_SCENE = "/views/ConfirmScene.fxml";
-    private static final String ERROR_SCENE = "/views/ErrorScene.fxml";
     private static final String TEST_SCENE = "/views/TestScene.fxml";
     private static final String SAVE_PLAYLIST_SCENE = "/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/views/LoadingScene.fxml";
@@ -51,13 +50,12 @@ public class MainMenuController implements Initializable, UserModelListener {
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
     @FXML private CheckListView<Name> _dataList;
     @FXML private ListView<Practisable> _selectedList;
-    @FXML private ListView<ConcatenatedName> _playList;
+    @FXML private ListView<Practisable> _playList;
     @FXML private TreeView<NameVersion> _recList;
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
     @FXML private ProgressBar _playingProgress,_levelProgress;
 
-    private ConfirmSceneController _confirmationController;
     private Task _player;
     private IDatabaseModel _databaseModel;
     private IUserModel _userModel;
@@ -78,8 +76,26 @@ public class MainMenuController implements Initializable, UserModelListener {
         _playList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         new HighlightedList(_playList);
+
+        _dataList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        _selectedList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 
+    /**
+     * Initialises the IDatabaseModel and IUserModel to which this MainMenuController
+     * communicates. This determines the information displayed and data saved.
+     * @param databaseModel
+     * @param userModel
+     */
     public void setModel(IDatabaseModel databaseModel, IUserModel userModel) {
         _databaseModel = databaseModel;
         _userModel = userModel;
@@ -96,11 +112,12 @@ public class MainMenuController implements Initializable, UserModelListener {
     }
 
     /**
-     * Sets start value to false so that the it doesn't show the
-     * start screen and streaks when returning to the start screen
+     * Sets the playlist in the search pane with a list of Practisable
+     * objects to be modified by the user.
+     * @param list
      */
-    public static void setStartFalse(){
-        start=false;
+    public void setPlaylist(List<Practisable> list) {
+        _playList.getItems().addAll(list);
     }
 
     /**
@@ -110,7 +127,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     public void handleStartUpAction(){
         _startPane.toBack();
         if (start) {
-            loadMessageScene(STREAK_SCENE,STREAK_SCENE_VALUE,null);
+            new SceneLoader().loadStreakMessage(_userModel);
         }
     }
 
@@ -155,18 +172,16 @@ public class MainMenuController implements Initializable, UserModelListener {
      * and the user is moved to the play scene. If searched name does not exist
      * the user is asked if they want to continue with the missing names.
      * @param event
-     * @throws IOException
      */
-    public void playSearchPressed(ActionEvent event) throws IOException {
+    public void playSearchPressed(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
-            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
+            new SceneLoader("ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
+            Task<List<Practisable>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
             loadWorker.setOnSucceeded(e -> {
-                if (approveMissingNames(_databaseModel.compileMissingNames(loadWorker.getValue()))) {
-                    moveToPlayScene(new ArrayList<>(loadWorker.getValue()), event);
-                }
+                // use a PlaylistLoader to decide whether or not to go to the next scene
+                new PlaylistLoader(loadWorker.getValue(), _databaseModel, _userModel).moveToPlayScene(event);
             });
             new Thread(loadWorker).start();
         }
@@ -179,16 +194,14 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void addToPlaylist(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
-            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Search is empty");
+            new SceneLoader("ERROR: Search is empty");
         } else {
-            Task<List<ConcatenatedName>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
+            Task<List<Practisable>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
-            // when finished update the list view if the user chooses to
+            // when finished loading the name, update the list view
             loadWorker.setOnSucceeded(e -> {
-                if (approveMissingNames(_databaseModel.compileMissingNames(loadWorker.getValue()))) {
-                    _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
-                    _searchBox.clear();
-                }
+                _playList.getItems().addAll(new ArrayList<>(loadWorker.getValue()));
+                _searchBox.clear();
             });
             new Thread(loadWorker).start();
         }
@@ -198,9 +211,8 @@ public class MainMenuController implements Initializable, UserModelListener {
      * Opens a file chooser which allows the user to upload the playlist they wish
      * to practise.
      * @param event
-     * @throws IOException
      */
-    public void chooseFilePressed(ActionEvent event) throws IOException {
+    public void chooseFilePressed(ActionEvent event) {
         // initialise file chooser
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select PlayList");
@@ -223,33 +235,14 @@ public class MainMenuController implements Initializable, UserModelListener {
      * to practise the playlist. Otherwise, the user is asked if they want to continue
      * with the playlist that contains missing names.
      * @param event
-     * @throws IOException
      */
-    public void playFilePressed(ActionEvent event) throws IOException {
+    public void playFilePressed(ActionEvent event) {
         if (_playList.getItems().size() == 0) { // check if list is empty
-            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: List is empty");
-            // check if there are any missing names. If so, ask the user if they want to continue.
-        } else if(approveMissingNames(_databaseModel.compileMissingNames(_playList.getItems()))) {
-            moveToPlayScene(new ArrayList<>(_playList.getItems()),event);
-        }
-    }
+            new SceneLoader().loadErrorMessage("ERROR: List is empty");
 
-    /**
-     * Ask the users if they want to continue with their actions if the given names are
-     * missing from the database.
-     * @param missingNames
-     * @return whether or not the user wants to continue
-     */
-    private boolean approveMissingNames(String missingNames) {
-        if(!missingNames.isEmpty()) { // if the name contains missing get user confirmation
-            loadMessageScene(CONFIRM_SCENE,CONFIRM_SCENE_VALUE,"Could not find the following name(s): \n\n" + missingNames);
-            if(_confirmationController.saidYes()) { // if they said yes continue practise with the missing names
-                return true;
-            }
-        } else { // otherwise, move on without asking
-            return true;
+        } else { // otherwise, use a PlaylistLoader to decide whether or not to go to the next scene
+            new PlaylistLoader(_playList.getItems(), _databaseModel, _userModel).moveToPlayScene(event);
         }
-        return false;
     }
 
     /**
@@ -257,9 +250,8 @@ public class MainMenuController implements Initializable, UserModelListener {
      * previewList with the names. If all names are found in the database, the playlist
      * field is loaded with names to practise.
      * @param selectedFile
-     * @throws FileNotFoundException
      */
-    private void loadFile(File selectedFile) throws IOException {
+    private void loadFile(File selectedFile) {
         _fileNameLabel.setText("  " + selectedFile.getName());
 
         // create a load worker for loading in the names in the file
@@ -323,7 +315,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void clearPlayListButtonPressed() {
         _playList.getItems().clear();
-        _fileNameLabel.setText("  No file selected");
+        _fileNameLabel.setText(" No file selected");
     }
 
     /**
@@ -331,7 +323,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void savePlayListPressed(ActionEvent event) {
         if (_playList.getItems().size() == 0) { // check if list is empty
-            loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: List is empty");
+            new SceneLoader().loadErrorMessage("ERROR: List is empty");
             return;
         }
         // load in the new scene
@@ -367,8 +359,9 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void handleStartAction(ActionEvent event) {
         // if no items are selected, do not switch scenes.
-        if(_selectedList.getItems().size() == 0){ return; }
-        moveToPlayScene(new ArrayList<>(_selectedList.getItems()), event);
+        if(_selectedList.getItems().size() != 0) {
+            new PlaylistLoader(_selectedList.getItems(), _databaseModel, _userModel).moveToPlayScene(event);
+        }
     }
 
     /**
@@ -376,30 +369,12 @@ public class MainMenuController implements Initializable, UserModelListener {
      * Executes a on a new thread to avoid unresponsiveness.
      */
     public void playUserRecordingPressed() {
-
         if (_recList.getSelectionModel().getSelectedItem() != null) {
             _player = playWorker();
             _player.setOnSucceeded( e -> stopProgress());
             _playingProgress.progressProperty().bind(_player.progressProperty());
             new Thread(_player).start();
         }
-    }
-
-    /**
-     * Creates a new Task which allows the play functionality to be
-     * executed on a new thread.
-     */
-    private Task playWorker() {
-        return new Task() {
-
-            @Override
-            protected Object call() throws Exception {
-                // play user recording
-                _recList.getSelectionModel().getSelectedItem().getValue().playRecording(1.0);
-                return true;
-            }
-        };
-
     }
 
     /**
@@ -443,52 +418,20 @@ public class MainMenuController implements Initializable, UserModelListener {
     }
 
     /**
-     * Given a practise list, redirects the user to the play scene to practise the list of names.
-     * @param list
-     * @param event
-     * @throws IOException
-     */
-    private void moveToPlayScene(List<Practisable> list , ActionEvent event) {
-        // load in the new scene
-        SceneLoader loader = new SceneLoader(PLAY_SCENE);
-
-        // pass selected items to the next controller
-        PlaySceneController controller = loader.getController();
-        controller.setModel(new PractiseListModel(new ArrayList<>(list)), _userModel, _databaseModel);
-
-        loader.switchScene(event);
-    }
-
-    /**
-     * Given a message, displays an error pop-up to the user displaying the
-     * message to user indicating what they have done wrong.
-     * @param message
-     */
-    private void loadMessageScene(String scene, int controllerValue, String message) {
-        // load in the new scene
-        SceneLoader loader = new SceneLoader(scene);
-
-        // pass selected items to the next controller
-        if (controllerValue == 1) {
-            ErrorSceneController controller = loader.getController();
-            controller.setMessage(message);
-        } else if (controllerValue == 2){
-            _confirmationController = loader.getController();
-            _confirmationController.setMessage(message);
-        } else if (controllerValue == 3){
-            StreakSceneController controller = loader.getController();
-            controller.setModel(_userModel);
-        }
-       loader.openScene();
-    }
-
-    /**
      * Removes all currently selected names from the playlist. This can be a single name
      * or multiple names.
      * @param event
      */
     public void removeFromPlaylist(ActionEvent event) {
         _playList.getItems().removeAll(_playList.getSelectionModel().getSelectedItems());
+    }
+
+    /**
+     * Sets start value to false so that the it doesn't show the
+     * start screen and streaks when returning to the start screen
+     */
+    public static void setStartFalse(){
+        start = false;
     }
 
     /**
@@ -502,20 +445,37 @@ public class MainMenuController implements Initializable, UserModelListener {
                 if (myFile.exists()) {
                     Desktop.getDesktop().open(myFile);
                 }else{
-                    loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: UserManual not found");
+                    new SceneLoader().loadErrorMessage("ERROR: UserManual not found");
                 }
             } catch (IOException ex) {
-                loadMessageScene(ERROR_SCENE,ERROR_SCENE_VALUE,"ERROR: Can't find application for opening PDF");
+                new SceneLoader().loadErrorMessage("ERROR: Can't find application for opening PDF");
             }
         }
     }
 
     /**
-     * Safely resets progress bar when playing has finished
+     * Safely resets progress bar when playing has finished.
      */
     private void stopProgress(){
         _playingProgress.progressProperty().unbind();
         _playingProgress.setProgress(0);
         _player.cancel();
+    }
+
+    /**
+     * Creates a new Task which allows the play functionality to be
+     * executed on a new thread.
+     */
+    private Task playWorker() {
+        return new Task() {
+
+            @Override
+            protected Object call() throws Exception {
+                // play user recording
+                _recList.getSelectionModel().getSelectedItem().getValue().playRecording(1.0);
+                return true;
+            }
+        };
+
     }
 }

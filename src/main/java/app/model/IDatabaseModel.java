@@ -77,7 +77,7 @@ public interface IDatabaseModel {
      * @param list
      * @return A String containing all the missing names in the given list
      */
-    String compileMissingNames(List<ConcatenatedName> list);
+    String compileMissingNames(List<Practisable> list);
 
     /**
      * Saves the string representations of each ConcatenatedName object
@@ -88,7 +88,7 @@ public interface IDatabaseModel {
      * @param list
      * @param fileName
      */
-    void savePlaylist(List<ConcatenatedName> list, String fileName);
+    void savePlaylist(List<Practisable> list, String fileName);
 
     /**
      * This sets the database directory to which this IDatabaseModel object
