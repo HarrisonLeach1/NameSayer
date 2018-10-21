@@ -55,7 +55,7 @@ public class Recording {
      */
     public NameVersion startRecording() {
         try {
-            String cmd = "mkdir -p " + USER_DATABASE.getName() + "; ffmpeg -hide_banner -loglevel quiet -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
+            String cmd = "mkdir -p " + USER_DATABASE.getName() + "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
             System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
