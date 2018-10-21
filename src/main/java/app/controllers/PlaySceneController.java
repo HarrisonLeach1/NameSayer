@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static app.controllers.MainMenuController.USER_MANUAL;
+
 /**
  * A PlaySceneController holds the responsibility of receiving input events
  * from the user during name pronunciation practise and then translating
@@ -27,7 +29,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
     private static final double MAX_VOLUME = 2.0;
     private static final double INITIAL_VOLUME = 1.0;
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
-    private static final String ERROR_SCENE = "/views/ErrorScene.fxml";
     private static final String RECORDING_SCENE = "/views/RecordingScene.fxml";
     private static final String MAIN_MENU_SCENE = "/views/NameSayer.fxml";
 
@@ -333,33 +334,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * @param actionEvent
      */
     public void helpButtonAction(ActionEvent actionEvent) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                File myFile = new File("UserManual.pdf");
-                if (myFile.exists()) {
-                    Desktop.getDesktop().open(myFile);
-                }else{
-                    loadErrorMessage("ERROR: UserManual not found");
-                }
-            } catch (IOException ex) {
-                loadErrorMessage("ERROR: Can't find application for opening PDF");
-            }
-        }
-    }
-
-    /**
-     * Given a message, displays an error pop-up to the user displaying the
-     * message to user indicating what they have done wrong.
-     * @param message
-     */
-    private void loadErrorMessage(String message) {
-        // load in the new scene
-        SceneLoader loader = new SceneLoader(ERROR_SCENE);
-
-        // pass selected items to the next controller
-        ErrorSceneController controller = loader.getController();
-        controller.setMessage(message);
-
-        loader.openScene();
+        URL documentURL = getClass().getResource(USER_MANUAL);
+        new DocumentLoader(new File(documentURL.getFile())).loadDocument();
     }
 }
