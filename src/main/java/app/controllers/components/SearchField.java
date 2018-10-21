@@ -1,4 +1,4 @@
-package app.controllers;
+package app.controllers.components;
 
 import app.model.IDatabaseModel;
 import impl.org.controlsfx.autocompletion.SuggestionProvider;

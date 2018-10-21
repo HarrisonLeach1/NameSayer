@@ -1,5 +1,7 @@
 package app.model;
 
+import app.model.processing.SingleName;
+import app.model.processing.SingleNameVersion;
 import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 
@@ -26,7 +28,7 @@ public interface IDatabaseModel {
      * a name, those version will be children of that name.
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<NameVersion> loadDatabaseTree();
+    TreeItem<SingleNameVersion> loadDatabaseTree();
 
     /**
      * Loads the database of user recordings as a tree. The root is returned,
@@ -36,14 +38,14 @@ public interface IDatabaseModel {
      * a name, those version will be children of that name.
      * @return the TreeItem root of the TreeView
      */
-    TreeItem<NameVersion> loadUserDatabaseTree();
+    TreeItem<SingleNameVersion> loadUserDatabaseTree();
 
     /**
      * Loads the database of recordings as a list. Each name only appears in
      * the list once and is of good quality (if possible).
-     * @return List<Name>
+     * @return List<SingleName>
      */
-    List<Name> loadDatabaseList();
+    List<SingleName> loadDatabaseList();
 
     /**
      * Returns a Task which which returns a List containing a single

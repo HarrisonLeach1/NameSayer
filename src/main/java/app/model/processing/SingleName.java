@@ -1,18 +1,20 @@
-package app.model;
+package app.model.processing;
+import app.model.Practisable;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A Name object represents a unique name that may have multiple versions
+ * A SingleName object represents a unique name that may have multiple versions
  * and is practisable by the user.
  */
-public class Name implements Practisable{
+public class SingleName implements Practisable {
     private final String _name;
-    private List<NameVersion> _nameVersions;
-    private NameVersion _goodVersion;
+    private List<SingleNameVersion> _nameVersions;
+    private SingleNameVersion _goodVersion;
 
-    public Name(String name) {
+    public SingleName(String name) {
         _name = name;
         _nameVersions = new ArrayList<>();
     }
@@ -20,11 +22,11 @@ public class Name implements Practisable{
     /**
      * Given a list, if there exists a good quality version in the list of a given name, one
      * is chosen at and returned. Otherwise, a bad recording is returned.
-     * @return NameVersion that was selected
+     * @return SingleNameVersion that was selected
      */
-    public NameVersion selectGoodVersion() {
+    public SingleNameVersion selectGoodVersion() {
         // loop through _nameVersions of versions of names until a good quality version is found
-        for(NameVersion currentName: _nameVersions) {
+        for(SingleNameVersion currentName: _nameVersions) {
             if(!currentName.isBadQuality()) { // if good (not bad) quality, return the version
                 _goodVersion = currentName;
                 return currentName;
@@ -38,10 +40,10 @@ public class Name implements Practisable{
     }
 
     /**
-     * Adds a NameVersion to the list of versions of this name
+     * Adds a SingleNameVersion to the list of versions of this name
      * @param name
      */
-    public void add(NameVersion name) {
+    public void add(SingleNameVersion name) {
         _nameVersions.add(name);
     }
 
@@ -62,7 +64,7 @@ public class Name implements Practisable{
      * @return the version at the specified position in the list
      * @throws IndexOutOfBoundsException if the index is out of range
      */
-    public NameVersion get(int i) {
+    public SingleNameVersion get(int i) {
         return _nameVersions.get(i);
     }
 
@@ -76,7 +78,7 @@ public class Name implements Practisable{
     }
 
     /**
-     * Plays the audio of a good quality recording that was found of this Name (if one exist).
+     * Plays the audio of a good quality recording that was found of this SingleName (if one exist).
      * Note that this method is blocking call and so should be executed on a new thread.
      * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
      *               audio is amplified by double, etc.

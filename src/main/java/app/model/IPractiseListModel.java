@@ -72,14 +72,14 @@ public interface IPractiseListModel {
     void keepRecording();
 
     /**
-     * Returns true if there exists a NameVersion object after the current NameVersion
+     * Returns true if there exists a SingleNameVersion object after the current SingleNameVersion
      * object in the list of selected recordings to be practised, otherwise
      * returns false.
      */
     boolean hasNext();
 
     /**
-     * Returns true if there exists a NameVersion object before the current NameVersion
+     * Returns true if there exists a SingleNameVersion object before the current SingleNameVersion
      * object in the list of selected recordings to be practised, otherwise
      * returns false.
      */

@@ -1,6 +1,8 @@
 package app.model;
 
 
+import app.model.processing.SingleName;
+import app.model.processing.SingleNameVersion;
 import javafx.scene.control.TreeItem;
 
 import java.util.*;
@@ -20,7 +22,7 @@ import java.util.*;
 public abstract class TreeViewFactory {
 
     /**
-     * Given a NameVersion object and a TreeItem, the NameVersion is wrapped in a TreeItem object and added as a
+     * Given a SingleNameVersion object and a TreeItem, the SingleNameVersion is wrapped in a TreeItem object and added as a
      * child of the given TreeItem parent in the TreeView.
      *
      * This is the factory method, subclasses decide which type of TreeItems the TreeView should have.
@@ -29,49 +31,49 @@ public abstract class TreeViewFactory {
      * @param parent
      * @return the TreeItem that has been added as a child to the parent
      */
-    protected abstract TreeItem<NameVersion> addBranch(NameVersion child, TreeItem<NameVersion> parent);
+    protected abstract TreeItem<SingleNameVersion> addBranch(SingleNameVersion child, TreeItem<SingleNameVersion> parent);
 
     /**
-     * Given a TreeItem and a path to database containing NameVersion files, children are added to the
-     * TreeItem such that the TreeItem can be used in a TreeView to represent the NameVersion heirarchy
+     * Given a TreeItem and a path to database containing SingleNameVersion files, children are added to the
+     * TreeItem such that the TreeItem can be used in a TreeView to represent the SingleNameVersion heirarchy
      * of the database.
      *
      * @param root
      * @param database
      * @return the TreeItem to be used as root for the TreeView
      */
-    public TreeItem<NameVersion> getTreeRoot(TreeItem<NameVersion> root , HashMap<String, Name> database) {
+    public TreeItem<SingleNameVersion> getTreeRoot(TreeItem<SingleNameVersion> root , HashMap<String, SingleName> database) {
         root.setExpanded(true);
 
         // loop through each name in table and build tree
         for (String key : database.keySet()) {
 
             // name that stores all versions
-            Name name = database.get(key);
+            SingleName name = database.get(key);
 
             // if multiple versions of the name exist, add children
             if (name.size() > 1) {
 
                 // creates a placeholder node that bridges to all versions of the name
-                NameVersion bridgeName = new NameVersion();
+                SingleNameVersion bridgeName = new SingleNameVersion();
                 bridgeName.setDisplayName(key);
-                TreeItem<NameVersion> bridgeNode = addBranch(bridgeName,root);
+                TreeItem<SingleNameVersion> bridgeNode = addBranch(bridgeName,root);
 
                 // add versions of this name to be children of the placeholder node
                 for (int i = 0; i < name.size(); i++) {
-                    NameVersion version = name.get(i);
+                    SingleNameVersion version = name.get(i);
                     addBranch(version, bridgeNode);
                 }
 
             } else {
-                NameVersion singleName = name.get(0);
+                SingleNameVersion singleName = name.get(0);
                 singleName.setDisplayName(key);
                 addBranch(singleName,root);
             }
         }
 
         // Sort children alphabetically
-        Collections.sort(root.getChildren(), Comparator.comparing((TreeItem<NameVersion> o) -> o.getValue().toString()));
+        Collections.sort(root.getChildren(), Comparator.comparing((TreeItem<SingleNameVersion> o) -> o.getValue().toString()));
 
         return root;
     }

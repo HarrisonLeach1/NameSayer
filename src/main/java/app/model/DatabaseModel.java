@@ -1,5 +1,8 @@
 package app.model;
 
+import app.model.processing.ConcatenatedName;
+import app.model.processing.SingleName;
+import app.model.processing.SingleNameVersion;
 import javafx.concurrent.Task;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
@@ -26,7 +29,7 @@ public class DatabaseModel implements IDatabaseModel {
     public static final File USER_DATABASE = new File("./userRecordings/");
     private static DatabaseModel _instance;
     private File _database = new File("./names/");
-	private HashMap<String, Name> _databaseTable;
+	private HashMap<String, SingleName> _databaseTable;
 	private List<String> _nameStrings;
 
 	private DatabaseModel() {
@@ -49,9 +52,9 @@ public class DatabaseModel implements IDatabaseModel {
      * Creates a TreeItem that contains all recordings in the database
      * as descendants. Uses the TreeViewFactory.
      */
-	public TreeItem<NameVersion> loadDatabaseTree(){
+	public TreeItem<SingleNameVersion> loadDatabaseTree(){
 		TreeViewFactory checkTree = new CheckTreeViewFactory();
-		CheckBoxTreeItem<NameVersion> root = new CheckBoxTreeItem<>();
+		CheckBoxTreeItem<SingleNameVersion> root = new CheckBoxTreeItem<>();
 		return checkTree.getTreeRoot(root, createNameTable(_database));
 	}
 
@@ -59,9 +62,9 @@ public class DatabaseModel implements IDatabaseModel {
      * Creates a CheckBox TreeItem that contains all recordings in the user
      * recordings database as descendants. Uses the CheckTreeViewFactory.
      */
-	public TreeItem<NameVersion> loadUserDatabaseTree(){
+	public TreeItem<SingleNameVersion> loadUserDatabaseTree(){
 		TreeViewFactory checkTree = new RegularTreeViewFactory();
-		TreeItem<NameVersion> root = new TreeItem<>();
+		TreeItem<SingleNameVersion> root = new TreeItem<>();
 		return checkTree.getTreeRoot(root, createNameTable(USER_DATABASE));
 	}
 
@@ -69,37 +72,37 @@ public class DatabaseModel implements IDatabaseModel {
 	 * Creates a List of Names containing only one version of each name.
 	 * @return ArrayList
 	 */
-	public List<Name> loadDatabaseList() {
-		HashMap<String, Name> nameTable = createNameTable(_database);
+	public List<SingleName> loadDatabaseList() {
+		HashMap<String, SingleName> nameTable = createNameTable(_database);
 
-		List<Name> nameList = new ArrayList<>();
+		List<SingleName> nameList = new ArrayList<>();
 
 		// loop through each base name
 		for (String key : nameTable.keySet()) {
 
 			// randomly select name from nameTable
-			Name selectedName = nameTable.get(key);
+			SingleName selectedName = nameTable.get(key);
 
 			nameList.add(selectedName);
 		}
 
 		// sort alphabetically
-		Collections.sort(nameList, Comparator.comparing((Name o) -> o.toString()));
+		Collections.sort(nameList, Comparator.comparing((SingleName o) -> o.toString()));
 
 		return nameList;
 	}
 
 	/**
-	 * Given a non-empty folder, all files are converted to NameVersion objects
-	 * and are stored in their respective Name which is an encapsulated collection of versions.
-	 * Each Name as a value in the HashMap and are keyed by a string corresponding to their name.
+	 * Given a non-empty folder, all files are converted to SingleNameVersion objects
+	 * and are stored in their respective SingleName which is an encapsulated collection of versions.
+	 * Each SingleName as a value in the HashMap and are keyed by a string corresponding to their name.
 	 *
 	 * A HashMap is used to allow for time-efficient search and retrieval.
 	 *
 	 * @return the HashMap containing the names keyed by a string
 	 */
-	private HashMap<String, Name> createNameTable(File databaseFolder) {
-		HashMap<String, Name> nameTable = new HashMap<>();
+	private HashMap<String, SingleName> createNameTable(File databaseFolder) {
+		HashMap<String, SingleName> nameTable = new HashMap<>();
 		_nameStrings = new ArrayList<>();
 
 		if(!databaseFolder.exists()){
@@ -118,21 +121,21 @@ public class DatabaseModel implements IDatabaseModel {
 
 				// try create a name version object for the file, if the following exceptions are thrown
 				// then the file is not a valid practise recording file. i.e. incorrect file name format
-				NameVersion nameVersion = null;
+				SingleNameVersion nameVersion = null;
 				try {
-					nameVersion = new NameVersion(fileName);
+					nameVersion = new SingleNameVersion(fileName);
 				} catch (ParseException | IndexOutOfBoundsException e) {
 					e.printStackTrace();
-					// if an exception has been thrown then the file is invalid, do not create a NameVersion for it
+					// if an exception has been thrown then the file is invalid, do not create a SingleNameVersion for it
 					continue;
 				}
 
 				// if other versions of the same nameVersion exist, add it to the name
 				if (nameTable.containsKey(nameVersion.getShortName().toLowerCase())) {
-					Name currentName = nameTable.get(nameVersion.getShortName().toLowerCase());
+					SingleName currentName = nameTable.get(nameVersion.getShortName().toLowerCase());
 					currentName.add(nameVersion);
-				} else { // otherwise create a new Name, add version to the Name
-					Name name = new Name(nameVersion.getShortName());
+				} else { // otherwise create a new SingleName, add version to the SingleName
+					SingleName name = new SingleName(nameVersion.getShortName());
 					name.add(nameVersion);
 					nameTable.put(nameVersion.getShortName().toLowerCase(), name);
 
@@ -184,7 +187,7 @@ public class DatabaseModel implements IDatabaseModel {
 				Scanner input = new Scanner(playlistFile);
 				List<Practisable> nameList = new ArrayList<>();
 
-				// load in each line of the text file, and use each string to create a new Name object
+				// load in each line of the text file, and use each string to create a new SingleName object
 				while (input.hasNextLine()) {
 					String inputString = input.nextLine();
 
@@ -211,7 +214,7 @@ public class DatabaseModel implements IDatabaseModel {
 
 	/**
 	 * Returns a displayable string which contains all the names that are not
-	 * in this database in each of the given Concatenated Name objects.
+	 * in this database in each of the given Concatenated SingleName objects.
 	 * @param list
 	 */
 	public String compileMissingNames(List<Practisable> list) {

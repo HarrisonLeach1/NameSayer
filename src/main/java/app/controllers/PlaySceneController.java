@@ -1,6 +1,9 @@
 package app.controllers;
 
+import app.controllers.loaders.DocumentLoader;
+import app.controllers.loaders.SceneLoader;
 import app.model.*;
+import app.model.processing.MicTestTask;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -89,7 +92,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     }
 
     /**
-     * Moves to the next Name in the list and updates the displayed name. The Name is
+     * Moves to the next SingleName in the list and updates the displayed name. The SingleName is
      * unchanged if the end of the list is reached.
      */
     public void nextButtonPressed() {
@@ -98,7 +101,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     }
 
     /**
-     * Moves to the previous Name in the list and updates the displayed name. The Name
+     * Moves to the previous SingleName in the list and updates the displayed name. The SingleName
      * is unchanged if there are no previous names.
      */
     public void previousButtonPressed() {
@@ -253,7 +256,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     }
 
     /**
-     * Updates the Label to display which Name is currently being practised and updates
+     * Updates the Label to display which SingleName is currently being practised and updates
      * its date/time information. Also removes the save and rating labels.
      */
     private void updateLabels() {

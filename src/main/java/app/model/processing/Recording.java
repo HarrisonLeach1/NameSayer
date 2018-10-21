@@ -1,4 +1,4 @@
-package app.model;
+package app.model.processing;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -7,12 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static app.model.DatabaseModel.USER_DATABASE;
-import static app.model.NameVersion.RECORDINGS_DATE_FORMAT;
+import static app.model.processing.SingleNameVersion.RECORDINGS_DATE_FORMAT;
 
 /**
  * A Recording object represents a production of a name created by a user.
  *
- * When created it is stored in a file and converted into a NameVersion object
+ * When created it is stored in a file and converted into a SingleNameVersion object
  * that is playable by the user and can also be deleted.
  */
 public class Recording {
@@ -52,9 +52,9 @@ public class Recording {
     /**
      * Records the users voice for a maximum of the specified recording time and
      * creates a new file for the recording.
-     * @return the NameVersion object pointing to the file of the newly created user recording.
+     * @return the SingleNameVersion object pointing to the file of the newly created user recording.
      */
-    public NameVersion startRecording() {
+    public SingleNameVersion startRecording() {
         try {
             String cmd = "mkdir -p " + USER_DATABASE.getName() + "; ffmpeg -y -f alsa -t "+ RECORD_TIME +" -i default "+ _fileName;
 
@@ -66,9 +66,9 @@ public class Recording {
         }
 
         // since we have specified the naming format correctly, the exception will not be thrown
-        NameVersion name = null;
+        SingleNameVersion name = null;
         try {
-            name = new NameVersion(_fileName);
+            name = new SingleNameVersion(_fileName);
         } catch (ParseException e) {
             e.printStackTrace();
         }

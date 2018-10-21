@@ -1,4 +1,4 @@
-package app.model;
+package app.model.processing;
 
 import javafx.concurrent.Task;
 import javax.sound.sampled.*;

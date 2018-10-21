@@ -1,5 +1,7 @@
 package app.model;
 
+import app.model.processing.SingleNameVersion;
+import app.model.processing.Recording;
 import javafx.concurrent.Task;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class PractiseListModel implements IPractiseListModel{
 
     private ArrayList<Practisable> _practiseList;
     private Recording _currentUserRecording;
-    private NameVersion _currentUserCreatedName;
+    private SingleNameVersion _currentUserCreatedName;
     private int _currentIndex;
     private boolean _keepRecording;
     private Task _currentPlayTask;
@@ -26,7 +28,7 @@ public class PractiseListModel implements IPractiseListModel{
     }
 
     /**
-     * Creates a new recording for the currently indexed NameVersion object
+     * Creates a new recording for the currently indexed SingleNameVersion object
      * and keeps it
      */
     public void createUserRecording() {
@@ -118,7 +120,7 @@ public class PractiseListModel implements IPractiseListModel{
     }
 
     /**
-     * Returns the next Name object in the list. If there is no
+     * Returns the next SingleName object in the list. If there is no
      * next name, the current and returned name remains unchanged.
      */
     public Practisable nextName() {
@@ -132,7 +134,7 @@ public class PractiseListModel implements IPractiseListModel{
 
 
     /**
-     * Returns the previous Name object in the list. If there is no
+     * Returns the previous SingleName object in the list. If there is no
      * previous name, the current and returned name remains unchanged.
      */
     public Practisable previousName() {

@@ -1,6 +1,14 @@
 package app.controllers;
 
+import app.controllers.loaders.DocumentLoader;
+import app.controllers.loaders.PlaylistLoader;
+import app.controllers.loaders.SceneLoader;
+import app.controllers.components.HighlightedList;
+import app.controllers.components.SearchField;
 import app.model.*;
+import app.model.processing.ConcatenatedName;
+import app.model.processing.SingleName;
+import app.model.processing.SingleNameVersion;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -42,10 +50,10 @@ public class MainMenuController implements Initializable, UserModelListener {
 
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
-    @FXML private CheckListView<Name> _dataList;
+    @FXML private CheckListView<SingleName> _dataList;
     @FXML private ListView<Practisable> _selectedList;
     @FXML private ListView<Practisable> _playList;
-    @FXML private TreeView<NameVersion> _recList;
+    @FXML private TreeView<SingleNameVersion> _recList;
     @FXML private TextField _searchBox;
     @FXML private Label _fileNameLabel, _streakCounter, _levelCounter, _databaseLabel, _nameCountLabel;
     @FXML private ProgressBar _playingProgress,_levelProgress;
@@ -343,7 +351,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     }
 
     /**
-     * The order of the NameVersion items in the selected list of Names is shuffled randomly
+     * The order of the SingleNameVersion items in the selected list of Names is shuffled randomly
      */
     public void databaseShuffleButtonPressed() {
         Collections.shuffle(_selectedList.getItems());
@@ -351,7 +359,7 @@ public class MainMenuController implements Initializable, UserModelListener {
 
 
     /**
-     * Loads in all NameVersion objects in the selected list, passes it to the next view
+     * Loads in all SingleNameVersion objects in the selected list, passes it to the next view
      * and controller, and switches scenes.
      * @param event
      * @throws IOException

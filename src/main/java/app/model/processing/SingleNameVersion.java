@@ -1,4 +1,4 @@
-package app.model;
+package app.model.processing;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -8,17 +8,17 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
- * A NameVersion object represents a name in a database that can be interacted with
- * by the user. A NameVersion object is usually created by providing a path to file
+ * A SingleNameVersion object represents a name in a database that can be interacted with
+ * by the user. A SingleNameVersion object is usually created by providing a path to file
  * with the following naming format:
  *
  * Creator_dd-MM-yyyy_HH-mm-ss_Name.wav
  * e.g. se206_2-5-2018_15-23-50_Mason.wav
  *
- * This NameVersion points to this file and stores information of the file such that
+ * This SingleNameVersion points to this file and stores information of the file such that
  * it can be efficiently played, rated and displayed to the user.
  */
-public class NameVersion {
+public class SingleNameVersion {
     static final String RECORDINGS_DATE_FORMAT = "dd-MM-yyyy_hh-mm-ss";
     private static final String NEW_DATE_FORMAT = "EEE, d MMM yyyy";
     private static final String NEW_TIME_FORMAT = "hh:mm:ss a";
@@ -29,7 +29,7 @@ public class NameVersion {
     private Process _playingProcess;
 
     /**
-     * Given the path to a valid recording file, a NameVersion object is created as playable
+     * Given the path to a valid recording file, a SingleNameVersion object is created as playable
      * and displayable reference to this file.
      * If the file name is not in the valid format an IndexOutOfBoundsException or ParseException
      * is thrown and the NameVerison object cannot be created.
@@ -37,14 +37,14 @@ public class NameVersion {
      * @throws IndexOutOfBoundsException
      * @throws ParseException
      */
-    public NameVersion(String filePath) throws IndexOutOfBoundsException, ParseException {
+    public SingleNameVersion(String filePath) throws IndexOutOfBoundsException, ParseException {
         _filePath = filePath;
         parseShortName();
         parseVersionName();
         _isBadQuality = findQuality();
     }
 
-    public NameVersion() {
+    public SingleNameVersion() {
     }
 
     /**
@@ -94,7 +94,7 @@ public class NameVersion {
     }
 
     /**
-     * Creates a new bash process which plays the audio file associated with this NameVersion object
+     * Creates a new bash process which plays the audio file associated with this SingleNameVersion object
      * at the given volume. Note that this method is a blocking call and as such should be executed on a
      * new thread.
      * @param volume 0 means silence, 1.0 means no volume reduction or amplification, 2.0 mans the original
@@ -116,7 +116,7 @@ public class NameVersion {
     }
 
     /**
-     * Ends the bash process which is playing the audio file of this NameVersion object. This will
+     * Ends the bash process which is playing the audio file of this SingleNameVersion object. This will
      * cause an InterruptedException to be thrown by the playRecording method during execution.
      */
     public void stopRecording() {
@@ -126,7 +126,7 @@ public class NameVersion {
     }
 
     /**
-     * The invoked NameVersion object is given a bad quality rating by the user.
+     * The invoked SingleNameVersion object is given a bad quality rating by the user.
      * This information is stored in a text file on the users machine.
      * @throws IOException
      */

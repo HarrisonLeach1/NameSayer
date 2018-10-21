@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.stage.Stage;
-import static app.model.Recording.RECORD_TIME;
+import static app.model.processing.Recording.RECORD_TIME;
 
 /**
  * A RecordingSceneController holds the responsibility of receiving input events

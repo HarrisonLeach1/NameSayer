@@ -1,5 +1,7 @@
-package app.controllers;
+package app.controllers.loaders;
 
+import app.controllers.ErrorSceneController;
+import app.controllers.StreakSceneController;
 import app.model.IUserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;

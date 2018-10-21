@@ -1,5 +1,6 @@
 package app.model;
 
+import app.model.processing.SingleNameVersion;
 import javafx.scene.control.TreeItem;
 
 /**
@@ -10,8 +11,8 @@ import javafx.scene.control.TreeItem;
 public class RegularTreeViewFactory extends TreeViewFactory {
 
     @Override
-    protected TreeItem<NameVersion> addBranch(NameVersion child, TreeItem<NameVersion> parent) {
-        TreeItem<NameVersion> item = new TreeItem<>(child);
+    protected TreeItem<SingleNameVersion> addBranch(SingleNameVersion child, TreeItem<SingleNameVersion> parent) {
+        TreeItem<SingleNameVersion> item = new TreeItem<>(child);
         item.setExpanded(false);
         parent.getChildren().add(item);
         return item;

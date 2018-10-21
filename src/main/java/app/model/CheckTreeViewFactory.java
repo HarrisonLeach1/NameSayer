@@ -1,5 +1,6 @@
 package app.model;
 
+import app.model.processing.SingleNameVersion;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
 
@@ -10,8 +11,8 @@ import javafx.scene.control.TreeItem;
 public class CheckTreeViewFactory extends TreeViewFactory {
 
     @Override
-    protected CheckBoxTreeItem<NameVersion> addBranch(NameVersion child, TreeItem<NameVersion> parent) {
-        CheckBoxTreeItem<NameVersion> item = new CheckBoxTreeItem<>(child);
+    protected CheckBoxTreeItem<SingleNameVersion> addBranch(SingleNameVersion child, TreeItem<SingleNameVersion> parent) {
+        CheckBoxTreeItem<SingleNameVersion> item = new CheckBoxTreeItem<>(child);
         item.setExpanded(false);
         parent.getChildren().add(item);
         return item;

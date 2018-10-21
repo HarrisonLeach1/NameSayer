@@ -1,4 +1,4 @@
-package app.controllers;
+package app.controllers.loaders;
 
 import java.io.File;
 import java.io.IOException;

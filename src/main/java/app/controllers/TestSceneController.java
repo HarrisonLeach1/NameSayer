@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.model.MicTestTask;
+import app.model.processing.MicTestTask;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

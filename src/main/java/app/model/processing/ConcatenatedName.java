@@ -1,20 +1,22 @@
-package app.model;
+package app.model.processing;
+
+import app.model.Practisable;
 
 import java.io.*;
 import java.util.*;
 import java.util.Iterator;
 
 /**
- * A ConcatenatedName object represents a Name that is composed of multiple name
+ * A ConcatenatedName object represents a SingleName that is composed of multiple name
  * recordings that is practisable by the user.
  *
- * Within the Concatenated Name class Name objects are normalised with silence cut
+ * Within the Concatenated SingleName class SingleName objects are normalised with silence cut
  * and concatenated.
  */
 public class ConcatenatedName implements Practisable {
     private static final String EXTENSION = "_temp.wav";
     private static final String BASH_LOCATION = "/bin/bash";
-    static final String TEMP_FOLDER = "temp/";
+    public static final String TEMP_FOLDER = "temp/";
 
     // indicates the levels of silence which are cut from the start and the end
     private static final int START_THRESHOLD = -35;
@@ -22,12 +24,12 @@ public class ConcatenatedName implements Practisable {
     private static final double VOLUME_LEVEL = -20.0;
 
     private final String _displayName;
-    private List<Name> _nameList;
+    private List<SingleName> _nameList;
     private String _stringOfPaths;
     private String _missingNames = "";
     private Process _playingProcess;
 
-    public ConcatenatedName(String name, HashMap<String, Name> databaseTable) throws InterruptedException {
+    public ConcatenatedName(String name, HashMap<String, SingleName> databaseTable) throws InterruptedException {
         _displayName = name;
 
         parseNameList(name, databaseTable);
@@ -72,7 +74,7 @@ public class ConcatenatedName implements Practisable {
     /**
      * Creates the audio file that is associated with this ConcatenatedName object.
      * The audio file is built from the List of Names of this ConcatenatedName object.
-     * The resulting audio file is all the Name recordings concatenated with silence
+     * The resulting audio file is all the SingleName recordings concatenated with silence
      * cut and audio normalised between the recordings.
      * @throws InterruptedException
      */
@@ -104,7 +106,7 @@ public class ConcatenatedName implements Practisable {
      * not contain any unnecessary silence.
      */
     private void cutSilence() {
-        for(Name name : _nameList) {
+        for(SingleName name : _nameList) {
             try {
                 // 1:0 -50dB indicates that anything below -50dB is cut off from the start
                 // 1:5 -50dB indicates that anything below -70dB is cut off from the end
@@ -128,8 +130,8 @@ public class ConcatenatedName implements Practisable {
      */
     private void normaliseAudio() throws InterruptedException {
         try { // use iterator to allow for deletion while iterating
-            for(Iterator<Name> it = _nameList.iterator(); it.hasNext();) {
-                Name name = it.next();
+            for(Iterator<SingleName> it = _nameList.iterator(); it.hasNext();) {
+                SingleName name = it.next();
 
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
@@ -184,7 +186,7 @@ public class ConcatenatedName implements Practisable {
      */
     private void concatenateFileNames() {
         _stringOfPaths = "";
-        for (Name name : _nameList) {
+        for (SingleName name : _nameList) {
             _stringOfPaths += " -i " + TEMP_FOLDER + name.toString() + EXTENSION;
         }
     }
@@ -225,7 +227,7 @@ public class ConcatenatedName implements Practisable {
      * @return a ConcatenatedName corresponding to the input string
      * @throws InterruptedException
      */
-    private void parseNameList(String inputString, HashMap<String, Name> databaseTable) throws InterruptedException {
+    private void parseNameList(String inputString, HashMap<String, SingleName> databaseTable) throws InterruptedException {
         _nameList = new ArrayList<>();
 
         List<String> stringList = formatStringList(inputString);
@@ -261,7 +263,7 @@ public class ConcatenatedName implements Practisable {
      * @param stringList
      * @param databaseTable
      */
-    private void stringListToNameList(List<String> stringList, HashMap<String, Name> databaseTable) {
+    private void stringListToNameList(List<String> stringList, HashMap<String, SingleName> databaseTable) {
         for (String str : stringList) {
             if (databaseTable.containsKey(str.toLowerCase())) {
                 _nameList.add(databaseTable.get(str.toLowerCase()));

@@ -1,5 +1,7 @@
-package app.controllers;
+package app.controllers.loaders;
 
+import app.controllers.ConfirmSceneController;
+import app.controllers.PlaySceneController;
 import app.model.IDatabaseModel;
 import app.model.IUserModel;
 import app.model.Practisable;
