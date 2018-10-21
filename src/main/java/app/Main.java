@@ -4,6 +4,7 @@ import app.controllers.MainMenuController;
 import app.model.DatabaseModel;
 import app.model.UserModel;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +27,12 @@ public class Main extends Application {
 
         // injection site of the IDatabaseModel and IUserModel types to be used
         controller.setModel(DatabaseModel.getInstance(), UserModel.getInstance());
+
+        // close all children when window is exited
+        primaryStage.setOnCloseRequest(t -> {
+            Platform.exit();
+            System.exit(0);
+        });
 
         // show application
         primaryStage.setTitle(APPLICATION_TITLE);
