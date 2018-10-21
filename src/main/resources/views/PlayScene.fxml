@@ -26,7 +26,7 @@
                         <Font name="Roboto Medium" size="15.0" />
                      </font>
                   </Label>
-                  <Label layoutX="849.0" layoutY="41.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="40.0" />
+                  <Label layoutX="845.0" layoutY="38.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="40.0"/>
                   <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="310.0" AnchorPane.topAnchor="40.0" />
                   <ProgressBar fx:id="_levelProgress" layoutX="939.0" layoutY="38.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="40.0" />
                   <ProgressBar fx:id="_micLevelProgress" layoutX="65.0" layoutY="41.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="42.0" />
@@ -57,7 +57,7 @@
                      <children>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <Button fx:id="play_btn1" alignment="CENTER" contentDisplay="CENTER" maxHeight="96.0" maxWidth="91.0" minHeight="45.0" minWidth="39.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="45.0" prefWidth="39.0" styleClass="sound" stylesheets="@style.css" textFill="WHITE">
+                              <Button fx:id="playBtn1" alignment="CENTER" contentDisplay="CENTER" maxHeight="96.0" maxWidth="91.0" minHeight="45.0" minWidth="39.0" mnemonicParsing="false" onAction="#playButtonPressed" prefHeight="45.0" prefWidth="39.0" styleClass="sound" stylesheets="@style.css" textFill="WHITE">
                                  <graphic>
                                     <ImageView fitHeight="35.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
