@@ -110,8 +110,6 @@ public class ConcatenatedName implements Practisable {
                 // 1:5 -50dB indicates that anything below -70dB is cut off from the end
                 String cmd = "ffmpeg -y -i " + name.selectGoodVersion().getFilePath() +
                         " -af silenceremove=1:0:"+ START_THRESHOLD +"dB:1:5:"+ END_THRESHOLD +"dB " + TEMP_FOLDER + name.toString() + EXTENSION;
-                System.out.println(cmd);
-
 
                 ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
                 Process process = builder.start();
@@ -136,7 +134,6 @@ public class ConcatenatedName implements Practisable {
                 // define process for returning the mean volume of the recording
                 String cmd = "ffmpeg -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
                         "-f null /dev/null |& grep 'mean_volume:' ";
-                System.out.println(cmd);
 
                 // start process
                 ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
@@ -148,7 +145,6 @@ public class ConcatenatedName implements Practisable {
                 InputStream stdout = process.getInputStream();
                 BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
                 String lineOut = stdoutBuffered.readLine();
-                System.out.println(lineOut);
 
                 // if the audio cannot be detected, remove it from the name from the recording list
                 if(lineOut == null) {
