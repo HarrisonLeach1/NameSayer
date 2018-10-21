@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="176.0" prefWidth="350.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.StreakSceneController">
+   <children>
+      <AnchorPane layoutX="-10.0" layoutY="-14.0" prefHeight="50.0" prefWidth="300.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" layoutX="139.0" layoutY="29.0" prefHeight="15.0" prefWidth="25.0" style="-fx-background-color: #474448;" text="Daily Streak" textFill="#fcfcfc" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #504f4f;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+         <children>
+            <Label alignment="CENTER" layoutX="43.0" layoutY="2.0" prefHeight="19.0" prefWidth="265.0" text="Your Daily Streak is:" textFill="#fcfcfc">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="43.0" layoutY="65.0" prefHeight="27.0" prefWidth="265.0" text="Keep it up!" textFill="#fcfcfc">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Button fx:id="_okBtn" layoutX="141.0" layoutY="92.0" mnemonicParsing="false" onAction="#okButtonAction" prefWidth="70.0" text="OK" textFill="WHITE">
+               <styleClass>
+                  <String fx:value="play" />
+                  <String fx:value="menu" />
+               </styleClass>
+            </Button>
+            <ImageView fitHeight="51.0" fitWidth="37.0" layoutX="158.0" layoutY="19.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/flame.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="_streakCounter" alignment="CENTER" layoutX="43.0" layoutY="22.0" prefHeight="43.0" prefWidth="265.0" text="1" textFill="#fcfcfc">
+               <font>
+                  <Font size="35.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

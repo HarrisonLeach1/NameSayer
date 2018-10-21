@@ -3,7 +3,7 @@
 \contentsline {subsection}{\numberline {2.1}Test Mic}{6}
 \contentsline {subsection}{\numberline {2.2}Select Database}{7}
 \contentsline {subsection}{\numberline {2.3}How should my database files be named?}{8}
-\contentsline {section}{\numberline {3}Main Pane}{9}
+\contentsline {section}{\numberline {3}app.Main Pane}{9}
 \contentsline {subsection}{\numberline {3.1}Daily Streak}{10}
 \contentsline {subsection}{\numberline {3.2}Levelling System}{10}
 \contentsline {section}{\numberline {4}Search Pane}{11}

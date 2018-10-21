@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * A SavePlaylistController holds the responsibility of receiving input events
  * from the user while they are inputting a name for their saved playlist.
- * It then translates this input to actions on the model using the given playlist.
+ * It then translates this input to actions on the app.model using the given playlist.
  */
 public class SavePlaylistController {
 
@@ -33,7 +33,7 @@ public class SavePlaylistController {
      * @param event
      */
     public void handleConfirmAction(ActionEvent event) {
-        // tell the data model to save the playlist somewhere
+        // tell the data app.model to save the playlist somewhere
         _databaseModel.savePlaylist(_playlist, _playListName.getText());
 
         // close window

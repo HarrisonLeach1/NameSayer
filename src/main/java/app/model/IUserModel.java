@@ -1,7 +1,7 @@
 package app.model;
 
 /**
- * An IUserModel represents a model that stores information about the users
+ * An IUserModel represents a app.model that stores information about the users
  * daily streak progress and level progress.
  *
  * Having the IDataModel interface allows for dependency injection, such that

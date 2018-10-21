@@ -10,7 +10,7 @@ import javafx.stage.Stage;
  * An ConfirmSceneController holds the responsibility of receiving input events
  * from the user while the confirm window is open. It is responsible for updating
  * the confirm message displayed to the user, and also translating the users
- * decision to actions on the views.
+ * decision to actions on the app.views.
  */
 public class ConfirmSceneController {
     @FXML private Label _confirmMessage;

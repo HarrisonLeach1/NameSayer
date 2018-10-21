@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 /**
  * An ErrorController holds the responsibility of receiving input events
  * from the user while the error window is open. It then translates them
- * into actions on the views.
+ * into actions on the app.views.
  */
 public class ErrorSceneController {
     @FXML private Label _errorMessage;

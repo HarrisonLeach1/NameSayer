@@ -4,18 +4,14 @@ import app.model.IUserModel;
 import app.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 /**
  * A StreakSceneController holds the responsibility of receiving input events
  * from the user while the streak window is open. It then translates them
- * into actions on the views.
+ * into actions on the app.views.
  */
 
 public class StreakSceneController {

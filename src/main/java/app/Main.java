@@ -1,7 +1,6 @@
 package app;
 
 import app.controllers.MainMenuController;
-import app.controllers.SavePlaylistController;
 import app.model.DatabaseModel;
 import app.model.UserModel;
 import javafx.application.Application;
@@ -10,10 +9,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class Main extends Application {
-    private static final String MAIN_MENU_SCENE = "views/NameSayer.fxml";
+    private static final String MAIN_MENU_SCENE = "/views/NameSayer.fxml";
     private static final String APPLICATION_TITLE = "NameSayer";
 
 

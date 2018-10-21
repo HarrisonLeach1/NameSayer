@@ -36,13 +36,13 @@ import java.util.ResourceBundle;
  * to update the view.
  */
 public class MainMenuController implements Initializable, UserModelListener {
-    private static final String STREAK_SCENE = "/app/views/StreakScene.fxml";
-    private static final String CONFIRM_SCENE = "/app/views/ConfirmScene.fxml";
-    private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
-    private static final String TEST_SCENE = "/app/views/TestScene.fxml";
-    private static final String SAVE_PLAYLIST_SCENE = "/app/views/SavePlaylistScene.fxml";
-    private static final String LOADING_SCENE = "/app/views/LoadingScene.fxml";
-    private static final String PLAY_SCENE = "/app/views/PlayScene.fxml";
+    private static final String STREAK_SCENE = "/views/StreakScene.fxml";
+    private static final String CONFIRM_SCENE = "/views/ConfirmScene.fxml";
+    private static final String ERROR_SCENE = "/views/ErrorScene.fxml";
+    private static final String TEST_SCENE = "/views/TestScene.fxml";
+    private static final String SAVE_PLAYLIST_SCENE = "/views/SavePlaylistScene.fxml";
+    private static final String LOADING_SCENE = "/views/LoadingScene.fxml";
+    private static final String PLAY_SCENE = "/views/PlayScene.fxml";
     private static final int ERROR_SCENE_VALUE = 1;
     private static final int CONFIRM_SCENE_VALUE = 2;
     private static final int STREAK_SCENE_VALUE = 3;
@@ -64,7 +64,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     private static boolean start = true;
 
     /**
-     * Initially the database of recordings is loaded in from the model,
+     * Initially the database of recordings is loaded in from the app.model,
      * and displayed in the TreeView of the main menu view.
      */
     @Override

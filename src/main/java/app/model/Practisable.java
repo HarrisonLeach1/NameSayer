@@ -1,7 +1,6 @@
 package app.model;
 
 import java.io.IOException;
-import java.util.Collection;
 
 /**
  * A Practisable object represents an object that can be used in

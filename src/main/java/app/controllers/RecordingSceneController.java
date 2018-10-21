@@ -22,7 +22,7 @@ public class RecordingSceneController {
     private IPractiseListModel _practiseListModel;
 
     /**
-     * Initialises the controller with the practise list model to be used.
+     * Initialises the controller with the practise list app.model to be used.
      * @param model
      */
     public void setModel(IPractiseListModel model) {
@@ -37,7 +37,7 @@ public class RecordingSceneController {
      * by the progress bar.
      */
     public void recordButtonPressed() {
-        // tell model to create recording
+        // tell app.model to create recording
         _practiseListModel.createUserRecording();
 
         _startBtn.setDisable(true);

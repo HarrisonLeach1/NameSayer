@@ -4,7 +4,6 @@ import javafx.concurrent.Task;
 import javafx.scene.control.TreeItem;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.List;
 
 /**

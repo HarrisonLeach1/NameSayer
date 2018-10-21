@@ -9,7 +9,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -160,7 +159,7 @@ public class DatabaseModel implements IDatabaseModel {
 		return new Task() {
 			@Override
 			protected List<ConcatenatedName> call() throws Exception {
-				// load name through data model
+				// load name through data app.model
 				List<ConcatenatedName> list = new ArrayList<>(Arrays.asList(new ConcatenatedName(name, _databaseTable)));
 
 				// compile missing names into a string to display to the user if needed
@@ -282,7 +281,7 @@ public class DatabaseModel implements IDatabaseModel {
 	}
 
 	/**
-	 * Returns the name of the database that this data model represents.
+	 * Returns the name of the database that this data app.model represents.
 	 *
 	 * The name of the database is determined initially by the name of the
 	 * directory which it references.

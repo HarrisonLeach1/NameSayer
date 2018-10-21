@@ -1,0 +1,182 @@
+.menu {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: white;
+}
+.menu-view_data{
+    -fx-background-color: #90A4A8;
+}
+.menu-view_data:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #90A4A8, #BCF4F5);
+}
+.menu-search{
+    -fx-background-color: #728184;
+}
+.menu-search:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #728184, #9FC6CE);
+}
+.menu-view_rec{
+    -fx-background-color: #789699;
+}
+.menu-view_rec:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #789699, #BCF4F5);
+}
+.menu-dark{
+    -fx-background-radius: 0;
+    -fx-background-color: #3E3B3F;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.menu-dark:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
+}
+.smallgreenbutton{
+    -fx-border-color:limegreen;
+    -fx-border-width:2;
+}
+.smallbluebutton{
+    -fx-border-color:turquoise;
+    -fx-border-width:2;
+}
+.medgreenbutton{
+    -fx-border-color:limegreen;
+    -fx-border-width:3;
+}
+.biggreenbutton{
+    -fx-border-color:limegreen;
+    -fx-border-width:5;
+}
+.smallredbutton{
+    -fx-border-color:tomato;
+    -fx-border-width:2;
+}
+.bigredbutton{
+    -fx-border-color:tomato;
+    -fx-border-width:5;
+}
+.biggoldbutton{
+    -fx-border-color:gold;
+    -fx-border-width:5;
+}
+.bigbluebutton{
+    -fx-border-color:turquoise;
+    -fx-border-width:5;
+}
+.smallpurplebutton{
+    -fx-border-color:Fuchsia;
+    -fx-border-width:2;
+}
+
+.menu:hover{
+    -fx-border-color: white;
+}
+.menu-dark:pressed{
+    -fx-background-color:radial-gradient(center 50% 50%, radius 60%, #3E3B3F, #6E6970);
+}
+.menu Text {
+    -fx-fill: white;
+    -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );
+}
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: transparent;
+}
+.circle{
+    -fx-background-radius: 10em;
+    -fx-min-width: 60px;
+    -fx-min-height: 60px;
+    -fx-max-width: 60px;
+    -fx-max-height: 60px;
+}
+.circle:pressed {
+    -fx-padding: 10 15 13 15;
+    -fx-background-insets: 1 0 0 0,1 0 1 0, 1 0 2 0, 1 0 2 0;
+ }
+.sound{
+     -fx-background-radius: 10em;
+     -fx-min-width: 30px;
+     -fx-min-height: 30px;
+     -fx-max-width: 30px;
+     -fx-max-height: 30px;
+     -fx-background-color: #6E6970;
+}
+.play{
+    -fx-background-color:forestgreen;
+}
+.play:hover {
+    -fx-background-color:#22AD4C;
+}
+.next{
+    -fx-background-color:purple;
+}
+.next:hover {
+    -fx-background-color:#FF00FF;
+}
+.bad{
+    -fx-background-color:red;
+}
+.bad:hover {
+    -fx-background-color:#F94343;
+}
+.sidebar{
+    -fx-background-color:
+        linear-gradient(from 0% 0% to 100% 100%,  #474448 0%, #302A33 100%);
+}
+
+.record{
+    -fx-background-color: #283044;
+}
+.record:hover{
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
+}
+
+.record:pressed{
+    -fx-border-color: white;
+}
+.progress-bar > .bar {
+    -fx-background-insets: 1 1 2 1;
+    -fx-padding: 0.20em;
+}
+
+.finish{
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-background-insets: 1 1 1 1;
+    -fx-background-color: forestgreen;
+    -fx-border-color: #3E3B3F;
+    -fx-border-width: 3;
+}
+.start{
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-background-insets: 1 1 1 1;
+    -fx-background-color: #3E3B3F;
+    -fx-border-color: limegreen;
+    -fx-border-width: 3;
+}
+.start:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, #3E3B3F, #6E6970);
+}
+.finish:hover {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 100%, forestgreen, limegreen);
+}
+.finish:pressed {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 60%, forestgreen, limegreen);
+    -fx-border-color:green;
+    -fx-border-width: 3;
+}
+.start:pressed {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 60%, #3E3B3F, #6E6970);
+    -fx-border-color:grey;
+    -fx-border-width: 3;
+}

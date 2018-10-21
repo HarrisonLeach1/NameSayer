@@ -4,18 +4,11 @@ import app.model.*;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 
-import javax.sound.sampled.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -35,12 +28,12 @@ public class PlaySceneController implements UserModelListener, Initializable {
     private static final double MAX_VOLUME = 2.0;
     private static final double INITIAL_VOLUME = 1.0;
     private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
-    private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
-    private static final String RECORDING_SCENE = "/app/views/RecordingScene.fxml";
+    private static final String ERROR_SCENE = "/views/ErrorScene.fxml";
+    private static final String RECORDING_SCENE = "/views/RecordingScene.fxml";
     private static final int MIN_LOOPS = 1;
     private static final int MAX_LOOPS = 10;
     private static final int DEFAULT_LOOPS = 3;
-    private static final String MAIN_MENU_SCENE = "/app/views/NameSayer.fxml";
+    private static final String MAIN_MENU_SCENE = "/views/NameSayer.fxml";
 
 
     @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
@@ -69,7 +62,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
         this._loopSpinner.setValueFactory(loopValueFactory);
     }
     /**
-     * Loads in the practise list model that stores the list of selected Practisable
+     * Loads in the practise list app.model that stores the list of selected Practisable
      * objects from the main menu to be practised.
      * @param practiseListModel
      */
@@ -126,7 +119,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     public void recordButtonPressed() {
         SceneLoader loader = new SceneLoader(RECORDING_SCENE);
 
-        // pass the model to the recording scene controller
+        // pass the app.model to the recording scene controller
         RecordingSceneController controller = loader.getController();
         controller.setModel(_practiseListModel);
 
@@ -212,7 +205,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * @param currentUserLevel
      * @param currentLevelProgress
      */
-    // TODO move calculations to user model
     @Override
     public void notifyProgress(int currentUserLevel, double currentLevelProgress) {
         _levelProgress.setProgress(currentLevelProgress);
@@ -225,7 +217,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * they have pronounced the name well.
      */
     private void openLevelScene() {
-        SceneLoader loader = new SceneLoader("/app/views/LevelScene.fxml");
+        SceneLoader loader = new SceneLoader("/app/app.views/LevelScene.fxml");
 
         LevelSceneController controller = loader.getController();
         controller.setModel(_userModel);

@@ -13,7 +13,7 @@ import javafx.util.Duration;
 /**
  * A LevelSceneController holds the responsibility of receiving input events
  * from the user while the error window is open it then translates them
- * into actions on the views.
+ * into actions on the app.views.
  */
 public class LevelSceneController {
 
