@@ -318,6 +318,7 @@ public class MainMenuController implements Initializable, UserModelListener {
 
         // pass selected items to the next controller
         SavePlaylistController controller = loader.getController();
+        controller.setModel(_databaseModel);
         controller.setPlayList(_playList.getItems());
 
         loader.openScene();

@@ -220,7 +220,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * they have pronounced the name well.
      */
     private void openLevelScene() {
-        SceneLoader loader = new SceneLoader("/app/app.views/LevelScene.fxml");
+        SceneLoader loader = new SceneLoader("/views/LevelScene.fxml");
 
         LevelSceneController controller = loader.getController();
         controller.setModel(_userModel);
