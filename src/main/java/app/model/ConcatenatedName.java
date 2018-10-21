@@ -207,7 +207,7 @@ public class ConcatenatedName implements Practisable {
 
         // execute the bash process
         try {
-            String cmd = "ffmpeg -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
+            String cmd = "ffmpeg -hidebanner -loglevel quiet -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
                     "-map '[out]' " + TEMP_FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);

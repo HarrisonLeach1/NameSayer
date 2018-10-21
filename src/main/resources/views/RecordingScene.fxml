@@ -22,7 +22,7 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="130.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <ProgressBar fx:id="_progressBar" layoutX="50.0" layoutY="30.0" prefWidth="200.0" progress="0.0" />
+            <ProgressBar fx:id="_progressBar" layoutX="50.0" layoutY="21.0" prefHeight="14.0" prefWidth="200.0" progress="0.0" />
             <Button fx:id="_cancelBtn" defaultButton="true" layoutX="118.0" layoutY="91.0" mnemonicParsing="false" onAction="#cancelButtonPressed" prefHeight="25.0" prefWidth="65.0" text="Cancel" textFill="WHITE">
                <styleClass>
                   <String fx:value="menu-dark" />

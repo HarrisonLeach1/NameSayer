@@ -156,7 +156,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     /**
      * Redirects the user back to the main menu when the return button is pressed.
      */
-    public void handleReturnAction(ActionEvent event) throws IOException {
+    public void handleReturnAction(ActionEvent event){
         // load in the main menu scene
         _micTest.cancel();
         MainMenuController.setStartFalse();

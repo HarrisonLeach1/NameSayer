@@ -29,7 +29,7 @@ public class TestSceneController {
     }
 
     /**
-     * Plays back the test recording to the user.
+     * Starts the microphone test.
      */
     public void handlePlayAction(ActionEvent event) {
         Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();

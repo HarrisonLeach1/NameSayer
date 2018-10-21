@@ -27,7 +27,7 @@
                      </font>
                   </Label>
                   <Label layoutX="849.0" layoutY="41.0" prefHeight="15.0" prefWidth="49.0" text="Level: " textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="40.0" />
-                  <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="40.0" />
+                  <Label fx:id="_levelCounter" layoutX="898.0" layoutY="41.0" prefHeight="15.0" prefWidth="41.0" text="0" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="310.0" AnchorPane.topAnchor="40.0" />
                   <ProgressBar fx:id="_levelProgress" layoutX="939.0" layoutY="38.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="120.0" AnchorPane.topAnchor="40.0" />
                   <ProgressBar fx:id="_micLevelProgress" layoutX="65.0" layoutY="41.0" prefWidth="200.0" progress="0.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="42.0" />
                   <ImageView fitHeight="44.0" fitWidth="41.0" layoutX="24.0" layoutY="29.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="27.0" AnchorPane.leftAnchor="24.0" AnchorPane.topAnchor="29.0">
@@ -48,6 +48,7 @@
                         </ImageView>
                      </graphic>
                   </Button>
+                  <Label layoutX="950.0" layoutY="20.0" text="Experience" textFill="WHITE" AnchorPane.bottomAnchor="60.0" AnchorPane.rightAnchor="190.0" AnchorPane.topAnchor="20.0" />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
