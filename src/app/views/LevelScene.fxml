@@ -19,12 +19,12 @@
       </AnchorPane>
       <AnchorPane layoutY="14.0" prefHeight="100.0" prefWidth="300.0" style="-fx-background-color: #90A4A8;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
          <children>
-            <Button fx:id="_badBtn" layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="27.0" prefWidth="80.0" text="No" textFill="WHITE">
+            <Button fx:id="_badBtn" layoutX="195.0" layoutY="49.0" mnemonicParsing="false" onAction="#badButtonPressed" prefHeight="27.0" prefWidth="80.0" text="Bad" textFill="WHITE" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="65.0">
                <styleClass>
                   <String fx:value="menu-dark" />
                   <String fx:value="smallredbutton" />
                </styleClass></Button>
-            <Button fx:id="_goodBtn" layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Yes" textFill="WHITE">
+            <Button fx:id="_goodBtn" layoutX="75.0" layoutY="49.0" mnemonicParsing="false" onAction="#goodButtonPressed" prefHeight="25.0" prefWidth="80.0" stylesheets="@style.css" text="Good" textFill="WHITE" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="65.0">
                <styleClass>
                   <String fx:value="menu-dark" />
                   <String fx:value="smallgreenbutton" />

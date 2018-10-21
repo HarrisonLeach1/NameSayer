@@ -27,6 +27,7 @@ public class MicTestTask extends Task {
     }
 
     /**
+     *
      * Updates the progress of this Task object based on the volume
      * level of the input received from the user's mic.
      * @return
@@ -77,6 +78,8 @@ public class MicTestTask extends Task {
     /**
      * Calculates the microphone input RMS Level and turns it into an integer
      * that can be used to display mic volume information to the user.
+     * Reference: https://stackoverflow.com/questions/3899585/microphone-level-in-java
+     * 
      */
     private int calculateRMSLevel(byte[] audioData) {
         long lSum = 0;
