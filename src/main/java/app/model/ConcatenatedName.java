@@ -107,7 +107,7 @@ public class ConcatenatedName implements Practisable {
             try {
                 // 1:0 -50dB indicates that anything below -50dB is cut off from the start
                 // 1:5 -50dB indicates that anything below -70dB is cut off from the end
-                String cmd = "ffmpeg -hidebanner -loglevel quiet -y -hide_banner -i " + name.selectGoodVersion().getFilePath() +
+                String cmd = "ffmpeg -hide_banner -loglevel quiet -y -i " + name.selectGoodVersion().getFilePath() +
                         " -af silenceremove=1:0:"+ START_THRESHOLD +"dB:1:5:"+ END_THRESHOLD +"dB " + TEMP_FOLDER + name.toString() + EXTENSION;
                 System.out.println(cmd);
 
@@ -133,7 +133,7 @@ public class ConcatenatedName implements Practisable {
                 Name name = it.next();
 
                 // define process for returning the mean volume of the recording
-                String cmd = "ffmpeg -hidebanner -loglevel -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
+                String cmd = "ffmpeg -hide_banner -loglevel -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a volumedetect " +
                         "-f null /dev/null |& grep 'mean_volume:' ";
                 System.out.println(cmd);
 
@@ -164,7 +164,7 @@ public class ConcatenatedName implements Practisable {
                 double adjustment = VOLUME_LEVEL - meanVolume;
 
                 // define bash process to create new audio file with the mean volume
-                String cmd2 = "ffmpeg -hidebanner -loglevel -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a \"volume=" +
+                String cmd2 = "ffmpeg -hide_banner -loglevel -y -i " + TEMP_FOLDER + name.toString() + EXTENSION + " -filter:a \"volume=" +
                         String.format( "%.1f", adjustment) + " dB\" " + TEMP_FOLDER + name.toString() + EXTENSION;
 
                 // start process
@@ -207,7 +207,7 @@ public class ConcatenatedName implements Practisable {
 
         // execute the bash process
         try {
-            String cmd = "ffmpeg -hidebanner -loglevel quiet -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
+            String cmd = "ffmpeg -hide_banner -loglevel quiet -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
                     "-map '[out]' " + TEMP_FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
