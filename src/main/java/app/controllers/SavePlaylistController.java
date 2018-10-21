@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.model.ConcatenatedName;
 import app.model.IDatabaseModel;
 import app.model.Practisable;
 import javafx.event.ActionEvent;

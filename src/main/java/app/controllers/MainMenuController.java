@@ -16,9 +16,6 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
-import sun.misc.Resource;
-
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -94,6 +91,20 @@ public class MainMenuController implements Initializable, UserModelListener {
         _nameCountLabel.setText(String.valueOf(_databaseModel.getDatabaseNameCount()));
 
         _userModel.addListener(this);
+    }
+
+    /**
+     * Updates the _levelCounter to display the users current level.
+     * Updates the _levelProgress to display the user experience progress towards
+     * the next level.
+     * @param currentUserLevel
+     * @param currentLevelProgress
+     */
+    @Override
+    public void notifyProgress(int currentUserLevel, double currentLevelProgress) {
+        _levelProgress.setProgress(currentLevelProgress);
+        _levelCounter.setText(String.valueOf(currentUserLevel));
+
     }
 
     /**
@@ -364,25 +375,11 @@ public class MainMenuController implements Initializable, UserModelListener {
     }
 
     /**
-     * Updates the _levelCounter to display the users current level.
-     * Updates the _levelProgress to display the user experience progress towards
-     * the next level.
-     * @param currentUserLevel
-     * @param currentLevelProgress
-     */
-    @Override
-    public void notifyProgress(int currentUserLevel, double currentLevelProgress) {
-        _levelProgress.setProgress(currentLevelProgress);
-        _levelCounter.setText(String.valueOf(currentUserLevel));
-
-    }
-
-    /**
-     * Handles any user input event related to the switching tabs.
+     * Handles any user input event related to the switching tabs or opening
+     * the test mic scene by finding the source of the event.
      * @param event
-     * @throws IOException
      */
-    public void handleMenuAction(ActionEvent event) throws IOException {
+    public void handleMenuAction(ActionEvent event) {
         if(event.getSource() == _viewDataBtn){
             _dataPane.toFront();
 
@@ -422,9 +419,9 @@ public class MainMenuController implements Initializable, UserModelListener {
 
     /**
      * Help button opens the user manual pdf from the current working directory.
-     * @param actionEvent
+     * @param event
      */
-    public void helpButtonAction(ActionEvent actionEvent) {
+    public void helpButtonAction(ActionEvent event) {
         new DocumentLoader(USER_MANUAL).loadDocument();
     }
 
@@ -442,13 +439,12 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     private void setupDatabaseShortcuts() {
         _dataList.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2) {
+            if (click.getClickCount() == 2) { // if double click is detected, move the item to the selected list
                 _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
             }
         });
-
         _selectedList.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2) {
+            if (click.getClickCount() == 2) { // if double click is detected, remove the item
                 _selectedList.getItems().remove(_selectedList.getSelectionModel().getSelectedItem());
             }
         });

@@ -12,13 +12,14 @@ import java.util.Iterator;
  * and concatenated.
  */
 public class ConcatenatedName implements Practisable {
-    public static final String EXTENSION = "_temp.wav";
-    public static final String TEMP_FOLDER = "temp/";
-    public static final double VOLUME_LEVEL = -20.0;
+    private static final String EXTENSION = "_temp.wav";
+    private static final String BASH_LOCATION = "/bin/bash";
+    static final String TEMP_FOLDER = "temp/";
 
     // indicates the levels of silence which are cut from the start and the end
     private static final int START_THRESHOLD = -35;
     private static final int END_THRESHOLD = -50;
+    private static final double VOLUME_LEVEL = -20.0;
 
     private final String _displayName;
     private List<Name> _nameList;
@@ -47,7 +48,7 @@ public class ConcatenatedName implements Practisable {
         try {
             String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + file + " -autoexit -nodisp";
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
             _playingProcess  = builder.start();
 
             _playingProcess.waitFor();
@@ -90,7 +91,7 @@ public class ConcatenatedName implements Practisable {
         try {
             String cmd = "mkdir -p " + TEMP_FOLDER;
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
             builder.start();
 
         } catch (IOException e) {
@@ -112,7 +113,7 @@ public class ConcatenatedName implements Practisable {
                 System.out.println(cmd);
 
 
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+                ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
                 Process process = builder.start();
 
                 process.waitFor();
@@ -138,7 +139,7 @@ public class ConcatenatedName implements Practisable {
                 System.out.println(cmd);
 
                 // start process
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+                ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
                 Process process = builder.start();
 
                 process.waitFor();
@@ -168,7 +169,7 @@ public class ConcatenatedName implements Practisable {
                         String.format( "%.1f", adjustment) + " dB\" " + TEMP_FOLDER + name.toString() + EXTENSION;
 
                 // start process
-                ProcessBuilder builder2 = new ProcessBuilder("/bin/bash", "-c", cmd2);
+                ProcessBuilder builder2 = new ProcessBuilder(BASH_LOCATION, "-c", cmd2);
                 Process process2 = builder2.start();
 
                 process2.waitFor();
@@ -210,7 +211,7 @@ public class ConcatenatedName implements Practisable {
             String cmd = "ffmpeg -y" + _stringOfPaths + " -filter_complex '"+ bashFilter + "' " +
                     "-map '[out]' " + TEMP_FOLDER + _displayName.replaceAll(" ","_") + EXTENSION;
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
+            ProcessBuilder builder = new ProcessBuilder(BASH_LOCATION, "-c", cmd);
             Process process = builder.start();
 
             process.waitFor();

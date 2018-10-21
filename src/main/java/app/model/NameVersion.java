@@ -12,13 +12,18 @@ import java.util.Scanner;
  * by the user. A NameVersion object is usually created by providing a path to file
  * with the following naming format:
  *
- * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * Creator_dd-MM-yyyy_HH-mm-ss_Name.wav
  * e.g. se206_2-5-2018_15-23-50_Mason.wav
  *
  * This NameVersion points to this file and stores information of the file such that
  * it can be efficiently played, rated and displayed to the user.
  */
 public class NameVersion {
+    static final String RECORDINGS_DATE_FORMAT = "dd-MM-yyyy_hh-mm-ss";
+    private static final String NEW_DATE_FORMAT = "EEE, d MMM yyyy";
+    private static final String NEW_TIME_FORMAT = "hh:mm:ss a";
+    private static final String BAD_RECORDINGS_FILE = "bad.txt";
+
     private String _shortName, _displayName, _filePath, _dateCreated, _timeCreated;
     private boolean _isBadQuality;
     private Process _playingProcess;
@@ -56,12 +61,12 @@ public class NameVersion {
             // get original date and time and parse into date object
             String[] parts = fileName.split("_");
             String originalDate = parts[1] + "_" + parts[2];
-            DateFormat originalFormat = new SimpleDateFormat("dd-MM-yyyy_hh-mm-ss");
+            DateFormat originalFormat = new SimpleDateFormat(RECORDINGS_DATE_FORMAT);
             Date date = originalFormat.parse(originalDate);
 
             // get date and time in more displayable format
-            DateFormat newDateFormat = new SimpleDateFormat("EEE, d MMM yyyy");
-            DateFormat newTimeFormat = new SimpleDateFormat("hh:mm:ss a");
+            DateFormat newDateFormat = new SimpleDateFormat(NEW_DATE_FORMAT);
+            DateFormat newTimeFormat = new SimpleDateFormat(NEW_TIME_FORMAT);
             _dateCreated = newDateFormat.format(date);
             _timeCreated = newTimeFormat.format(date);
 
@@ -127,7 +132,7 @@ public class NameVersion {
      * @throws IOException
      */
     public void setBadQuality() throws IOException {
-        FileWriter fw = new FileWriter("bad.txt", true); //the true will append the new data
+        FileWriter fw = new FileWriter(BAD_RECORDINGS_FILE, true); //the true will append the new data
 
         if (!_isBadQuality) { // if it is not already bad quality, mark as bad quality
             fw.write(_filePath + "\r\n");
@@ -142,7 +147,7 @@ public class NameVersion {
      * @throws IOException
      */
     private boolean findQuality() {
-        File file = new File("bad.txt");
+        File file = new File(BAD_RECORDINGS_FILE);
         Scanner scanner = null;
 
         // create bad.txt if it does not already exist

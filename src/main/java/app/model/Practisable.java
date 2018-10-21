@@ -6,7 +6,7 @@ import java.io.IOException;
  * A Practisable object represents an object that can be used in
  * a PractiseListModel.
  *
- * As such, it can be played, stopped, and give date, rating and
+ * As such, it can be played, stopped, and give a date, rating and
  * missing audio information.
  */
 public interface Practisable {

@@ -5,7 +5,6 @@ import app.model.IUserModel;
 import app.model.Practisable;
 import app.model.PractiseListModel;
 import javafx.event.ActionEvent;
-
 import java.util.ArrayList;
 import java.util.List;
 

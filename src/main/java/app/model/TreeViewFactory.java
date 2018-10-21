@@ -10,7 +10,7 @@ import java.util.*;
  *
  * All files in the database folder should be named in the format:
  *
- * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * Creator_dd-MM-yyyy_HH-mm-ss_Name.wav
  *
  * e.g. se206_2-5-2018_15-23-50_Mason.wav
  *

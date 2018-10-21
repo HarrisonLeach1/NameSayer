@@ -22,7 +22,7 @@ public class RecordingSceneController {
     private IPractiseListModel _practiseListModel;
 
     /**
-     * Initialises the controller with the practise list app.model to be used.
+     * Initialises the controller with the IPractiseListModel to be used.
      * @param model
      */
     public void setModel(IPractiseListModel model) {

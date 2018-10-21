@@ -8,8 +8,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -25,12 +23,14 @@ import static app.controllers.MainMenuController.USER_MANUAL;
  * to update the view.
  */
 public class PlaySceneController implements UserModelListener, Initializable {
+    private static final String RECORDING_SCENE = "/views/RecordingScene.fxml";
+    private static final String MAIN_MENU_SCENE = "/views/NameSayer.fxml";
+    private static final String LEVEL_SCENE = "/views/LevelScene.fxml";
+    private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
+
     private static final double MIN_VOLUME = 0;
     private static final double MAX_VOLUME = 2.0;
     private static final double INITIAL_VOLUME = 1.0;
-    private static final String MISSING_MSG = "Record yourself to contribute to this name! \nMissing audio: \n";
-    private static final String RECORDING_SCENE = "/views/RecordingScene.fxml";
-    private static final String MAIN_MENU_SCENE = "/views/NameSayer.fxml";
 
     private static final int MIN_LOOPS = 1;
     private static final int MAX_LOOPS = 10;
@@ -220,7 +220,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * they have pronounced the name well.
      */
     private void openLevelScene() {
-        SceneLoader loader = new SceneLoader("/views/LevelScene.fxml");
+        SceneLoader loader = new SceneLoader(LEVEL_SCENE);
 
         LevelSceneController controller = loader.getController();
         controller.setModel(_userModel);
@@ -334,7 +334,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
      * @param actionEvent
      */
     public void helpButtonAction(ActionEvent actionEvent) {
-        URL documentURL = getClass().getResource(USER_MANUAL);
         new DocumentLoader(USER_MANUAL).loadDocument();
     }
 }

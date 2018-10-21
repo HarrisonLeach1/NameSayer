@@ -3,7 +3,6 @@ package app.model;
 import javafx.concurrent.Task;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.TreeItem;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -20,7 +19,7 @@ import java.util.*;
  * For a recording file to be recognised as a valid name recording in this database, it
  * must have the following file name format:
  *
- * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * Creator_dd-MM-yyyy_HH-mm-ss_Name.wav
  * e.g. se206_2-5-2018_15-23-50_Mason.wav
  */
 public class DatabaseModel implements IDatabaseModel {

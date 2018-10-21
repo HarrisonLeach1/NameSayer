@@ -1,9 +1,6 @@
 package app.controllers;
 
-import app.model.IDatabaseModel;
 import app.model.IUserModel;
-import app.model.Practisable;
-import app.model.PractiseListModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -11,12 +8,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A SceneLoader object represents an FXMLLoader that when given the path to an FXML

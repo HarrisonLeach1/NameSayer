@@ -199,10 +199,11 @@ public class PractiseListModel implements IPractiseListModel{
 
     /**
      * Returns the list of Practisable names that are being practised in this
-     * PractiseListModel object.
+     * PractiseListModel object. Finalises the users recording if they have one.
      * @return a list of Practisable objects
      */
     public List<Practisable> getPractiseList() {
+        finaliseRecording();
         return _practiseList;
     }
 }

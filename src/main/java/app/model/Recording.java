@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static app.model.DatabaseModel.USER_DATABASE;
+import static app.model.NameVersion.RECORDINGS_DATE_FORMAT;
 
 /**
  * A Recording object represents a production of a name created by a user.
@@ -27,7 +28,7 @@ public class Recording {
      * @param name
      */
     public Recording(String name) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
+        SimpleDateFormat formatter = new SimpleDateFormat(RECORDINGS_DATE_FORMAT);
         Date date = new Date();
         String dateTime = formatter.format(date);
 

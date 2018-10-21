@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.model.IUserModel;
-import app.model.UserModel;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;

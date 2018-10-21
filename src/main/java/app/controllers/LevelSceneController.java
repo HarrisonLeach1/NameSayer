@@ -1,7 +1,6 @@
 package app.controllers;
 
 import app.model.IUserModel;
-import app.model.UserModel;
 import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

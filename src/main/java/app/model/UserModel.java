@@ -22,6 +22,8 @@ import java.util.Scanner;
 public class UserModel implements IUserModel {
     private static final File DATA_FILE = new File(".userData.txt");
     private static final int XP_PER_LEVEL = 150;
+    private static final String STREAK_DATE_FORMAT = "dd-MM-yyyy";
+
     private static UserModel _instance;
 
     private List<UserModelListener> _listeners;
@@ -115,7 +117,7 @@ public class UserModel implements IUserModel {
 
             FileWriter fw = new FileWriter(DATA_FILE,false);
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(STREAK_DATE_FORMAT);
             String loginString = _lastLogin.format(formatter);
 
             fw.write(loginString + "\r\n");
@@ -141,7 +143,7 @@ public class UserModel implements IUserModel {
         try {
             Scanner input = new Scanner(DATA_FILE);
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(STREAK_DATE_FORMAT);
             _lastLogin = LocalDate.parse(input.nextLine(), formatter);
 
             _streakCount = Integer.parseInt(input.nextLine());
