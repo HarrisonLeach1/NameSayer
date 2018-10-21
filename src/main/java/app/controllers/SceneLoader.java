@@ -25,8 +25,8 @@ import java.util.List;
  * from the opening scene and switching scene operations that must be performed on an FXMLLoader.
  */
 public class SceneLoader {
-    private static final String ERROR_SCENE = "/app/views/ErrorScene.fxml";
-    private static final String STREAK_SCENE = "/app/views/StreakScene.fxml";
+    private static final String ERROR_SCENE = "/views/ErrorScene.fxml";
+    private static final String STREAK_SCENE = "/views/StreakScene.fxml";
 
     private FXMLLoader _loader;
     private Parent _playerParent;

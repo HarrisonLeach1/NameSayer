@@ -17,9 +17,9 @@ import java.util.List;
  * a playlist should be moved onto the play scene.
  */
 public class PlaylistLoader {
-    private static final String CONFIRM_SCENE = "/app/views/ConfirmScene.fxml";
+    private static final String CONFIRM_SCENE = "/views/ConfirmScene.fxml";
     private static final String CONFIRM_MSG = "Could not find the following name(s): \n\n";
-    private static final String PLAY_SCENE = "/app/views/PlayScene.fxml";
+    private static final String PLAY_SCENE = "/views/PlayScene.fxml";
     private final List<Practisable> _playlist;
     private final IDatabaseModel _databaseModel;
     private final IUserModel _userModel;

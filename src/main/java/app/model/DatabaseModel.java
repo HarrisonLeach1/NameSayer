@@ -115,7 +115,8 @@ public class DatabaseModel implements IDatabaseModel {
 
 				// define the path the recording will use to find it's wav file
 				// if the folder has spaces they must be replaced "\ " to be interpreted by a bash process
-				String fileName = databaseFolder.getName().replaceAll(" ","\\\\ ") + "/" + file.getName();
+				String fileName = databaseFolder.getPath().replaceAll(" ","\\\\ ") + "/" + file.getName();
+				System.out.println(fileName);
 
 				// try create a name version object for the file, if the following exceptions are thrown
 				// then the file is not a valid practise recording file. i.e. incorrect file name format
@@ -123,6 +124,7 @@ public class DatabaseModel implements IDatabaseModel {
 				try {
 					nameVersion = new NameVersion(fileName);
 				} catch (ParseException | IndexOutOfBoundsException e) {
+					e.printStackTrace();
 					// if an exception has been thrown then the file is invalid, do not create a NameVersion for it
 					continue;
 				}

@@ -27,7 +27,7 @@ public class UserModel implements IUserModel {
     private List<UserModelListener> _listeners;
     private int _streakCount = 1;
     private LocalDate _lastLogin = LocalDate.now();
-    private int _userXP = 100;
+    private int _userXP = 150;
     private int _currentLevel;
     private double _currentLevelProgress;
 

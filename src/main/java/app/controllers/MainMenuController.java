@@ -4,7 +4,6 @@ import app.model.*;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -12,16 +11,13 @@ import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
-
 import java.awt.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -41,10 +37,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     private static final String TEST_SCENE = "/views/TestScene.fxml";
     private static final String SAVE_PLAYLIST_SCENE = "/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/views/LoadingScene.fxml";
-    private static final String PLAY_SCENE = "/views/PlayScene.fxml";
-    private static final int ERROR_SCENE_VALUE = 1;
-    private static final int CONFIRM_SCENE_VALUE = 2;
-    private static final int STREAK_SCENE_VALUE = 3;
+
 
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
@@ -77,17 +70,7 @@ public class MainMenuController implements Initializable, UserModelListener {
 
         new HighlightedList(_playList);
 
-        _dataList.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2) {
-                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
-            }
-        });
-
-        _selectedList.setOnMouseClicked(click -> {
-            if (click.getClickCount() == 2) {
-                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
-            }
-        });
+        setupDatabaseShortcuts();
     }
 
     /**
@@ -460,6 +443,23 @@ public class MainMenuController implements Initializable, UserModelListener {
         _playingProgress.progressProperty().unbind();
         _playingProgress.setProgress(0);
         _player.cancel();
+    }
+
+    /**
+     * Initialises the View Database pane to allow for double click user shortcuts.
+     */
+    private void setupDatabaseShortcuts() {
+        _dataList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                _selectedList.getItems().add(_dataList.getSelectionModel().getSelectedItem());
+            }
+        });
+
+        _selectedList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                _selectedList.getItems().remove(_selectedList.getSelectionModel().getSelectedItem());
+            }
+        });
     }
 
     /**

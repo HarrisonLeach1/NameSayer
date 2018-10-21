@@ -1,6 +1,5 @@
 package app.controllers;
 
-import app.model.ConcatenatedName;
 import app.model.Practisable;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
