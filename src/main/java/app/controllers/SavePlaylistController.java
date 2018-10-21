@@ -2,6 +2,7 @@ package app.controllers;
 
 import app.model.ConcatenatedName;
 import app.model.IDatabaseModel;
+import app.model.Practisable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -19,7 +20,7 @@ import java.util.List;
 public class SavePlaylistController {
 
     @FXML private TextField _playListName;
-    private List<ConcatenatedName> _playlist;
+    private List<Practisable> _playlist;
     private IDatabaseModel _databaseModel;
 
     public void setModel(IDatabaseModel databaseModel) {
@@ -56,7 +57,7 @@ public class SavePlaylistController {
      * Sets the playlist which is to be named in this controller.
      * @param playlist
      */
-    public void setPlayList(List<ConcatenatedName> playlist) {
+    public void setPlayList(List<Practisable> playlist) {
         _playlist = playlist;
     }
 }

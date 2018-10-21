@@ -51,7 +51,7 @@ public class NameVersion {
      */
     private void parseVersionName() throws IndexOutOfBoundsException, ParseException{
             // get file name without the database folder
-            String fileName = _filePath.substring(_filePath.indexOf("/"));
+            String fileName = _filePath.substring(_filePath.lastIndexOf("/"));
 
             // get original date and time and parse into date object
             String[] parts = fileName.split("_");
@@ -99,6 +99,7 @@ public class NameVersion {
     public void playRecording(double volume) throws InterruptedException {
         try {
             String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _filePath + " -autoexit -nodisp";
+            System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             _playingProcess = builder.start();

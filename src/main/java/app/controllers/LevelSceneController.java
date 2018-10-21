@@ -60,11 +60,11 @@ public class LevelSceneController {
      * up or experience gained message.
      */
     private void updateMessageLabel(IUserModel.ComparisonRating rating) {
-        int previousLevel = UserModel.getInstance().getUserLevel();
+        int previousLevel = _userModel.getUserLevel();
 
-        UserModel.getInstance().updateUserXP(rating);
+        _userModel.updateUserXP(rating);
 
-        int currentLevel = UserModel.getInstance().getUserLevel();
+        int currentLevel =_userModel.getUserLevel();
 
         // if level has increased, notify user of level up. Otherwise notify user of experience gained.
         if (currentLevel > previousLevel) {

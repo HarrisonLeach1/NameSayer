@@ -1,6 +1,6 @@
 package app.controllers;
 
-import app.model.ConcatenatedName;
+import app.model.Practisable;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
@@ -16,9 +16,9 @@ public class HighlightedList {
     private static final String MISSING_MSG = "Missing Name(s): ";
     private static final String FOUND_MSG = "All Names Found!";
 
-    private final ListView<ConcatenatedName> _listView;
+    private final ListView<Practisable> _listView;
 
-    public HighlightedList(ListView<ConcatenatedName> listView) {
+    public HighlightedList(ListView<Practisable> listView) {
         _listView = listView;
 
         initialiseHighlighting();
@@ -30,22 +30,22 @@ public class HighlightedList {
      * which names are missing.
      */
     private void initialiseHighlighting() {
-        _listView.setCellFactory(lv -> new ListCell<ConcatenatedName>() {
+        _listView.setCellFactory(lv -> new ListCell<Practisable>() {
             @Override
-            protected void updateItem(ConcatenatedName c, boolean empty) {
-                super.updateItem(c, empty);
+            protected void updateItem(Practisable name, boolean empty) {
+                super.updateItem(name, empty);
                 // if empty, ignore
                 if (empty) {
                     setText(null);
                     setStyle("");
 
                 } else {
-                    setText(c.toString());
+                    setText(name.toString());
 
                     // If the ConcatenatedName object contains missing names, update the cell accordingly.
-                    if (!c.getMissingNames().equals("")) {
+                    if (!name.getMissingNames().equals("")) {
                         setStyle("-fx-background-color: rgba(255,0,0,0.5)");
-                        setTooltip( new Tooltip( MISSING_MSG + c.getMissingNames()));
+                        setTooltip( new Tooltip( MISSING_MSG + name.getMissingNames()));
                     } else {
                         setStyle("");
                         setTooltip( new Tooltip(FOUND_MSG));
