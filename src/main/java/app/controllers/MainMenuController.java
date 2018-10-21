@@ -16,6 +16,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
+import sun.misc.Resource;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +36,11 @@ import java.util.ResourceBundle;
  * to update the view.
  */
 public class MainMenuController implements Initializable, UserModelListener {
+    public static final String USER_MANUAL = "/UserManual.pdf";
     private static final String TEST_SCENE = "/views/TestScene.fxml";
     private static final String SAVE_PLAYLIST_SCENE = "/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/views/LoadingScene.fxml";
+
 
 
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
@@ -422,18 +426,8 @@ public class MainMenuController implements Initializable, UserModelListener {
      * @param actionEvent
      */
     public void helpButtonAction(ActionEvent actionEvent) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                File myFile = new File("UserManual.pdf");
-                if (myFile.exists()) {
-                    Desktop.getDesktop().open(myFile);
-                }else{
-                    new SceneLoader().loadErrorMessage("ERROR: UserManual not found");
-                }
-            } catch (IOException ex) {
-                new SceneLoader().loadErrorMessage("ERROR: Can't find application for opening PDF");
-            }
-        }
+        URL documentURL = getClass().getResource(USER_MANUAL);
+        new DocumentLoader(new File(documentURL.getFile())).loadDocument();
     }
 
     /**
