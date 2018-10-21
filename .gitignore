@@ -2,6 +2,7 @@
 *.class
 bin/
 out/
+target/
 
 # Log file
 *.log
@@ -21,19 +22,22 @@ out/
 *.tar.gz
 *.rar
 
-# Project files
+# IDE Project files
 .project
 .classpath
 .idea/
 *.iml
-names/
 META-INF/
+
+# Recording databases
+names/
 userRecordings/
-.test.wav
 temp/
-*.txt
 DataBase VoNZ word/
 *.wav
+
+# Generated text files
+*.txt
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
