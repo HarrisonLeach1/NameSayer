@@ -335,6 +335,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
      */
     public void helpButtonAction(ActionEvent actionEvent) {
         URL documentURL = getClass().getResource(USER_MANUAL);
-        new DocumentLoader(new File(documentURL.getFile())).loadDocument();
+        new DocumentLoader(USER_MANUAL).loadDocument();
     }
 }

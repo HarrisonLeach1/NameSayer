@@ -7,17 +7,18 @@ import java.io.IOException;
  * A DocumentLoader represents an object that loads, opens and displays documents to the
  * user.
  *
- * The document opened should be supplied to the object upon construction. When the object
- * is supplied with invalid document files, error messages are displayed to the user.
+ * The document to be opened should be supplied to the object upon construction. When
+ * the object is supplied with invalid document file names, error messages are displayed
+ * to the user.
  */
 public class DocumentLoader {
     private static final String OPEN_ERROR_MSG = "ERROR: Could not open ";
     private static final String FIND_ERROR_MSG = "ERROR: Could not find ";
 
-    private final File _document;
+    private final String _documentName;
 
-    public DocumentLoader(File document) {
-        _document = document;
+    public DocumentLoader(String documentName) {
+        _documentName = documentName;
     }
 
     /**
@@ -25,10 +26,11 @@ public class DocumentLoader {
      * the document does not exist, an error message is displayed.
      */
     public void loadDocument() {
-            if (_document.exists()) {
+            File documentFile = new File(_documentName);
+            if (documentFile.exists()) {
                 runOpenProcess();
             } else{
-                new SceneLoader().loadErrorMessage(FIND_ERROR_MSG + _document.getName());
+                new SceneLoader().loadErrorMessage(FIND_ERROR_MSG + _documentName);
             }
     }
 
@@ -38,12 +40,12 @@ public class DocumentLoader {
      */
     private void runOpenProcess() {
         try {
-            String cmd = "evince " + _document.getPath();
+            String cmd = "xdg-open " + _documentName;
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
             builder.start();
         } catch (IOException e) {
-            new SceneLoader().loadErrorMessage(OPEN_ERROR_MSG + _document.getName());
+            new SceneLoader().loadErrorMessage(OPEN_ERROR_MSG + _documentName);
         }
     }
 }

@@ -36,12 +36,10 @@ import java.util.ResourceBundle;
  * to update the view.
  */
 public class MainMenuController implements Initializable, UserModelListener {
-    public static final String USER_MANUAL = "/UserManual.pdf";
+    public static final String USER_MANUAL = "UserManual.pdf";
     private static final String TEST_SCENE = "/views/TestScene.fxml";
     private static final String SAVE_PLAYLIST_SCENE = "/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/views/LoadingScene.fxml";
-
-
 
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
@@ -59,8 +57,8 @@ public class MainMenuController implements Initializable, UserModelListener {
     private static boolean start = true;
 
     /**
-     * Initially the database of recordings is loaded in from the app.model,
-     * and displayed in the TreeView of the main menu view.
+     * Initially, if this is first time the user has opened the scene, do not display the
+     * start menu. Initiliases components with their required functionality.
      */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -427,8 +425,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      * @param actionEvent
      */
     public void helpButtonAction(ActionEvent actionEvent) {
-        URL documentURL = getClass().getResource(USER_MANUAL);
-        new DocumentLoader(new File(documentURL.getFile())).loadDocument();
+        new DocumentLoader(USER_MANUAL).loadDocument();
     }
 
     /**
