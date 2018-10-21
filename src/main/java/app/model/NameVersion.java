@@ -98,7 +98,7 @@ public class NameVersion {
      */
     public void playRecording(double volume) throws InterruptedException {
         try {
-            String cmd = "ffplay -af volume=" + String.format( "%.1f", volume) + " " + _filePath + " -autoexit -nodisp";
+            String cmd = "ffplay -hidebanner -af volume=" + String.format( "%.1f", volume) + " " + _filePath + " -autoexit -nodisp";
             System.out.println(cmd);
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", cmd);
