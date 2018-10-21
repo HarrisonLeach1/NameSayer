@@ -9,7 +9,7 @@ import java.util.List;
  * user has selected to practise from the database.
  *
  * The user must be able to perform various actions on this IPractiseListModel
- * to practise their name Pronunciation.
+ * to practise their name pronunciation.
  */
 public interface IPractiseListModel {
     /**

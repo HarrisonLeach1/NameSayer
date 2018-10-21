@@ -12,7 +12,7 @@ import java.util.Scanner;
  * by the user. A NameVersion object is usually created by providing a path to file
  * with the following naming format:
  *
- * se206_dd-MM-yyyy_HH-mm-ss_Name.wav
+ * Creator_dd-MM-yyyy_HH-mm-ss_Name.wav
  * e.g. se206_2-5-2018_15-23-50_Mason.wav
  *
  * This NameVersion points to this file and stores information of the file such that

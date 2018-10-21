@@ -40,6 +40,8 @@ public class MainMenuController implements Initializable, UserModelListener {
     private static final String TEST_SCENE = "/views/TestScene.fxml";
     private static final String SAVE_PLAYLIST_SCENE = "/views/SavePlaylistScene.fxml";
     private static final String LOADING_SCENE = "/views/LoadingScene.fxml";
+    private static final String SEARCH_ERROR_MSG = "ERROR: Search is empty";
+    private static final String LIST_ERROR_MSG = "ERROR: List is empty";
 
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
     @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
@@ -160,7 +162,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void playSearchPressed(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
-            new SceneLoader("ERROR: Search is empty");
+            new SceneLoader().loadErrorMessage(SEARCH_ERROR_MSG);
         } else {
             Task<List<Practisable>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
@@ -179,7 +181,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void addToPlaylist(ActionEvent event) {
         if (_searchBox.getText().trim().isEmpty()) {
-            new SceneLoader("ERROR: Search is empty");
+            new SceneLoader().loadErrorMessage(SEARCH_ERROR_MSG);
         } else {
             Task<List<Practisable>> loadWorker = _databaseModel.loadSingleNameTask(_searchBox.getText());
 
@@ -223,7 +225,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void playFilePressed(ActionEvent event) {
         if (_playList.getItems().size() == 0) { // check if list is empty
-            new SceneLoader().loadErrorMessage("ERROR: List is empty");
+            new SceneLoader().loadErrorMessage(LIST_ERROR_MSG);
 
         } else { // otherwise, use a PlaylistLoader to decide whether or not to go to the next scene
             new PlaylistLoader(_playList.getItems(), _databaseModel, _userModel).moveToPlayScene(event);
@@ -300,7 +302,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void clearPlayListButtonPressed() {
         _playList.getItems().clear();
-        _fileNameLabel.setText(" No file selected");
+        _fileNameLabel.setText("    No file selected");
     }
 
     /**
@@ -308,18 +310,18 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void savePlayListPressed(ActionEvent event) {
         if (_playList.getItems().size() == 0) { // check if list is empty
-            new SceneLoader().loadErrorMessage("ERROR: List is empty");
-            return;
+            new SceneLoader().loadErrorMessage(LIST_ERROR_MSG);
+        } else {
+            // load in the new scene
+            SceneLoader loader = new SceneLoader(SAVE_PLAYLIST_SCENE);
+
+            // pass selected items to the next controller
+            SavePlaylistController controller = loader.getController();
+            controller.setModel(_databaseModel);
+            controller.setPlayList(_playList.getItems());
+
+            loader.openScene();
         }
-        // load in the new scene
-        SceneLoader loader = new SceneLoader(SAVE_PLAYLIST_SCENE);
-
-        // pass selected items to the next controller
-        SavePlaylistController controller = loader.getController();
-        controller.setModel(_databaseModel);
-        controller.setPlayList(_playList.getItems());
-
-        loader.openScene();
     }
 
     /**
