@@ -5,6 +5,11 @@ import javafx.concurrent.Task;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A PractiseListModel is an implementation of an IPractiseListModel. It
+ * represents a list of Practisable objects that are manipulated by a controller
+ * to perform tasks that help the user practise their name pronunciation.
+ */
 public class PractiseListModel implements IPractiseListModel{
 
     private ArrayList<Practisable> _practiseList;
@@ -75,9 +80,11 @@ public class PractiseListModel implements IPractiseListModel{
 
     /**
      * Returns a task that when executed plays the audio of the current user created
-     * production, immediately followed by the database recording. It is returned as
+     * production, immediately followed by the database recording. It repeats this for
+     * the specified number of loops. It is returned as
      * a task so that it can be executed on a new thread.
      * @param volume
+     * @param loops
      * @return a Task that plays audio of the user recording then the database recording
      */
     public Task compareUserRecordingTask(double volume, int loops) {

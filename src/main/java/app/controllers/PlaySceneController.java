@@ -37,7 +37,7 @@ public class PlaySceneController implements UserModelListener, Initializable {
     private static final int DEFAULT_LOOPS = 3;
 
 
-    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn;
+    @FXML private Button _keepBtn, _compareBtn, _prevBtn, _nextBtn, _badBtn, _playBtn, _stopBtn, _recordBtn;
     @FXML private Label _displayName, _badLabel, _savedLabel, _dateTimeLabel , _levelCounter, _missingNamesLabel;
     @FXML private Slider _volumeSlider;
     @FXML private ProgressBar _levelProgress, _micLevelProgress;
@@ -175,26 +175,34 @@ public class PlaySceneController implements UserModelListener, Initializable {
     }
 
     /**
-     * Plays the user's recording then the original recording.
-     * Allows the user to judge their pronunciation.
+     * Plays the user's recording then the original recording, this is repeated for
+     * the amount of times specified by the user through the spinner.
      */
     public void compareButtonPressed() {
+        // get value from spinner
         int loops = (int) _loopSpinner.getValue();
         _playing = _practiseListModel.compareUserRecordingTask(_volumeSlider.getValue(), loops);
         _playBar.progressProperty().bind(_playing.progressProperty());
+
+
+        _compareBtn.setDisable(true);
+        _recordBtn.setDisable(true);
 
         _playing.setOnSucceeded(e -> {
             if (_firstComparison) {
                 openLevelScene();
                 _firstComparison = false;
             }
+            _recordBtn.setDisable(false);
+            _compareBtn.setDisable(false);
             endAudio();
         });
         new Thread(_playing).start();
     }
 
     /**
-     * Sets the currently display to be of bad quality.
+     * Sets the currently display to be of bad quality. It is written to a
+     * text file
      */
     public void badButtonPressed() throws IOException {
         _currentName.setBadQuality();
