@@ -1,4 +1,5 @@
 # NameSayer
+This project involves creating a platform that will provide users with an application to help them practise unfamiliar names. The target users are university students that want to practise the names of their class mates.
 
 ## How to Use
 
@@ -11,7 +12,7 @@
 
 * It is only runnable on a Linux OS
 
-* The system must have ffmpeg installed, to install type the following into the terminal:
+* The system must have ffmpeg installed, to install type the following command into the terminal:
 ```shell
 $ sudo apt-get install ffmpeg
 ```
@@ -28,7 +29,7 @@ $ java -jar NameSayer-1.0.jar
 Please refer to the [UserManual.pdf](./UserManual.pdf) for information on how to use the application itself.
 
 ## How to build
-To build `NameSayer-1.0.jar` you should have Maven installed and be in the same directory as the `pom.xml`.
+To build `NameSayer-1.0.jar` you should have the latest version of [Maven](https://maven.apache.org/) installed and be in the same directory as the `pom.xml`.
 
 Enter the following command into the terminal:
 ```shell
