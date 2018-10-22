@@ -1,23 +1,35 @@
 # NameSayer
 
-## How to Run
+## How to Use
 
-1. Place names database in a folder called names in the same directory as the jar file.
+### Prerequisites
+* Java 8 or later
 
-2. Make sure the User Manual is in the same directory as the jar file and source code.
+* JavaFX runtime
 
-2. Give necessary permissions or run using java command in terminal.
+* Audio input and Output devices
 
-3. Go to directory containing jar file.
+* It is only runnable on a Linux OS
 
-4. Enter `java -jar NameSayer_part3.jar` into the terminal.
+* The system must have ffmpeg installed, to install type the following into the terminal:
+```shell
+$ sudo apt-get install ffmpeg
+```
 
-## Special Features:
-Upload Multiple text files
-Level up by making good recordings
-Creating and saving custom playlists
-and more....
+* (Optional) make sure the [UserManual.pdf](./UserManual.pdf) is located in the same directory as the `NameSayer-1.0.jar`.
 
-Target Audience:
-Adults
+* You should have database of name recordings. See sections **'Choose Database'** and **'How should my database files be named?'** in the [UserManual.pdf](./UserManual.pdf).
 
+### How to Run
+Navigate to the same directory as the `NameSayer-1.0.jar` file and type the following command into the terminal:
+```shell
+$ java -jar NameSayer-1.0.jar
+```
+
+## How to build
+To build `NameSayer-1.0.jar` you should have Maven installed and be in the same directory as the `pom.xml`.
+
+Enter the following command into the terminal:
+```shell
+$ mvn package
+```
