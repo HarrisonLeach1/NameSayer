@@ -25,6 +25,7 @@ Navigate to the same directory as the `NameSayer-1.0.jar` file and type the foll
 ```shell
 $ java -jar NameSayer-1.0.jar
 ```
+Please refer to the [UserManual.pdf](./UserManual.pdf) for information on how to use the application itself.
 
 ## How to build
 To build `NameSayer-1.0.jar` you should have Maven installed and be in the same directory as the `pom.xml`.
@@ -33,3 +34,11 @@ Enter the following command into the terminal:
 ```shell
 $ mvn package
 ```
+The `NameSayer-1.0.jar` will then be in the `target/` directory.
+
+## Built With
+* Java - with the use of the JavaFX and [ControlsFX](http://fxexperience.com/controlsfx/) libraries
+* [Maven](https://maven.apache.org/) - for building and dependency management
+
+## License 
+This project is licensed under the GNU General Public License - see the [LICENSE](./LICENSE) file for details
