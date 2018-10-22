@@ -82,16 +82,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
     }
 
     /**
-     * Initialises the default max, min and initial volume for the volume bar when
-     * the user first enters the play scene.
-     */
-    private void initialiseVolume() {
-        _volumeSlider.setMin(MIN_VOLUME);
-        _volumeSlider.setMax(MAX_VOLUME);
-        _volumeSlider.setValue(INITIAL_VOLUME);
-    }
-
-    /**
      * Moves to the next SingleName in the list and updates the displayed name. The SingleName is
      * unchanged if the end of the list is reached.
      */
@@ -225,6 +215,13 @@ public class PlaySceneController implements UserModelListener, Initializable {
         _levelCounter.setText(String.valueOf(currentUserLevel));
     }
 
+    /**
+     * Help button opens the user manual pdf from the current working directory.
+     * @param actionEvent
+     */
+    public void helpButtonAction(ActionEvent actionEvent) {
+        new DocumentLoader(USER_MANUAL).loadDocument();
+    }
 
     /**
      * Opens the level scene to the user which allows them to decide whether or not
@@ -341,10 +338,12 @@ public class PlaySceneController implements UserModelListener, Initializable {
     }
 
     /**
-     * Help button opens the user manual pdf from the current working directory.
-     * @param actionEvent
+     * Initialises the default max, min and initial volume for the volume bar when
+     * the user first enters the play scene.
      */
-    public void helpButtonAction(ActionEvent actionEvent) {
-        new DocumentLoader(USER_MANUAL).loadDocument();
+    private void initialiseVolume() {
+        _volumeSlider.setMin(MIN_VOLUME);
+        _volumeSlider.setMax(MAX_VOLUME);
+        _volumeSlider.setValue(INITIAL_VOLUME);
     }
 }

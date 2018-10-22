@@ -25,7 +25,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckListView;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +48,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     private static final String LIST_ERROR_MSG = "ERROR: List is empty";
 
     @FXML private Pane _dataPane, _recPane, _searchPane, _startPane;
-    @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn;
+    @FXML private Button _returnBtn, _viewDataBtn,_viewRecBtn,_testMicBtn,_searchMenuBtn, _playRecordingBtn;
     @FXML private CheckListView<SingleName> _dataList;
     @FXML private ListView<Practisable> _selectedList;
     @FXML private ListView<Practisable> _playList;
@@ -144,6 +143,7 @@ public class MainMenuController implements Initializable, UserModelListener {
     public void handleQuitAction(ActionEvent event){
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.close();
+        System.exit(0);
     }
 
     /**
@@ -362,7 +362,6 @@ public class MainMenuController implements Initializable, UserModelListener {
      * Loads in all SingleNameVersion objects in the selected list, passes it to the next view
      * and controller, and switches scenes.
      * @param event
-     * @throws IOException
      */
     public void handleStartAction(ActionEvent event) {
         // if no items are selected, do not switch scenes.
@@ -377,8 +376,14 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void playUserRecordingPressed() {
         if (_recList.getSelectionModel().getSelectedItem() != null) {
+            _playRecordingBtn.setDisable(true);
             _player = playWorker();
-            _player.setOnSucceeded( e -> stopProgress());
+
+            _player.setOnSucceeded( e -> {
+                stopProgress();
+                _playRecordingBtn.setDisable(false);
+            });
+
             _playingProgress.progressProperty().bind(_player.progressProperty());
             new Thread(_player).start();
         }

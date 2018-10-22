@@ -13,7 +13,7 @@ import javafx.scene.control.Tooltip;
  * simple functionality is introduced an the extra coupling is uneccessary.
  */
 public class HighlightedList {
-    private static final String MISSING_MSG = "Missing SingleName(s): ";
+    private static final String MISSING_MSG = "Missing Name(s): ";
     private static final String FOUND_MSG = "All Names Found!";
 
     private final ListView<Practisable> _listView;
