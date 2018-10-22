@@ -105,11 +105,11 @@ public class ConcatenatedName implements Practisable {
      * Modifies the audio files of the associated names such that they do
      * not contain any unnecessary silence.
      */
-    private void cutSilence() {
+    private void cutSilence() throws InterruptedException {
         for(SingleName name : _nameList) {
             try {
-                // 1:0 -50dB indicates that anything below -50dB is cut off from the start
-                // 1:5 -50dB indicates that anything below -70dB is cut off from the end
+                // 1:0 START_THRESHOLD indicates that anything below START_THRESHOLD is cut off from the start
+                // 1:5 END_THRESHOLD indicates that anything below END_THRESHOLD is cut off from the end
                 String cmd = "ffmpeg -y -i " + name.selectGoodVersion().getFilePath() +
                         " -af silenceremove=1:0:"+ START_THRESHOLD +"dB:1:5:"+ END_THRESHOLD +"dB " + TEMP_FOLDER + name.toString() + EXTENSION;
 
@@ -118,7 +118,7 @@ public class ConcatenatedName implements Practisable {
 
                 process.waitFor();
 
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -225,9 +225,8 @@ public class ConcatenatedName implements Practisable {
      * Different names should be separated by a space or hyphen in the input string.
      * @param inputString
      * @return a ConcatenatedName corresponding to the input string
-     * @throws InterruptedException
      */
-    private void parseNameList(String inputString, HashMap<String, SingleName> databaseTable) throws InterruptedException {
+    private void parseNameList(String inputString, HashMap<String, SingleName> databaseTable) {
         _nameList = new ArrayList<>();
 
         List<String> stringList = formatStringList(inputString);
