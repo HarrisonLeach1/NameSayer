@@ -321,6 +321,7 @@ public class MainMenuController implements Initializable, UserModelListener {
      */
     public void clearPlayListButtonPressed() {
         _playList.getItems().clear();
+        _databaseModel.deleteTempRecordings();
         _fileNameLabel.setText("    No file selected");
     }
 

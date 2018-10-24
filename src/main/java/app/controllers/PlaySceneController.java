@@ -162,8 +162,6 @@ public class PlaySceneController implements UserModelListener, Initializable {
         controller.setModel(_databaseModel, _userModel);
         controller.setPlaylist(_practiseListModel.getPractiseList());
 
-        _databaseModel.deleteTempRecordings();
-
         loader.switchScene(event);
     }
 

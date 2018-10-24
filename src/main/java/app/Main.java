@@ -31,6 +31,7 @@ public class Main extends Application {
         // close all children when window is exited
         primaryStage.setOnCloseRequest(t -> {
             Platform.exit();
+            DatabaseModel.getInstance().deleteTempRecordings();
             System.exit(0);
         });
 
